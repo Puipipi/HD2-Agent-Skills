@@ -1,0 +1,11 @@
+HD2Skeleton 0.1.0
+status    = loaded: ffi=true stages=0
+frame     = function: 0x01a08e7d9208
+uptime_s  = 0.0
+stages    = 0/6
+ship_ok   = false
+world     = 0
+gui       = false
+ffi_ok    = true
+frame_err = 0
+stopped   = no
