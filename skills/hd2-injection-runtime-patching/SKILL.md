@@ -137,7 +137,7 @@ earlier is what makes a write take effect is wrong.
 
 **A guard that whitelists only {current == target, current == original} bricks its own write.**
 The observed symptom: the first write to a mount slot succeeds, changing it to another item is
-refused, and a mech that was first a carrier and later an addition becomes unwritable entirely —
+refused, and a mech that was first a carrier and later an addition becomes unwritable entirely,
 because after the first successful write `cur` is the previous target, which matches neither branch.
 Store **both** the current target and the original per address, and treat the previously written
 value as a legal source:
@@ -161,9 +161,9 @@ end
 **Writing the original value back must always bypass every check.** Added 2026-10-03 (guard dog):
 if the original value is itself blocked by the `cur` test, a player migrating from an older mod is
 permanently stuck. Concretely: `guard-dog-mg43` already wrote **MG-43**, the new mod's `orig` =
-**A32621E3BDE13379**, `cur` = MG-43, `last` = nil → `cur` is neither the original nor `last` →
-refuse, so even selecting the original becomes impossible. Hence the `want == orig` clause in the
-snippet above: whenever the target value equals the original, skip the check entirely and write
+**A32621E3BDE13379**, `cur` = MG-43, `last` = nil, so `cur` is neither the original nor `last` and
+the write is refused — even selecting the original becomes impossible. Hence the `want == orig` clause
+in the snippet above: whenever the target value equals the original, skip the check entirely and write
 directly. "Writing back the original" can never be worse than leaving an unknown value in place.
 Non-original item swaps stay protected. This is the second safeguard besides `force`; both
 `exo_loadout` and `guard_dog_loadout` implement it, and guard-dog offline case **13** pins it
@@ -173,9 +173,9 @@ directly contradicts the widespread write-guard idiom that whitelists only
 
 **Initialisation must restore original defaults, not the last cfg.** Reusing the normal write-back
 path (`apply_all('vanilla')`) left the last-exit configuration in memory, because the current value
-matched neither original nor target and the guard refused silently. Fix: a `vanilla_force` mode —
-`apply_all('vanilla', true)` — that validates only `node` / `pad` / `recIdx` and force-writes the
-original. Initialisation does **not** read `ExoLoadout.cfg`; the last-exit cfg is the wrong
+matched neither original nor target and the guard refused silently. Fix: a `vanilla_force` mode,
+called as `apply_all('vanilla', true)`, that validates only `node` / `pad` / `recIdx` and force-writes
+the original. Initialisation does **not** read `ExoLoadout.cfg`; the last-exit cfg is the wrong
 semantics. Consolidate it:
 
 ```
@@ -207,7 +207,7 @@ For carrying mech A plus additional mech B:
 | A/B | `package-64` / `package-60` cooldown | do not touch |
 
 Write only the carrying record's single `additional_stratagem`; writing both ways creates a
-stratagem nesting loop. Before writing, verify the current `+32` is `0` or already the target —
+stratagem nesting loop. Before writing, verify that the current `+32` is `0` or already the target;
 otherwise refuse.
 
 ### 4.5 Release discipline

@@ -40,6 +40,9 @@
 | [`hd2-bilingual-doc-verify`](skills/hd2-bilingual-doc-verify/SKILL.md) | `scripts/verify_translations.py` | 让 `X.md` / `X_cn.md` 成对保持诚实：代码块、标题结构、链接、frontmatter。 |
 | [`hd2-live-memory-probe`](skills/hd2-live-memory-probe/SKILL.md) | —（模式 + 骨架） | 写一个只读探针跑在运行中的游戏上，验证地址链，不必再打一局。 |
 | [`hd2-mod-log-analysis`](skills/hd2-mod-log-analysis/SKILL.md) | —（模式 + 骨架） | 把"模组没反应"变成具名阶段，并写出说清这件事的分析器。 |
+| [`hd2-mod-release-operations`](skills/hd2-mod-release-operations/SKILL.md) | [中文](skills/hd2-mod-release-operations/SKILL_cn.md) | 打包与发布：工程布局、包命名、字节级归档格式、七步发布清单、GitHub 操作、token 处理与网络坑。 |
+| [`hd2-injection-runtime-patching`](skills/hd2-injection-runtime-patching/SKILL.md) | [中文](skills/hd2-injection-runtime-patching/SKILL_cn.md) | 运行时那一半：安全的写入原语、FFI 与本 VM 的 LuaJIT 语义陷阱、何时写与写多频繁，以及运行时读取数据表。 |
+| [`hd2-offline-data-workflow`](skills/hd2-offline-data-workflow/SKILL.md) | [中文](skills/hd2-offline-data-workflow/SKILL_cn.md) | 离线优先、实机在后：按签名定位数据表、从明文镜像解码、LDLD 块格式与两个哈希、扫描器设计，以及一次性的只读侦察 addon。随附完整 106 项踩坑清单作为证据。 |
 | [`hd2-no-quarantine-packaging`](skills/hd2-no-quarantine-packaging/SKILL.md) | — | 让模组的辅助脚本能过站点扫描：把 `.bat`/`.ps1` 在运行时生成到用户配置目录，而不是放进归档；并把它做成构建门禁。 |
 | [`writing-mod-tools`](skills/writing-mod-tools/SKILL.md) | — | 怎么把这些工具写好：前置条件与优雅降级、默认只读、退出码、`--json`、dry-run、自检、**实机前先验证判据**、诚实写出做不到什么。 |
 
