@@ -5,6 +5,10 @@ description: Ship a mod whose helper scripts survive mod-site scanning — gener
 
 # Packaging a mod so its helper scripts are not quarantined
 
+English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-no-quarantine-packaging/SKILL_cn.md)
+
+> **Confidence:** the mechanism is read from SmoothBoot's source, not reproduced. The build gate that refuses a script-bearing archive *is* verified here.
+
 A mod that needs the user to run *something* — a log collector, a config picker, an exclude
 tool — has a packaging problem: **mod sites quarantine archives that contain script files**,
 and a quarantined release looks to the author like a mysterious rejection or a mod that

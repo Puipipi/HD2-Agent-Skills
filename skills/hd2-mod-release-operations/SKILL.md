@@ -5,12 +5,20 @@ description: Package and publish a Helldivers 2 Bingus/MDL Lua mod — project l
 
 # HD2 mod release operations
 
+> **Confidence:** reported; §1 lists the per-item status, including what is environment-specific.
+
 English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-mod-release-operations/SKILL_cn.md)
 
 This is the operations half of HD2 mod work: how the project is laid out, how the package is
 named and archived, the seven steps a release actually consists of, and what breaks on the
 network. Every number below is evidence from one author's machine and repository
-(`junze0910/junze-hd2-lua-mod`); where a value is local rather than general it says so.
+(`junze0910/junze-hd2-lua-mod`, MIT); where a value is local rather than general it says so.
+
+**None of it has been executed in this repository either.** It is a reorganisation of that
+author's notes, who states that not everything there has been tested. See §1 for the per-item
+status. Two things about the archive format *are* independently checkable here and were checked:
+this repository's own build produces and inspects packages with the same envelope, and the
+name→hash function matches the loader's published vectors.
 
 ## 1. Scope and provenance — read this before trusting a number
 
@@ -20,7 +28,7 @@ network. Every number below is evidence from one author's machine and repository
 | `Invoke-RestMethod` / `curl.exe` HTTPS failure | **Sandbox/host-specific**, not a general Windows rule. On this host the certificate store is locked, so every PowerShell HTTPS client fails; on a normal machine it may work. |
 | Dates in §8 and §3 (`2026-10-02`, `2026-10-04`) | Dated incidents, kept because they explain why the rule exists. |
 | Manifest GUIDs quoted as `2b8e6c51-…` / `7f2c8a04-…` | Truncated in the source; they are mod identities, not secrets. |
-| `.patch_N` byte layout (§6) | Byte-level verified by round trip. |
+| `.patch_N` byte layout (§6) | Verified by the author's own round trip, **not re-verified here**. Consistent with the envelope this repository's build script produces and its inspector parses — but that is agreement, not proof. |
 
 ## 2. Project layout and the two artifact lines
 

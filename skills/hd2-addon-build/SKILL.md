@@ -5,6 +5,10 @@ description: Build a Helldivers 2 Bingus/MDL Lua mod into a mod-manager-importab
 
 # hd2-addon-build
 
+> **Confidence:** the five gates were run here, and each was shown to fail when provoked. The envelope format is from the loader's tools. That a manager *imports* the artifact is not verified here — see [verification status](../../docs/verification-status.md).
+
+English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-addon-build/SKILL_cn.md)
+
 `scripts/build_mod.py` turns one plaintext Lua entry into the addon envelope a mod
 manager imports, and stops before packaging when the source is unsafe to ship.
 

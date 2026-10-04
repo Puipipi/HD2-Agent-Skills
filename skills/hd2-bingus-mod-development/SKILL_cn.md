@@ -5,6 +5,8 @@ description: 开发、验证并打包一个基于 Bingus/MDL 加载器的 Helldi
 
 # HD2 Bingus 模组开发
 
+> **置信度:** 流水线结构在本仓库跑过;部署路径、槽位号、日志位置是**某一台安装**的观测值,请自行重新推导。
+
 [English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-bingus-mod-development/SKILL.md) / 简体中文
 
 这套流水线产出了本工作区里的全部模组。HD2 模组**不是**"写个 Lua 丢进游戏目录"，而是：

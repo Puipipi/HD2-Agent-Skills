@@ -5,6 +5,8 @@ description: Develop, validate and package a Helldivers 2 Lua mod for the Bingus
 
 # HD2 Bingus mod development
 
+> **Confidence:** the pipeline structure was exercised here; deployment paths, slot numbers and log locations are observed values from one install — re-derive them.
+
 English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-bingus-mod-development/SKILL_cn.md)
 
 The pipeline that produced the mods in this workspace. A HD2 mod is **not** "write Lua and

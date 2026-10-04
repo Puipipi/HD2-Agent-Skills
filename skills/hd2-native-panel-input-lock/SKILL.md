@@ -5,6 +5,8 @@ description: Open an in-game panel on a hotkey (F7) inside Helldivers 2, unlock 
 
 # HD2 native panel: hotkey, cursor unlock, input lock
 
+> **Confidence:** reported. No code was executed; the provenance section says which parts are copyleft.
+
 English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-native-panel-input-lock/SKILL_cn.md)
 
 Taken from **Super Earth Armory Forge v6.2.1** (F7 panel) — the section its comments

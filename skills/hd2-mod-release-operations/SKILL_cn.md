@@ -5,6 +5,8 @@ description: 打包并发布一个 Helldivers 2 Bingus/MDL Lua mod —— 项目
 
 # HD2 mod 发布运维
 
+> **置信度:** 读来的;§1 逐项列出状态,包括哪些是环境特定的。
+
 [English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-mod-release-operations/SKILL.md) / 简体中文
 
 这是 HD2 mod 工作中偏运维的那一半：项目如何布局、包如何命名与归档、一次发布实际由哪七步

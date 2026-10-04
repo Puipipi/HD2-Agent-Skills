@@ -5,6 +5,10 @@ description: Static check that every C symbol a Helldivers 2 Lua mod calls is de
 
 # hd2-ffi-audit
 
+> **Confidence:** the scanner runs, but its rules are reported, not re-derived from the loader. Its known blind spots are listed below. See [verification status](../../docs/verification-status.md).
+
+English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-ffi-audit/SKILL_cn.md)
+
 `scripts/ffi_audit.py` reads Lua source as text and reports two classes of breakage that have
 both shipped in this ecosystem:
 

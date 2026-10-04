@@ -5,6 +5,8 @@ description: How to write a maintenance and diagnostics tool for a Helldivers 2 
 
 # Writing mod tools
 
+> **Confidence:** the rules are verified by re-encountering them while building the tools in this repository; the incidents they cite are quoted, not re-run.
+
 English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/writing-mod-tools/SKILL_cn.md)
 
 Distilled from the ~120 tools across the mods in this workspace: four build scripts, a

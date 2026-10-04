@@ -5,6 +5,10 @@ description: Analyze a Helldivers 2 mod's runtime log to answer "did it actually
 
 # hd2-mod-log-analysis
 
+English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-mod-log-analysis/SKILL_cn.md)
+
+> **Confidence:** reported. The incident behind it is real; no script here was executed.
+
 "The mod does nothing" is only answerable from the log. This skill is how to read one, and
 how to write a tool that reads it for you.
 

@@ -199,8 +199,31 @@ def check_switcher(en_path, cn_path, en_text, cn_text, root):
             continue
         if len(found) > 1:
             problems.append("%s has %d switcher lines" % (label, len(found)))
-        if want not in found[0]:
+        # The switcher may name the counterpart as a relative path or as an
+        # absolute blob URL; both are acceptable, so accept either.
+        if want not in found[0] and not found[0].rstrip(")").endswith(want):
             problems.append("%s switcher does not point at %s" % (label, want))
+    return problems
+
+
+def check_header_switcher(path, root, verbose=True):
+    """9. a skill's own switcher must exist even when its pair is missing.
+
+    The pair check only runs when both files exist, so a skill that has an English
+    file but no translation yet escapes it entirely - which is exactly how five
+    English skills ended up without a switcher while their translations had one.
+    """
+    problems = []
+    text = io.open(path, encoding="utf-8").read()
+    head = text.split("\n## ")[0]
+    found = [l for l in head.split("\n") if "简体中文" in l and "English" in l]
+    if not found:
+        problems.append("%s has no language switcher line" % os.path.relpath(path, root))
+    elif len(found) > 1:
+        problems.append("%s has %d switcher lines" % (os.path.relpath(path, root), len(found)))
+    if verbose:
+        for p in problems:
+            print("  FAIL " + p)
     return problems
 
 
@@ -330,6 +353,19 @@ if __name__ == "__main__":
         print()
 
     all_ok = True
+
+    # Every skill file must carry its own switcher, even before its
+    # translation exists: the pair loop below skips a file whose counterpart
+    # is absent, which is how five English skills lost their switcher while
+    # their Chinese files kept one.
+    skills_dir = os.path.join(ROOT, "skills")
+    if os.path.isdir(skills_dir):
+        for d in sorted(os.listdir(skills_dir)):
+            for f in ("SKILL.md", "SKILL_cn.md"):
+                p = os.path.join(skills_dir, d, f)
+                if os.path.exists(p) and check_header_switcher(p, ROOT):
+                    all_ok = False
+
     pairs = discover_pairs(ROOT)
     if not pairs:
         print("no X.md / X_cn.md pairs found under %s" % ROOT)

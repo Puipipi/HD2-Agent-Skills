@@ -11,9 +11,27 @@ Scope: addons that run inside the game's LuaJIT VM and read/write the Helldivers
 through FFI at runtime. Asset-replacement mods (swapping `data/` resources) are a different class
 and are not covered here.
 
-Everything below is reproduced from the project's machine-verified notes. Where a value is bound to
-one build or one mod version, the text says so — never promote a build-bound number into a portable
-offset.
+## Provenance and confidence — read this first
+
+**Nothing in this file has been executed or re-measured in this repository.** It is a
+reorganisation of one contributor's working notes, taken from
+[`junze0910/junze-hd2-lua-mod`](https://github.com/junze0910/junze-hd2-lua-mod) (MIT). The author
+states plainly that not everything there has been tested, and that some of it needs someone else
+to test it. So treat every section below as **reported and not independently verified here**.
+
+What that means in practice:
+
+| Marking used below | What it means |
+|---|---|
+| *(verified in-game by the author)* | the source says it was observed on a live run. Still one machine, one build. |
+| *(reported)* | stated by the source with no test described. Unverified. |
+| *(build-bound)* | the value belongs to one game build or one mod version. It is not portable. Re-derive it. |
+| *(unresolved)* | two statements in the source disagree and it does not reconcile them. Both are kept. |
+
+Do not promote a build-bound number into a portable offset, and do not cite anything here as
+established fact. If you need certainty, derive it yourself and say how you did.
+
+---
 
 ---
 

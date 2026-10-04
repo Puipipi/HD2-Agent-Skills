@@ -5,6 +5,10 @@ description: Keep a bilingual document set honest — verify that a translated m
 
 # hd2-bilingual-doc-verify
 
+English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-bilingual-doc-verify/SKILL_cn.md)
+
+> **Confidence:** verified here; both of its failure modes were provoked deliberately.
+
 `scripts/verify_translations.py` checks the things a translation must **not** change, so review
 attention can go to the prose instead of to whether a code sample is still correct.
 
@@ -31,7 +35,7 @@ python -B scripts/verify_translations.py --no-luajit         # force the degrade
 
 Exit 0 = every pair passed; non-zero = at least one failed, with the pair named.
 
-## The seven checks
+## The nine checks
 
 1. **Translated Lua still compiles on LuaJIT** — extracts every `lua` fence from the
    *translation* and compiles it. Catches a translation that touched code.
@@ -52,13 +56,22 @@ Exit 0 = every pair passed; non-zero = at least one failed, with the pair named.
 7. **The language switcher exists, once, and points at the counterpart** — in the header block
    of both sides, with the current language left unlinked:
    ```
-   English / [简体中文](https://github.com/OWNER/REPO/blob/main/README_cn.md)
-   [English](https://github.com/OWNER/REPO/blob/main/README.md) / 简体中文
+   English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/README_cn.md)
+   [English](https://github.com/YC426/HD2-Agent-Skills/blob/main/README.md) / 简体中文
    ```
    Absolute URLs are deliberate — copied from DeepSeek's own repositories, because the
    switcher is the one link a reader needs before they can navigate anything else. It is
    checked rather than trusted: removing one, pointing it at the wrong file, or leaving two
    in the header all fail the run.
+
+8. **Every skill file carries its own switcher, even with no translation yet** — checked for
+   every `SKILL.md` and `SKILL_cn.md` under `skills/`, independently of pairing. The pair loop
+   only runs when both sides exist, so a skill with an English file and no translation escapes
+   it entirely: that is exactly how five English skills ended up without a switcher while their
+   Chinese files had one.
+9. **Absolute GitHub URL targets must resolve** — reported by `check_absolute_targets()`,
+   because the switchers use absolute URLs by convention and a missing counterpart is otherwise
+   a dead link on the rendered page that nothing notices.
 
 ## Two lessons baked into it
 

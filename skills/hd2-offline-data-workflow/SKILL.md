@@ -11,6 +11,36 @@ A machine session costs a game restart, and Bingus Shared Loader has no hot relo
 
 Written for the Lua-injection addon class (addons loaded by Bingus Shared Loader, running inside the game's LuaJIT VM). Asset-replacement mods that swap `data/` resources are a different pipeline. The runtime-write side is out of scope here on purpose.
 
+## Provenance and confidence — read this first
+
+**Nothing in this file has been executed or re-measured in this repository.** It reorganises one
+contributor's working notes, taken from
+[`junze0910/junze-hd2-lua-mod`](https://github.com/junze0910/junze-hd2-lua-mod) (MIT). The author
+states that not everything there has been tested and that some of it needs someone else to test
+it. Treat every claim below as **reported and not independently verified here**.
+
+Two exceptions, because they were checked in this repository rather than taken on faith:
+
+- **"You cannot scan the shipped `game.dll` offline"** — independently reproduced. The on-disk
+  image hashes to the loader's gate constant but its main sections have blanked names, ~7.9998
+  entropy and no trace of a known code signature; see `docs/hd2-mod-failure-catalog.md` §5.
+- **The name→hash function and the archive magic/type constants** — checked against the loader's
+  own published test vectors by `hd2-addon-package-inspector`, which fails if they disagree.
+
+One claim **could not** be checked here and is marked as such in the caveats: the assertion that
+the in-memory image of `generated_entities.dl_bin` is byte-identical to the file on disk. The file
+is not present in this workspace.
+
+| Marking used below | What it means |
+|---|---|
+| *(verified in-game by the author)* | the source says it was observed on a live run. Still one machine, one build. |
+| *(reported)* | stated by the source with no test described. Unverified. |
+| *(build-bound)* | the value belongs to one game build, mod version or date. Not portable; re-derive it. |
+| *(unresolved)* | two statements in the source disagree and it does not reconcile them. Both are kept. |
+
+Do not cite anything here as established fact. If you need certainty, derive it yourself and say
+how you did.
+
 ## The offline-first loop
 
 1. **Find the plaintext offline** — the table's bytes and the type library, on disk.

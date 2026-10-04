@@ -5,6 +5,8 @@ description: 判断正在运行的 Helldivers 2 客户端是中文还是英文 �
 
 # HD2 游戏语言自动判断
 
+> **置信度:** 读来的。离线测试接缝存在于护甲模组自己的测试里,但在本仓库是**读过、没跑过**。
+
 [English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-game-language-autodetect/SKILL.md) / 简体中文
 
 两种**相互独立**的方法，按应当尝试的顺序排列。两者都取自可正常工作的 HD2 Lua/JIT mod，并经过实机确认。

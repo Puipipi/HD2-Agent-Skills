@@ -5,6 +5,10 @@ description: Write and run a read-only live probe against the running Helldivers
 
 # hd2-live-memory-probe
 
+English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-live-memory-probe/SKILL_cn.md)
+
+> **Confidence:** the technique is reported from probes in this workspace; the probe skeleton itself has never been run against a live game here.
+
 A live probe answers one question — *is this address chain what the mod thinks it is?* — while
 the game is running, in seconds, instead of in another deployment + mission + log cycle.
 
