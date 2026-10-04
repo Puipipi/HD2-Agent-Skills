@@ -5,6 +5,8 @@ description: Develop, validate and package a Helldivers 2 Lua mod for the Bingus
 
 # HD2 Bingus mod development
 
+English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-bingus-mod-development/SKILL_cn.md)
+
 The pipeline that produced the mods in this workspace. A HD2 mod is **not** "write Lua and
 drop it in the game folder" — it is:
 
@@ -236,7 +238,7 @@ This is the part that keeps the project honest, and it is cheap:
 1. Copy `skills/hd2-addon-build/scripts/build_mod.py`, fill in the CONFIG block (source path,
    resource name, GUID, display name, README marker).
 2. Get `build_addon.py` + `archive.py` into `work/standalone/vendor/bingus/`.
-3. Start the source from `skills/hd2-bingus-mod-development/template/panel_skeleton.lua`
+3. Start the source from `template/panel_skeleton.lua`
    (staged bring-up, value-check guards, frame error budget, STATUS file, testable seam) —
    it is a package-independent mod skeleton, not a Bingus-specific one.
 4. Build features against the code-level skills for the part you are writing.

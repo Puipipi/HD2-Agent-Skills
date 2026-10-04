@@ -5,6 +5,8 @@ description: 仅使用引擎的 Gui.rect 原语在《Helldivers 2》里绘制一
 
 # HD2 游戏内面板（纯 rect、保留式 GUI）
 
+[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-in-game-panel/SKILL.md) / 简体中文
+
 一个能正常工作的游戏内面板，**没有引擎字体、没有材质、没有 Gui.text** —— 每一个像素，包括中文字符，都是一个 `Gui.rect`。来源：`Custom Armor Kit 2.5.10`（`mods/custom-armor-kit/work/standalone/multi_perk.lua`）。
 
 **为什么是这种形态：** 在引擎构建完它的字体/材质库之前调用 `World.create_screen_gui`，会在**原生**层面出错 —— `pcall` 不抓原生崩溃。证据：日志停在 `building the panel`，进程每隔几秒抛出 `ntdll 0xc0000026`，帧回调一直是死的。rect 不带有这种依赖。

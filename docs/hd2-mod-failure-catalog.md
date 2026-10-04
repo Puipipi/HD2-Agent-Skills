@@ -1,6 +1,8 @@
 # Field guide: what breaks an HD2 Lua mod, and how to tell it apart
 
-> 中文版：[hd2-mod-failure-catalog.zh-CN.md](hd2-mod-failure-catalog.zh-CN.md)
+English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/docs/hd2-mod-failure-catalog_cn.md)
+
+> 中文版：[hd2-mod-failure-catalog_cn.md](hd2-mod-failure-catalog_cn.md)
 
 For people writing a Helldivers 2 mod (Bingus/MDL loader, LuaJIT FFI). Every entry below is
 a **symptom → root cause → fix** taken from a real attempt, mostly from the Custom Armor

@@ -5,6 +5,8 @@ description: Launch Helldivers 2 on Windows and drive it from ship into an activ
 
 # HD2 Mission Entry (unattended)
 
+English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-mission-entry/SKILL_cn.md)
+
 Goal: from a cold start, get the game **into a mission with a known loadout**, with
 verifiable evidence at every step. Written from real runs; every coordinate and
 gotcha below was hit and confirmed in practice.

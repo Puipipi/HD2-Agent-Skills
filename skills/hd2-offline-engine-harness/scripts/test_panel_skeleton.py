@@ -18,13 +18,14 @@ Run:  python -B scripts/test_panel_skeleton.py [--skeleton <path>]
 
 Prerequisites
     Python 3.8+ and lupa (real LuaJIT 2.1 with ffi). No game, no loader tools.
-    It writes its scratch log directory under this script's folder.
+    It writes its scratch log directory under the system temp dir, never in the repo.
 """
 import argparse
 import importlib.util
 import os
 import re
 import sys
+import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SKILL = os.path.dirname(HERE)
@@ -44,7 +45,9 @@ def check(label, cond, detail=""):
 def fresh(source, prelude=""):
     """A LuaJIT runtime with a fake environment. The skeleton writes a log file,
     so point LOCALAPPDATA at a scratch dir to keep the workspace clean."""
-    scratch = os.path.join(HERE, "_scratch")
+    # Under the system temp dir, never inside the repository: a harness that
+    # litters the working tree gets its own output committed by accident.
+    scratch = os.path.join(tempfile.gettempdir(), "hd2_skeleton_harness")
     os.makedirs(os.path.join(scratch, "CowboyBingus", "Helldivers2", "Logs"), exist_ok=True)
     rt = lj.LuaRuntime(unpack_returned_tuples=True)
     rt.execute(f"os.getenv = function(n) if n == 'LOCALAPPDATA' then return [[{scratch}]] end end")
@@ -107,7 +110,8 @@ def test_no_engine():
     check("no engine: stages did not advance past native memory",
           int(mod.stage) < int(rt.eval("HD2Skeleton.stage")) + 1, f"stage={mod.stage}")
     check("no engine: leaves a named hold reason in the log",
-          "held" in open(os.path.join(HERE, "_scratch", "CowboyBingus", "Helldivers2", "Logs",
+          "held" in open(os.path.join(tempfile.gettempdir(), "hd2_skeleton_harness",
+                                        "CowboyBingus", "Helldivers2", "Logs",
                                       "HD2Skeleton.log"), encoding="utf-8", errors="replace").read())
 
 
@@ -224,7 +228,8 @@ def test_status_file_written():
     rt = fresh(open(SKELETON, encoding="utf-8").read())
     mod = rt.globals().HD2Skeleton
     mod.tick(1)
-    status = os.path.join(HERE, "_scratch", "CowboyBingus", "Helldivers2", "Logs",
+    status = os.path.join(tempfile.gettempdir(), "hd2_skeleton_harness",
+                                        "CowboyBingus", "Helldivers2", "Logs",
                           "HD2Skeleton-STATUS.txt")
     check("STATUS file exists after load", os.path.exists(status))
     if os.path.exists(status):

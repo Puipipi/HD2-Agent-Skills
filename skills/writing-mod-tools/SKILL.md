@@ -5,6 +5,8 @@ description: How to write a maintenance and diagnostics tool for a Helldivers 2 
 
 # Writing mod tools
 
+English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/writing-mod-tools/SKILL_cn.md)
+
 Distilled from the ~120 tools across the mods in this workspace: four build scripts, a
 guarded deployer, a dozen live memory probes, log analyzers, offline simulators and a
 static FFI auditor. Every rule below is something one of them got right — usually after

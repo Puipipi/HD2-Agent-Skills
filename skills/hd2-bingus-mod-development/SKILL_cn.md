@@ -5,6 +5,8 @@ description: 开发、验证并打包一个基于 Bingus/MDL 加载器的 Helldi
 
 # HD2 Bingus 模组开发
 
+[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-bingus-mod-development/SKILL.md) / 简体中文
+
 这套流水线产出了本工作区里的全部模组。HD2 模组**不是**"写个 Lua 丢进游戏目录"，而是：
 
 > 独立 git 仓库 → 纯文本 LuaJIT 源码 → 离线沙盒自检 → 信封包 ZIP → 管理器手动部署 → 实机日志取证
@@ -208,7 +210,7 @@ Start-Process 'steam://rungameid/553850'      # 约 15-25 秒到船上
 1. 复制 `skills/hd2-addon-build/scripts/build_mod.py`，填 CONFIG 块（源码路径、资源名、
    GUID、显示名、README 标记）。
 2. 把 `build_addon.py` + `archive.py` 放进 `work/standalone/vendor/bingus/`。
-3. 源码从 `skills/hd2-bingus-mod-development/template/panel_skeleton.lua` 起步（分级建立、取值守卫、帧错误预算、
+3. 源码从 `template/panel_skeleton.lua` 起步（分级建立、取值守卫、帧错误预算、
    STATUS 文件、可测接缝）——它是不依赖特定打包格式的模组骨架。
 4. 写功能时对照对应的代码级 skill。
 5. 每次保存跑 `--validate-only`；每个功能配一份离线测试。
@@ -221,7 +223,7 @@ Start-Process 'steam://rungameid/553850'      # 约 15-25 秒到船上
   直接运行。
 - `hd2-in-game-panel`、`hd2-native-panel-input-lock`、`hd2-game-language-autodetect` —— 功能侧：
   绘制、输入/光标、本地化。
-- [`docs/hd2-mod-failure-catalog.zh-CN.md`](../../docs/hd2-mod-failure-catalog.zh-CN.md) —— 出问题时：
+- [`docs/hd2-mod-failure-catalog_cn.md`](../../docs/hd2-mod-failure-catalog_cn.md) —— 出问题时：
   症状 → 根因 → 修法，包括那些不抛异常的坑。
 
 ## 哪些**没有**验证

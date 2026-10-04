@@ -9,7 +9,7 @@ description: Keep a bilingual document set honest — verify that a translated m
 attention can go to the prose instead of to whether a code sample is still correct.
 
 Written after this repository grew an English/Chinese pair for every document: six pairs of
-`X.md` / `X.zh-CN.md`, where a stale code block in the Chinese copy is a bug nobody notices.
+`X.md` / `X_cn.md`, where a stale code block in the Chinese copy is a bug nobody notices.
 
 ## Prerequisites
 
@@ -17,7 +17,7 @@ Written after this repository grew an English/Chinese pair for every document: s
 |---|---|---|
 | Python 3.8+ | the script | — |
 | **`lupa`** | recompiles the translated Lua blocks on real LuaJIT (check 1) | the other five checks still run; the script prints what it skipped |
-| the pairs, in a repo layout | discovery expects `skills/<name>/SKILL.md` + `SKILL.zh-CN.md`, or `docs/`, `template/` | point it with `--root`, or extend `discover_pairs()` |
+| the pairs, in a repo layout | discovery finds any `X.md` with an `X_cn.md` beside it, anywhere in the tree | point it with `--root` |
 
 Nothing else: no game, no loader tools, no network. It writes nothing.
 
@@ -31,7 +31,7 @@ python -B scripts/verify_translations.py --no-luajit         # force the degrade
 
 Exit 0 = every pair passed; non-zero = at least one failed, with the pair named.
 
-## The six checks
+## The seven checks
 
 1. **Translated Lua still compiles on LuaJIT** — extracts every `lua` fence from the
    *translation* and compiles it. Catches a translation that touched code.
@@ -44,11 +44,21 @@ Exit 0 = every pair passed; non-zero = at least one failed, with the pair named.
    skeleton (glyphs, indentation, first token per line), which still catches a dropped branch
    or a renamed path; prose is compared by line count only, because every word is translated.
 4. **Heading structure matches** — count and levels, in order. Catches a dropped section.
-5. **Every relative link is carried over**, or is deliberately retargeted to a `.zh-CN` peer
-   (reported as a note, not a failure). The source pointing *at* a `.zh-CN` file the
-   translation *is* is also a note.
+5. **Every relative link is carried over**, or is deliberately retargeted to a `_cn` peer
+   (reported as a note, not a failure). The source pointing *at* a `_cn` file the translation
+   *is* is also a note.
 6. **Frontmatter is intact** — same keys, `name:` unchanged (it is an identifier), and
    `description:` translated (it is what a reader sees when choosing the skill).
+7. **The language switcher exists, once, and points at the counterpart** — in the header block
+   of both sides, with the current language left unlinked:
+   ```
+   English / [简体中文](https://github.com/OWNER/REPO/blob/main/README_cn.md)
+   [English](https://github.com/OWNER/REPO/blob/main/README.md) / 简体中文
+   ```
+   Absolute URLs are deliberate — copied from DeepSeek's own repositories, because the
+   switcher is the one link a reader needs before they can navigate anything else. It is
+   checked rather than trusted: removing one, pointing it at the wrong file, or leaving two
+   in the header all fail the run.
 
 ## Two lessons baked into it
 

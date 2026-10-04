@@ -5,6 +5,8 @@ description: 在 Windows 上启动 Helldivers 2 并把它从舰船驱动进入�
 
 # HD2 任务进入（无人值守）
 
+[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-mission-entry/SKILL.md) / 简体中文
+
 目标：从冷启动开始，把游戏**带着已知配装送进任务**，每一步都有可验证的证据。本文来自真实实机运行；
 下面每个坐标和坑都是实际撞到并确认过的。
 

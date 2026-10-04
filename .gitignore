@@ -3,3 +3,5 @@ node_modules/
 __pycache__/
 # scratch output written by the test harnesses (recreated on every run)
 tests/_scratch/
+# any harness scratch, wherever a script happens to live
+**/_scratch/

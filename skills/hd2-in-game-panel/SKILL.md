@@ -5,6 +5,8 @@ description: Draw a clickable mod panel inside Helldivers 2 using only the engin
 
 # HD2 in-game panel (rect-only, retained GUI)
 
+English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-in-game-panel/SKILL_cn.md)
+
 A working in-game panel with **no engine font, no material, no Gui.text** — every pixel,
 including Chinese characters, is a `Gui.rect`. Source: `Custom Armor Kit 2.5.10`
 (`mods/custom-armor-kit/work/standalone/multi_perk.lua`).

@@ -5,6 +5,8 @@ description: Find out whether a running Helldivers 2 client is in Chinese or Eng
 
 # HD2 game language auto-detect
 
+English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-game-language-autodetect/SKILL_cn.md)
+
 Two **independent** methods, in the order they should be attempted. Both were taken
 from working HD2 Lua/JIT mods and confirmed live.
 

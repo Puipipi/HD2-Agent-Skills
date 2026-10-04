@@ -1,17 +1,17 @@
 """Verify that a translated doc still matches its source.
 
-Run this after editing either side of a `X.md` / `X.zh-CN.md` pair. It checks the
+Run this after editing either side of an `X.md` / `X_cn.md` pair. It checks the
 things a translation must NOT change, so review attention can go to the prose:
 
   1. every Lua block extracted from the TRANSLATION still compiles on LuaJIT
   2. code fences match the source after all comments are removed
-     (lua `--` and `--[[ ]]`, powershell `#`, pseudo-code `;`)
-  3. documentation fences (directory trees, package layouts) match by STRUCTURE
-     -- glyphs, indentation and the first token of each line -- because their
-     annotations are meant to be translated
+     (lua `--` and `--[[ ]]`, python/shell `#`, pseudo-code `;`)
+  3. documentation fences are compared as documentation: a tree/layout by its
+     skeleton, a fence with no executable code (prose, or a quoted docstring) by
+     shape only
   4. heading structure (levels and order) matches
-  5. every relative link is carried over, or deliberately retargeted to a
-     `.zh-CN` peer (reported, not failed)
+  5. every relative link is carried over, or deliberately retargeted to the `_cn`
+     peer (reported, not failed)
   6. frontmatter keys are intact, `name:` is unchanged, `description:` translated
 
 Run:  python -B scripts/verify_translations.py [--root <repo>]
@@ -177,7 +177,34 @@ def compiles_on_luajit(body):
         return False
 
 
-def check_pair(src_path, dst_path, label):
+def check_switcher(en_path, cn_path, en_text, cn_text, root):
+    """7. the language switcher exists, once, and points at the counterpart.
+
+    A missing or stale switcher is invisible until a reader cannot find their own
+    language, so it is checked rather than assumed.
+    """
+    problems = []
+    en_rel = os.path.relpath(en_path, root).replace(os.sep, "/")
+    cn_rel = os.path.relpath(cn_path, root).replace(os.sep, "/")
+
+    def switchers(text):
+        head = text.split("\n## ")[0]           # header block only
+        return [l for l in head.split("\n") if "简体中文" in l and "English" in l]
+
+    for text, want, label in ((en_text, cn_rel, "source"),
+                              (cn_text, en_rel, "translation")):
+        found = switchers(text)
+        if not found:
+            problems.append("%s has no language switcher line" % label)
+            continue
+        if len(found) > 1:
+            problems.append("%s has %d switcher lines" % (label, len(found)))
+        if want not in found[0]:
+            problems.append("%s switcher does not point at %s" % (label, want))
+    return problems
+
+
+def check_pair(src_path, dst_path, label, root):
     src = io.open(src_path, encoding="utf-8").read()
     dst = io.open(dst_path, encoding="utf-8").read()
     ok = True
@@ -230,10 +257,13 @@ def check_pair(src_path, dst_path, label):
 
     sl, dl = links(src), links(dst)
     for l in [x for x in sl if x not in dl]:
-        peer = l.replace(".md", ".zh-CN.md")
+        # A language switcher and cross-language references move between the
+        # pair: allow the `_cn` retarget, and allow a source link that the
+        # translation does not need because the translation IS that file.
+        peer = l.replace(".md", "_cn.md")
         if peer in dl:
             print(f"  note: link retargeted to its Chinese peer: {l} -> {peer}")
-        elif ".zh-CN." in l:
+        elif l.endswith("_cn.md"):
             print(f"  note: cross-language link not needed in the translation: {l}")
         else:
             print(f"  FAIL relative link lost: {l}")
@@ -251,25 +281,34 @@ def check_pair(src_path, dst_path, label):
             print("  WARN description not translated")
         else:
             print("  frontmatter: keys intact, name unchanged, description translated")
+
+    switcher_problems = check_switcher(src_path, dst_path, src, dst, root)
+    for problem in switcher_problems:
+        print(f"  FAIL language switcher: {problem}")
+        ok = False
+    if not switcher_problems:
+        print("  language switcher: present and pointing at the counterpart")
+
     print(f"  {'OK' if ok else 'PROBLEM'}")
     return ok
 
 
 def discover_pairs(root):
-    """Every X.md that has an X.zh-CN.md sibling."""
+    """Every X.md that has an X_cn.md sibling.
+
+    The `_cn` suffix follows the convention DeepSeek's own repositories use
+    (README.md / README_cn.md), so a reader of either language finds the
+    counterpart by name.
+    """
     pairs = []
-    for dirpath, _, names in os.walk(os.path.join(root, "skills")):
-        for n in names:
-            if n == "SKILL.zh-CN.md":
-                pairs.append((os.path.join(dirpath, "SKILL.md"), os.path.join(dirpath, n)))
-    for sub in ("docs", "template"):
-        d = os.path.join(root, sub)
-        if not os.path.isdir(d):
+    for dirpath, _, names in os.walk(root):
+        if ".git" in dirpath:
             continue
-        for n in sorted(os.listdir(d)):
-            if n.endswith(".zh-CN.md"):
-                base = n[:-len(".zh-CN.md")] + ".md"
-                pairs.append((os.path.join(d, base), os.path.join(d, n)))
+        for n in sorted(names):
+            if n.endswith("_cn.md"):
+                base = n[:-len("_cn.md")] + ".md"
+                if os.path.exists(os.path.join(dirpath, base)):
+                    pairs.append((os.path.join(dirpath, base), os.path.join(dirpath, n)))
     return sorted(pairs)
 
 
@@ -293,10 +332,10 @@ if __name__ == "__main__":
     all_ok = True
     pairs = discover_pairs(ROOT)
     if not pairs:
-        print("no X.md / X.zh-CN.md pairs found under %s" % ROOT)
+        print("no X.md / X_cn.md pairs found under %s" % ROOT)
         sys.exit(1)
     for src, dst in pairs:
-        all_ok &= check_pair(src, dst, os.path.relpath(dst, ROOT))
+        all_ok &= check_pair(src, dst, os.path.relpath(dst, ROOT), ROOT)
         print()
     print("OVERALL:", "OK" if all_ok else "see above")
     sys.exit(0 if all_ok else 1)

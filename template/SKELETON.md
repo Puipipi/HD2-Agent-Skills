@@ -1,6 +1,8 @@
 # template/ — a minimal, contract-correct HD2 mod skeleton
 
-> 中文版：[README.zh-CN.md](README.zh-CN.md)
+English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/template/SKELETON_cn.md)
+
+> 中文版：[SKELETON_cn.md](SKELETON_cn.md)
 
 `panel_skeleton.lua` is a starting point that is deliberately boring. It draws nothing
 meaningful; it exists to get the three expensive rules right from line one, before any

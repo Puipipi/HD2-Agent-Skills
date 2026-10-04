@@ -1,5 +1,7 @@
 # template/ —— 一个最小、契约正确的 HD2 模组骨架
 
+[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/template/SKELETON.md) / 简体中文
+
 `panel_skeleton.lua` 是一个刻意无聊的起点。它不画任何有意义的东西；它的存在是为了让那三条
 最贵的规则从第一行就是对的，免得后面的功能代码把违规藏起来。
 
@@ -8,7 +10,7 @@
 | `panel_skeleton.lua` | 骨架本体。当成 addon 丢进加载器即可。 |
 | `../tests/test_panel_skeleton.py` | 离线测试台：在真 LuaJIT 上、用假引擎跑骨架。 |
 
-> 英文原文：[README.md](README.md)
+> 英文原文：[SKELETON.md](SKELETON.md)
 
 ## 它强制的三条规则
 
@@ -46,8 +48,8 @@ python -B tests/test_panel_skeleton.py
    加载器的回调——**两条路都要让预算包装留在链路里**。
 3. 把你的每帧工作放进 `MOD.work`（或替换 `frame` 里标出的那段）。
 4. 任何涉及绘制或输入的东西，先读
-   [`../skills/hd2-in-game-panel/SKILL.zh-CN.md`](../skills/hd2-in-game-panel/SKILL.zh-CN.md) 和
-   [`../skills/hd2-native-panel-input-lock/SKILL.zh-CN.md`](../skills/hd2-native-panel-input-lock/SKILL.zh-CN.md)
+   [`../skills/hd2-in-game-panel/SKILL_cn.md`](../skills/hd2-in-game-panel/SKILL_cn.md) 和
+   [`../skills/hd2-native-panel-input-lock/SKILL_cn.md`](../skills/hd2-native-panel-input-lock/SKILL_cn.md)
    再加调用。
 5. 对结果重跑 `ffi_audit.py`——每个新增的 `ffi.cdef` 符号都要在列表里有声明，而一条错误的
    声明能静默顶掉另一个模组的声明。
