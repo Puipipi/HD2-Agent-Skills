@@ -40,6 +40,8 @@
 | [`hd2-bilingual-doc-verify`](skills/hd2-bilingual-doc-verify/SKILL.md) | `scripts/verify_translations.py` | 让 `X.md` / `X_cn.md` 成对保持诚实：代码块、标题结构、链接、frontmatter。 |
 | [`hd2-live-memory-probe`](skills/hd2-live-memory-probe/SKILL.md) | —（模式 + 骨架） | 写一个只读探针跑在运行中的游戏上，验证地址链，不必再打一局。 |
 | [`hd2-mod-log-analysis`](skills/hd2-mod-log-analysis/SKILL.md) | —（模式 + 骨架） | 把"模组没反应"变成具名阶段，并写出说清这件事的分析器。 |
+| [`hd2-lua-forward-declarations`](skills/hd2-lua-forward-declarations/SKILL.md) | [中文](skills/hd2-lua-forward-declarations/SKILL_cn.md) | Lua 里函数调用定义在它后面的函数:调用解析成 `nil`、框架把错误吞掉、设置静默无效。教你怎么从**调用图**去定位,而不是靠猜。 |
+| [`hd2-mod-options-menu`](skills/hd2-mod-options-menu/SKILL.md) | [中文](skills/hd2-mod-options-menu/SKILL_cn.md) | 做游戏内设置页:ModOptionsMenu 的真实契约、为什么 `slider` 会被拒、2–16 项上限、取序号而非文本的 `choice`、单一主人规则,以及让整棵选项树消失的管理器侧故障。 |
 | [`hd2-crash-reporting-and-settings`](skills/hd2-crash-reporting-and-settings/SKILL.md) | [中文](skills/hd2-crash-reporting-and-settings/SKILL_cn.md) | 在 `data/settings.ini` 里开关崩溃上报、转储写入与崩溃截图,管理 `%APPDATA%` 下的崩溃文件夹,并说明为什么 `floating_point_exceptions` 不只是又一个上报开关。 |
 | [`hd2-mod-release-operations`](skills/hd2-mod-release-operations/SKILL.md) | [中文](skills/hd2-mod-release-operations/SKILL_cn.md) | 打包与发布：工程布局、包命名、字节级归档格式、七步发布清单、GitHub 操作、token 处理与网络坑。 |
 | [`hd2-injection-runtime-patching`](skills/hd2-injection-runtime-patching/SKILL.md) | [中文](skills/hd2-injection-runtime-patching/SKILL_cn.md) | 运行时那一半：安全的写入原语、FFI 与本 VM 的 LuaJIT 语义陷阱、何时写与写多频繁，以及运行时读取数据表。 |

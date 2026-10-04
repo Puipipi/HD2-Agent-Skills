@@ -241,6 +241,20 @@ that ever sees the file:
 
 ---
 
+- **A config fix missed one of two parsers.** The same settings file was read by a sectioned
+  parser and by a flat one. A fix applied to one was overwritten by the other, so the change
+  looked ineffective. When you touch config parsing, enumerate every parser before declaring it
+  fixed — the mod had two, and both had to change (`stratagem-cooldown` 2.9.5 → 2.9.6).
+- **Chinese values silently produced invalid keys.** Values like `仅载具` / `仅支援武器` / `全部`
+  parsed to nothing, so the config line was written and ignored — and a malformed value like
+  `仅vehicles` was generated. Fix: an alias table, matched **longest-first**, covering every new
+  word. Evidence: `stratagem-cooldown` `docs/pitfalls-and-fixes.md` §3.
+- **An unknown category was excluded by default.** `in_scope()` rejected anything it did not
+  recognise, `nil` included, so any stratagem added by a future game update would simply not be
+  modified. Default unknown families to following the existing colour/toggle switches instead of
+  to exclusion (`stratagem-cooldown` 3.8.0). Default-open fails loudly; default-closed fails by
+  doing nothing.
+
 ## 7. Logging that makes a bug findable
 
 The mods that got fixed had this; the ones that did not, did not.
@@ -281,6 +295,18 @@ Verified dead ends. Do not spend time here.
 
 ---
 
+- **`tasklist`'s `/FI` filter is case-sensitive, and the wrong case reads as "not running".**
+  Checking for `Helldivers2.exe` against a process actually named `helldivers2.exe` reported the game
+  as not started — four times, each costing a round trip. Detect the lowercase name, and treat a
+  process check that gates a whole run as something to log rather than to trust.
+- **Launch through Steam (`-applaunch`), not the exe.** Running `helldivers2.exe` directly leaves a
+  ~92 MB Steam DRM stub spinning, which presents as a black screen or a hang and gets blamed on the
+  game or on a mod. The symptom disappears when the game is started the way Steam starts it.
+- **A stale package in the mod manager's library will overwrite a newer layer.** With an old package
+  in the library and a hand-placed newer layer on disk, pressing Deploy applies the old one. Either
+  re-import the new package before deploying, or use only the layer already in place — and prefer
+  having exactly one package in flight.
+
 ## 9. Test the parts you can, offline
 
 You cannot unit-test the engine. You can test **your** code against an engine boundary:
@@ -300,6 +326,16 @@ You cannot unit-test the engine. You can test **your** code against an engine bo
 Write these when the feature is small. Retrofitting them after a crash is much slower.
 
 ---
+
+- **Your own test can be the thing that lies.** A deployment check filtered for `.patch_0` while
+  the deployed file was named `.patch_323`, and reported "0 layers in the game directory" — which
+  sent the investigation after a deployment that was in fact correct. Match by content and compare
+  **sha256 byte-for-byte** instead of trusting a filename pattern.
+- **A test that asserts removed behaviour fails while the product is right.** A unit test still
+  pinned "snap the percentage to 100/80/50" long after that behaviour had been deliberately
+  removed, so a green-to-red change pointed at the test, not the code. When you remove a feature,
+  grep the tests for it in the same commit. The replacement assertion described the new contract:
+  "a free value is used as-is, out-of-range is clamped".
 
 ## Evidence and what is *not* verified
 

@@ -215,7 +215,7 @@ Scanner 的设计笔记记录：区域内偏移在会话之间是稳定的，这
 
 ## UI 集成
 
-`_G.ModOptionsMenu`（`mom.register_option`）只支持 `toggle`、`choice`（**2–16** 个固定选项）和 `slider`。它**不**支持自由文本输入、任意按钮 / Action 行、动态只读状态行，也不支持在注册之后修改 `choice` 列表。由此得出的做法：左和右需要各自独立的 `choice` 池（左槽只列左侧条目，右槽只列右侧条目）；由玩家触发的动作（开始扫描 / 初始化）由一个 `toggle` 承载 —— Apply 触发回调，做完事之后要么立刻 `menu.set(id,false)` 弹回，要么在操作结束时弹回；任何在选择变化后必须重算的东西都用 `menu.set` 同步回去；Scanner 本身在 MODS 页用了 3 行（状态 / AOB / 诊断），可以直接照抄。
+`_G.ModOptionsMenu`（`mom.register_option`,`api == 1`）只接受 `toggle` 与 `choice`（**2–16** 项）—— **不接受 `slider`**。`slider` 会在注册时被拒,这正是「7 项只显示 2 项」的原因。完整契约与陷阱见 `hd2-mod-options-menu`。它**不**支持自由文本输入、任意按钮 / Action 行、动态只读状态行，也不支持在注册之后修改 `choice` 列表。由此得出的做法：左和右需要各自独立的 `choice` 池（左槽只列左侧条目，右槽只列右侧条目）；由玩家触发的动作（开始扫描 / 初始化）由一个 `toggle` 承载 —— Apply 触发回调，做完事之后要么立刻 `menu.set(id,false)` 弹回，要么在操作结束时弹回；任何在选择变化后必须重算的东西都用 `menu.set` 同步回去；Scanner 本身在 MODS 页用了 3 行（状态 / AOB / 诊断），可以直接照抄。
 
 整个 `_G.HD2Menu` / `HD2MenuQueue` 页面系统已退役（**2026-10-04**）：渲染宿主 `ui.lua` 自 **2026-10-03** 起就不在发布包里了，所以页面从来无法显示；而在 2026-10-04，`registry.lua` 也随之一并被删除。新的 mod 不得写 `menu.register{...}`，也不得往 `HD2MenuQueue` 里排队 —— `rawget(_G,'HD2Menu')` 现在是 `nil`。搭在已退役宿主上的页面从未渲染过，白白浪费了整块 mod 功能。
 
