@@ -1,3 +1,5 @@
-﻿node_modules/
+node_modules/
 *.log
 __pycache__/
+# scratch output written by the test harnesses (recreated on every run)
+tests/_scratch/
