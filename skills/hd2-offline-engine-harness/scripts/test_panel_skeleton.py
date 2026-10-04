@@ -14,17 +14,21 @@ which is where the expensive mistakes live:
   6. a frame that throws 5 times must STOP the feature and leave a reason, not
      keep throwing forever
 
-Run:  python -B tests/test_panel_skeleton.py
+Run:  python -B scripts/test_panel_skeleton.py [--skeleton <path>]
+
+Prerequisites
+    Python 3.8+ and lupa (real LuaJIT 2.1 with ffi). No game, no loader tools.
+    It writes its scratch log directory under this script's folder.
 """
+import argparse
 import importlib.util
 import os
 import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)
-SKELETON = os.path.join(ROOT, "template", "panel_skeleton.lua")
-sys.path.insert(0, ROOT)
+SKILL = os.path.dirname(HERE)
+sys.path.insert(0, HERE)
 
 from lupa import luajit21 as lj  # noqa: E402  (LuaJIT 2.1 — the real target)
 
@@ -52,10 +56,17 @@ def fresh(source, prelude=""):
 
 # ---------------------------------------------------------------- 1. ffi audit
 def test_ffi_audit():
-    spec = importlib.util.spec_from_file_location(
-        "ffi_audit",
-        os.path.join(ROOT, "..", "..", "..", "mods", "custom-armor-kit", "work", "standalone", "ffi_audit.py"),
-    )
+    """Prefer this repository's own auditor; fall back to a workspace copy."""
+    candidates = [
+        os.path.join(SKILL, "..", "hd2-ffi-audit", "scripts", "ffi_audit.py"),
+        os.path.join(HERE, "..", "..", "..", "mods", "custom-armor-kit", "work",
+                     "standalone", "ffi_audit.py"),
+    ]
+    found = next((os.path.abspath(c) for c in candidates if os.path.exists(c)), None)
+    if found is None:
+        check("static FFI audit available", False, "ffi_audit.py not found")
+        return
+    spec = importlib.util.spec_from_file_location("ffi_audit", found)
     if spec is None or not os.path.exists(spec.origin):
         check("static FFI audit runs", False, "ffi_audit.py not found")
         return
@@ -241,4 +252,24 @@ def main():
 
 
 if __name__ == "__main__":
+    ap = argparse.ArgumentParser(description="Offline engine-boundary harness.")
+    ap.add_argument("--skeleton", default=None,
+                    help="path to panel_skeleton.lua (default: search the repo)")
+    opts = ap.parse_args()
+
+    # Search plausible layouts rather than hard-coding one: this runs from the
+    # repo root, from tests/, and from a copied skill folder.
+    for cand in (opts.skeleton,
+                 os.path.join(HERE, "panel_skeleton.lua"),
+                 os.path.join(SKILL, "template", "panel_skeleton.lua"),
+                 os.path.join(SKILL, "..", "..", "template", "panel_skeleton.lua"),
+                 os.path.join(os.getcwd(), "template", "panel_skeleton.lua")):
+        if cand and os.path.exists(cand):
+            SKELETON = os.path.abspath(cand)
+            break
+    else:
+        print("panel_skeleton.lua not found; pass --skeleton <path>")
+        sys.exit(1)
+    print("skeleton: %s" % SKELETON)
+    print()
     sys.exit(main())

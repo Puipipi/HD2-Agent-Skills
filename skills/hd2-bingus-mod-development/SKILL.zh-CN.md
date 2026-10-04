@@ -29,7 +29,7 @@ mymod/
 ├─ THIRD_PARTY_NOTICES.md    依赖了什么、哪些不能再分发
 ├─ work/standalone/          构建放这里（沿用上游约定）
 │  ├─ mymod.lua              模组源码：纯文本 UTF-8 Lua，无 BOM
-│  ├─ build_mod.py           门禁 + 打包（见 template/build_mod.py）
+│  ├─ build_mod.py           门禁 + 打包（来自 hd2-addon-build）
 │  ├─ vendor/bingus/         build_addon.py + archive.py —— 需另行获取
 │  ├─ test_*.py              离线测试，一个功能一个文件
 │  └─ fixtures/*.lua         测试要复放的参考 Lua 快照
@@ -70,7 +70,7 @@ shell）：
 
 ## 3. 门禁（构建必须拒绝什么）
 
-本 skill 的 `template/build_mod.py` 已实现全部四条；改 CONFIG 块，不要自己重写一遍。
+`hd2-addon-build` 已实现全部四条；改它的 CONFIG 块，不要自己重写一遍。
 
 | 门禁 | 检查 | 它防住的事故 |
 |---|---|---|
@@ -205,9 +205,10 @@ Start-Process 'steam://rungameid/553850'      # 约 15-25 秒到船上
 
 ## 工作流
 
-1. 复制 `template/build_mod.py`，填 CONFIG 块（源码路径、资源名、GUID、显示名、README 标记）。
+1. 复制 `skills/hd2-addon-build/scripts/build_mod.py`，填 CONFIG 块（源码路径、资源名、
+   GUID、显示名、README 标记）。
 2. 把 `build_addon.py` + `archive.py` 放进 `work/standalone/vendor/bingus/`。
-3. 源码从本 skill `template/` 目录的 `panel_skeleton.lua` 起步（分级建立、取值守卫、帧错误预算、
+3. 源码从 `skills/hd2-bingus-mod-development/template/panel_skeleton.lua` 起步（分级建立、取值守卫、帧错误预算、
    STATUS 文件、可测接缝）——它是不依赖特定打包格式的模组骨架。
 4. 写功能时对照对应的代码级 skill。
 5. 每次保存跑 `--validate-only`；每个功能配一份离线测试。
@@ -216,7 +217,7 @@ Start-Process 'steam://rungameid/553850'      # 约 15-25 秒到船上
 
 ## 参考
 
-- `template/build_mod.py` —— 含全部四条门禁、图标处理和 README 抽取的构建脚本。改 CONFIG 块即可
+- `hd2-addon-build` —— 含全部四条门禁、图标处理和 README 抽取的构建脚本。改 CONFIG 块即可
   直接运行。
 - `hd2-in-game-panel`、`hd2-native-panel-input-lock`、`hd2-game-language-autodetect` —— 功能侧：
   绘制、输入/光标、本地化。

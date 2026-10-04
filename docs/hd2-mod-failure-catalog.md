@@ -137,7 +137,7 @@ docs say" — you will go and re-derive an engine offset that was never wrong. S
 arity out (`local ok, a, b = pcall(fn, ...)`) and grow it deliberately; do not paper over
 it with `select('#', ...)`, which makes the caller's destructuring unsafe.
 
-Both are covered by the offline harness in `tests/test_panel_skeleton.py`, which is the
+Both are covered by the offline harness (`hd2-offline-engine-harness`), which is the
 point of having one: these bugs are invisible in code review and instant in a test.
 
 ---

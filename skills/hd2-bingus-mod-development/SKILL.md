@@ -76,8 +76,8 @@ FFI, never by spawning a shell from the update thread):
 
 ## 3. The gates (what a build must refuse)
 
-`template/build_mod.py` in this skill implements all of them; adapt the CONFIG block rather
-than writing your own.
+`hd2-addon-build` implements all of them; adapt its CONFIG block rather than writing your
+own.
 
 | Gate | Check | Failure it prevents |
 |---|---|---|
@@ -233,10 +233,10 @@ This is the part that keeps the project honest, and it is cheap:
 
 ## Workflow
 
-1. Copy `template/build_mod.py`, fill in the CONFIG block (source path, resource name, GUID,
-   display name, README marker).
+1. Copy `skills/hd2-addon-build/scripts/build_mod.py`, fill in the CONFIG block (source path,
+   resource name, GUID, display name, README marker).
 2. Get `build_addon.py` + `archive.py` into `work/standalone/vendor/bingus/`.
-3. Start the source from `template/panel_skeleton.lua` in the skill's `template/` folder
+3. Start the source from `skills/hd2-bingus-mod-development/template/panel_skeleton.lua`
    (staged bring-up, value-check guards, frame error budget, STATUS file, testable seam) —
    it is a package-independent mod skeleton, not a Bingus-specific one.
 4. Build features against the code-level skills for the part you are writing.
@@ -246,7 +246,7 @@ This is the part that keeps the project honest, and it is cheap:
 
 ## Reference
 
-- `template/build_mod.py` — the build script with all four gates, icon handling and README
+- `hd2-addon-build` — the build script with all four gates, icon handling and README
   extraction. Adapt the CONFIG block; it runs as-is.
 - `hd2-in-game-panel`, `hd2-native-panel-input-lock`, `hd2-game-language-autodetect` —
   features: drawing, input/cursor, localisation.

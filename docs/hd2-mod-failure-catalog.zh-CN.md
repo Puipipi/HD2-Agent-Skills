@@ -128,7 +128,7 @@ local ok, w, h = call('Gui.resolution', sr.Gui.resolution)   -- h 永远是 nil
 （`local ok, a, b = pcall(fn, ...)`），要加就刻意加；不要用 `select('#', ...)` 糊过去，
 那会让调用方的解构变得不安全。
 
-两个坑都被 `tests/test_panel_skeleton.py` 里的离线测试台覆盖了——这就是要有测试台的原因：
+两个坑都被离线测试台（`hd2-offline-engine-harness`）覆盖了——这就是要有测试台的原因：
 这些 bug 在代码评审里看不见，在测试里一眼就现。
 
 ---
@@ -219,9 +219,9 @@ local ok, w, h = call('Gui.resolution', sr.Gui.resolution)   -- h 永远是 nil
 - `lupa`（CPython 里的 LuaJIT）+ 一个会统计 `create_screen_gui` / `destroy_gui` /
   `Gui.move` 调用的假 `stingray` 表，能抓出：保留式重建泄漏、拆除不完整、静止面板却在调
   `Gui.move`、拖拽越界、以及在**没有固定等待**的情况下分级建立能否跑完。
-- 用 LuaJIT 编译检查每个源文件，并且断言你期望的 FFI 表面——护甲模组的 `ffi_audit.py` 就是
-  用它把住构建的。你实际调用的符号少了一条 `ffi.cdef` 就是调用点的硬错误，而且这曾经是一个
-  发布出去的 bug：`missing declaration for symbol 'VirtualAllocEx'` 才是“点击卡片没反应”的真因。
+- 用 LuaJIT 编译检查每个源文件，并且断言你期望的 FFI 表面——`hd2-ffi-audit` 就是用它把住构建的。
+  你实际调用的符号少了一条 `ffi.cdef` 就是调用点的硬错误，而且这曾经是一个发布出去的 bug：
+  `missing declaration for symbol 'VirtualAllocEx'` 才是“点击卡片没反应”的真因。
 - 也要断言**数据不变量**，不只是代码：每个标签在你的点阵字体里都必须有字形；每个英文名都
   必须和原生 id 对得上；任何描述都不能超过面板宽度。
 

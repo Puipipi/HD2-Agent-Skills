@@ -54,7 +54,7 @@ Safe to delete: remove the mod folder and the two files under `Logs/`.
 
 It tests the two things this repository cannot simulate:
 
-1. The manager accepts a ZIP produced by `template/build_mod.py` — the manifest
+1. The manager accepts a ZIP produced by `hd2-addon-build` — the manifest
    fields, the `Addon/` layout and the GUID.
 2. A source that passes all four build gates actually initialises inside real
    LuaJIT with the game's engine present.

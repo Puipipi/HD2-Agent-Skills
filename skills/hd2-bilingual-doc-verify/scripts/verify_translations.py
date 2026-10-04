@@ -14,17 +14,29 @@ things a translation must NOT change, so review attention can go to the prose:
      `.zh-CN` peer (reported, not failed)
   6. frontmatter keys are intact, `name:` is unchanged, `description:` translated
 
-Run:  python -B tests/verify_translations.py
+Run:  python -B scripts/verify_translations.py [--root <repo>]
+
+Prerequisites
+    Python 3.8+
+    lupa, for check 1 (recompiling the translated Lua). Without it, the other five
+    checks still run and the script says which one it skipped instead of raising.
+    Nothing else: no game, no loader tools, no network. It writes nothing.
 """
+import argparse
 import hashlib
 import io
 import os
 import re
 import sys
 
-import lupa.luajit21 as lj
+try:
+    import lupa.luajit21 as lj
+except ImportError:                                    # a missing prerequisite
+    lj = None                                          # degrades, never traces back
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# script lives at <repo>/skills/<skill>/scripts/, so the repo root is 4 up
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__)))))
 
 BLOCK_COMMENT = re.compile(r"--\[\[.*?\]\]", re.S)
 DOC_FENCES = ("text", "txt", "markdown", "md", "")
@@ -120,6 +132,8 @@ def frontmatter(text):
 
 
 def compiles_on_luajit(body):
+    if lj is None:                       # lupa absent: skip, never fail the run
+        return None
     rt = lj.LuaRuntime()
     try:
         return rt.eval("function(s) return loadstring(s, 'block') end")(body) is not None
@@ -200,15 +214,15 @@ def check_pair(src_path, dst_path, label):
     return ok
 
 
-def discover_pairs():
+def discover_pairs(root):
     """Every X.md that has an X.zh-CN.md sibling."""
     pairs = []
-    for dirpath, _, names in os.walk(os.path.join(ROOT, "skills")):
+    for dirpath, _, names in os.walk(os.path.join(root, "skills")):
         for n in names:
             if n == "SKILL.zh-CN.md":
                 pairs.append((os.path.join(dirpath, "SKILL.md"), os.path.join(dirpath, n)))
     for sub in ("docs", "template"):
-        d = os.path.join(ROOT, sub)
+        d = os.path.join(root, sub)
         if not os.path.isdir(d):
             continue
         for n in sorted(os.listdir(d)):
@@ -219,8 +233,28 @@ def discover_pairs():
 
 
 if __name__ == "__main__":
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--root", default=ROOT,
+                    help="repo root to scan (default: four levels above this script)")
+    ap.add_argument("--no-luajit", action="store_true",
+                    help="skip the LuaJIT recompile check (it needs lupa)")
+    args = ap.parse_args()
+    ROOT = os.path.abspath(args.root)
+    if args.no_luajit:
+        lj = None
+
+    if lj is None:
+        print("note: LuaJIT recompile check skipped (lupa not installed, or --no-luajit)")
+        print("      the other five checks do not need it")
+        print()
+
     all_ok = True
-    for src, dst in discover_pairs():
+    pairs = discover_pairs(ROOT)
+    if not pairs:
+        print("no X.md / X.zh-CN.md pairs found under %s" % ROOT)
+        sys.exit(1)
+    for src, dst in pairs:
         all_ok &= check_pair(src, dst, os.path.relpath(dst, ROOT))
         print()
     print("OVERALL:", "OK" if all_ok else "see above")
