@@ -239,9 +239,14 @@ local function filter_install(window)
 end
 ```
 
-- **Track buttons already held at install time** so the release message is never
+- Track buttons already held at install time so the release message is never
   swallowed (`held` bitmask in the data slot). Releasing a button the game never saw
   pressed is a stuck-input bug.
+- **Data-slot contract** (what the machine code and the Lua side agree on): an integer
+  array at the block's start, `u[0]` = enabled flag, `u[1..3]` = wheel-notches / keys
+  dropped / clicks dropped counters, `u[8]` (byte offset 32) = held-button bitmask seeded
+  at install. The code entry point is `block + 64`, so the header carries the original
+  window procedure and `CallWindowProcW` and the body is appended after it.
 - **Never remove the filter.** Another mod may have chained its own procedure after
   yours; instead flip the enable flag in the shared data slot (`filter_set(on)`).
 - The filter also **counts wheel notches** — the panel needs them and they would
@@ -338,13 +343,63 @@ LB/RB switch tabs, right stick scrolls. Two details:
 - **The mouse takes over again** the moment it moves more than ~2 px: drop the focus box
   and bump a `ui.version` counter so the panel redraws.
 
+## 6. Provenance and licensing — read before copying code
+
+This skill describes a technique; the code in it was written for this document. That
+distinction is deliberate, because the reference implementation's lineage is **not**
+uniform and one branch of it is copyleft:
+
+| Piece | Where it comes from | Status |
+|---|---|---|
+| Cursor take / keep / release (`ShowCursor` / `ClipCursor` / `sr.Window.set_*_cursor`) | **adapted from SHODAN Stat Editor** — its own header says so | **GPL-3.0** |
+| Window-message filter machine code + the parameter block that builds it | **the same SHODAN code**, byte-identical in both mods (verified) | **GPL-3.0** |
+| `mouse_left` via `GetAsyncKeyState` + `SM_SWAPBUTTON` | Armory Forge's own — not present in SHODAN | Armory Forge |
+| Raw-input deregistration / give-back, `mouse()` / hit-testing / click arming, controller support | Armory Forge's own — not present in SHODAN | Armory Forge |
+| `bd` / `sd` / `bl` / `filters[].u` data-slot contract | Armory Forge's own | Armory Forge |
+
+**The trap:** Armory Forge's `CREDITS.txt` (and its README) describe SHODAN Stat Editor
+v1.4.1 as *"public domain / Unlicense"*. The repository itself is **GPL-3.0** — the
+`LICENSE` file and GitHub's license metadata both say so. Verified 2026-10-04:
+
+```
+GET https://api.github.com/repos/SHODAN-HORAI/SHODAN-Stat-Editor
+  license: { "key": "gpl-3.0", "spdx_id": "GPL-3.0" }
+GET https://raw.githubusercontent.com/SHODAN-HORAI/SHODAN-Stat-Editor/main/LICENSE
+  → "GNU GENERAL PUBLIC LICENSE / Version 3, 29 June 2007"
+```
+
+The mod comment is wrong, so **do not treat "the mod says public domain" as a licence
+grant**. A publicly downloadable mod is not the same as permissively licensed code, and a
+GPL-3.0 file copied into a repository that carries a different licence (this one is MIT)
+is not something the mod author can authorise — only the copyright holder can.
+
+Practical consequences:
+
+- **You want to use it in your own mod?** Fine, and simplest: keep the attribution to
+  SHODAN, and licence your mod GPL-3.0 (or GPL-compatible). The Armory Forge author's
+  extra permission is not needed on top of that.
+- **Copying GPL-3.0 bytes into a permissively-licensed repo?** Not recommended. The
+  filter bytes above are exactly that case. Everything else here is the technique plus
+  this document's own code, which is why the byte table is deliberately absent.
+- **Independent reimplementation is genuinely easy here.** The Windows ABI facts are not
+  copyrightable: the `RID_DEVICE_INFO`-sized `{page, usage, flags, target}` layout, the
+  `RIM_TYPEMOUSE = 0` / `RIM_TYPEKEYBOARD = 1` usage values on page `0x01`, `flags = 0x1`
+  removing a registration, the `GWLP_WNDPROC = -4` index, `CallWindowProcW` chaining, and
+  the `WHEEL_DELTA = 120` accumulator. Implement the same slot contract from those facts
+  and the safety invariants in §3 and you get the behaviour without the lineage.
+
+If you specifically want the two byte tables (`FILTER_TABLE`, `FILTER_CODE`), get them
+from the GPL-3.0 source with that licence noted alongside — they are not reproduced here.
+
 ## Evidence / provenance
 
 - `outputs/validated-2026-10-04/hud-compatibility/sources/installed-Super-Earth-Armory-Forge-v6.2.1-0-0.lua`
   — `build_input()` (L2874-3075), `PP.hold_input`/`PP.give_input` (L5330-5400),
   `hotkey_pressed` (L5938-5947), `mouse()` (L5452-5521), cursor take/keep/release
   (L5675-5727), `panel_frame` (L5745+), `panel_tick` (L5949-6001).
-  Header comment at L5267-5279 states the raw-input vs window-message split.
+  Header comment at L5267-5279 states the raw-input vs window-message split; the panel
+  provenance note is at L2822-2831. `CREDITS.txt` in that repository is where the
+  (incorrect) "public domain" claim about SHODAN Stat Editor appears — see §6.
 - `mods/custom-armor-kit/work/standalone/multi_perk.lua` — the minimal version:
   `sample_input` (L1791-1810), `panel_drag` (L1761-1787). Note its own finding:
   *"the engine's Mouse.button reports unreliably in menu states, which made clicks feel

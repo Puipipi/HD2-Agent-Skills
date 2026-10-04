@@ -42,7 +42,9 @@ skill directory. Each skill is a self-contained `SKILL.md` with frontmatter
 - Input injection always verifies the **target window is foreground** before sending.
 - Every step has a **log evidence line or screenshot** to confirm it actually happened.
 - Skills describe **techniques**, not other authors' code: reference implementations are
-  cited by file and line, and no third-party mod source is copied into this repository.
+  cited by file and line. Where a referenced implementation's code is copyleft, the skill
+  says so and gives an independently written equivalent rather than the original — see
+  the provenance section of `hd2-native-panel-input-lock` for a worked example.
 
 ## License
 
