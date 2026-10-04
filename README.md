@@ -8,6 +8,10 @@ These skills exist because the game gives no automation API: an agent has to wor
 through window focus, synthetic input, in-game menus, and mod logs. Every coordinate,
 key sequence and failure mode here was verified in real runs.
 
+**Writing a mod rather than driving the game?** Start with the
+[failure catalog](docs/hd2-mod-failure-catalog.md) — it is organised symptom-first, and its
+first section is the rule that costs the most time (`pcall` does not catch native crashes).
+
 ## Skills
 
 | Skill | Purpose |
@@ -24,6 +28,7 @@ linked and discussed upstream.
 
 | Report | Summary |
 |---|---|
+| [`docs/hd2-mod-failure-catalog.md`](docs/hd2-mod-failure-catalog.md) | Symptom → root cause → fix for the ways an HD2 Lua mod dies: native crashes `pcall` cannot catch, engine library timing, retained-GUI invisibility, LuaJIT's silent limits, memory-read safety, config handling, logging, and verified dead ends. |
 | [`docs/c4-quick-actions-performance-feedback-2026-10-04.md`](docs/c4-quick-actions-performance-feedback-2026-10-04.md) | Steady-state read-count and FPS evidence for HD2 C4 Quick Actions 1.11 (Chinese first, then English); submitted upstream as [issue #1](https://github.com/etxp/HD2-C4-Quick-Actions/issues/1). |
 
 ## Usage

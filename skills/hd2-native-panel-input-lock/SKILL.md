@@ -7,7 +7,12 @@ description: Open an in-game panel on a hotkey (F7) inside Helldivers 2, unlock 
 
 Taken from **Super Earth Armory Forge v6.2.1** (F7 panel) — the section its comments
 credit to **SHODAN Stat Editor v1.4.1** — cross-checked against the Custom Armor Kit's
-simpler pointer handling.
+simpler pointer handling. **Read §6 (provenance and licensing) before you copy anything**;
+the lineage is not uniform and one branch of it is copyleft.
+
+> Companion reading: [`docs/hd2-mod-failure-catalog.md`](../../docs/hd2-mod-failure-catalog.md)
+> — §1 and §8 are why the input path is written defensively (a half-applied input grab is
+> worse than none).
 
 The problem in one line: the game's camera and UI *do* react to hardware keys and the
 mouse, so a panel drawn on top is not enough — you must **take the mouse and keyboard

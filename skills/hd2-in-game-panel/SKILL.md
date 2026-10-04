@@ -14,6 +14,10 @@ font/material libraries faults at **native** level — `pcall` does not catch it
 the log stopped at `building the panel`, the process threw `ntdll 0xc0000026` every few
 seconds, and the frame callback stayed dead. Rects carry no such dependency.
 
+> Companion reading: [`docs/hd2-mod-failure-catalog.md`](../../docs/hd2-mod-failure-catalog.md)
+> — §1 (native crashes `pcall` cannot catch), §2 (engine build timing) and §3 (the three
+> reasons a retained panel goes invisible) are the failure modes this skill is shaped around.
+
 ---
 
 ## 1. Hard preconditions (all four, or defer the whole frame)

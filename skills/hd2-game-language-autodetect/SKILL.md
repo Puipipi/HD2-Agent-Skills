@@ -17,6 +17,10 @@ Method A needs a build proof before it is allowed to read a single byte. Method 
 nothing but a live GUI handle. Use A for accuracy, B as the portable fallback, and the
 config override (`lang=zh` / `lang=en`) as the manual escape hatch.
 
+> Companion reading: [`docs/hd2-mod-failure-catalog.md`](../../docs/hd2-mod-failure-catalog.md)
+> — §5 (memory-read safety: build proof, torn reads, id validation) and §6 (config parsing)
+> are the rules this skill applies to a single value.
+
 ---
 
 ## 1. Method A — read the selected language (exact-offset, build-gated)
