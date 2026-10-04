@@ -165,6 +165,23 @@ point of having one: these bugs are invisible in code review and instant in a te
   ```
 - **Torn reads are real.** Read a value, derive from it, then re-read the source and compare
   before trusting the result (the armor kit's language read does exactly this).
+- **`VirtualQuery` inspects YOUR process, not the target.** The non-`Ex` forms
+  (`VirtualQuery`, `VirtualProtect`) act on the calling process; for a cross-process tool you
+  must use `VirtualQueryEx(handle, addr, …)` / `VirtualProtectEx(handle, …)`. Getting this
+  wrong is silent and self-consistent: the tool truthfully reports the page unreadable — for
+  the wrong address space — so a probe reports `total writes=0` and the run looks like a
+  negative result. This cost a live validation round in
+  `mods/mobility-optimization` (`tools/ability1_live.py` §docstring).
+- **A write needs a handle with write rights — a read-only handle fails as "zero writes".**
+  A handle opened with `PROCESS_QUERY_INFORMATION | PROCESS_VM_READ` cannot
+  `VirtualProtectEx`; it needs `PROCESS_VM_OPERATION`, and `WriteProcessMemory` needs that
+  **plus** `PROCESS_VM_WRITE` (`0x0400 | 0x0010 | 0x0008 | 0x0020`). Reusing a reader's handle
+  for a write path is a category error, and it does not report "permission denied" — it
+  reports that nothing was written.
+- **A "write happened once" observation may be code-path specific.** One state byte appeared
+  to be written only on a key press — until the character was actually *moving*, and the game
+  recomputed it **every frame**, overwriting any single clear within ~50 ms. Verify a write is
+  still there N frames later, under the conditions you intend to ship.
 - **Validate id64s.** Engine id64s are large. The armor kit refuses a captured value below
   `2^48` as "looks like a pointer or garbage", and for the material slot it follows the
   pointer (the real id64 lives 24 bytes in) because feeding `G.material` a wrong id makes it

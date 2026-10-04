@@ -152,6 +152,20 @@ local ok, w, h = call('Gui.resolution', sr.Gui.resolution)   -- h 永远是 nil
   ```
 - **撕裂读是真的。** 读一个值、据它推导，然后在相信结果之前**回头复读源头并比对**
   （护甲模组的语言读取就是这么做的）。
+- **`VirtualQuery` 查的是你自己的进程，不是目标进程。** 不带 `Ex` 的形式
+  （`VirtualQuery`、`VirtualProtect`）作用于**调用者**的地址空间；跨进程工具必须用
+  `VirtualQueryEx(handle, addr, …)` / `VirtualProtectEx(handle, …)`。写错这一点是**静默且自洽**的：
+  工具会如实报告"这个页不可读"——只不过是对错误的地址空间——于是探针报 `total writes=0`，
+  整轮看起来像个否定的结果。这在实际验证中白烧掉了一轮（`mods/mobility-optimization` 的
+  `tools/ability1_live.py` 文档字符串里有记录）。
+- **写入需要带写权限的句柄；只读句柄的失败表现是"零次写入"。** 用
+  `PROCESS_QUERY_INFORMATION | PROCESS_VM_READ` 打开的句柄调不了 `VirtualProtectEx`，
+  它需要 `PROCESS_VM_OPERATION`；而 `WriteProcessMemory` 还需要**再加上** `PROCESS_VM_WRITE`
+  （`0x0400 | 0x0010 | 0x0008 | 0x0020`）。拿读取器的句柄去走写路径是范畴错误，它不会报
+  "权限不足"——它报的是"什么都没写进去"。
+- **"这个写入只发生一次"可能是代码路径专属的观察。** 某个状态字节看起来只在按键时写一次——
+  直到角色真正**在移动**时，游戏**每帧重算**它，任何一次清零都在约 50 毫秒内被覆盖。
+  要验证"N 帧之后我的写入还在不在"，并且在你打算发布的那种条件下验证。
 - **校验 id64。** 引擎 id64 很大。护甲模组把任何低于 `2^48` 的捕获值当作
   “像指针或垃圾”直接拒绝；对材质槽它还会顺着指针走（真正的 id64 在 24 字节处），因为给
   `G.material` 喂一个错的 id 会让它返回垃圾 ink，之后在原生层 fault。

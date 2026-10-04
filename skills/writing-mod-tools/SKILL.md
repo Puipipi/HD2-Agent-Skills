@@ -136,9 +136,97 @@ test for whether a tool is worth writing:
 | a probe's address chain was unreadable live | `check_live_probe.py` | cross-checks two independent sources (module list *and* the probe's own header parse) and prints both when they disagree |
 | the addon's own timing was unusable | `measure_overhead.py` | explains *why*: `os.clock()` resolution is ~15.6 ms, so sub-millisecond work rounds to 0.000; measures from outside instead |
 | a hard-coded slot deleted the mod loader | `safe_deploy.py` | content-based targeting, dry-run, refusal, post-write verification, self-test |
+| **7 live rounds, 2 of them informative** | `ability1_live.py` / `ability1_mask.py` | see §6b: the criterion and the instrument, not the hypothesis, consumed the rest |
 
 So: **write the tool for the failure you just paid for**, and record that failure in the
 docstring. The next person then knows why the tool exists and when to reach for it.
+
+## 6b. Validate the criterion and the instrument FIRST
+
+**This is the most expensive lesson in this workspace.** A tool can be correct, run
+successfully, and prove nothing — because the *criterion* it used to decide "my change was
+applied" was wrong, or because the sampling gate never opened.
+
+From one afternoon of live work on a single feature (`LIVE-EVIDENCE-2026-10-04.md`): **seven
+live rounds, and only two of them actually tested the hypothesis.** The rest went to a bad
+criterion, a mis-learned value, or a broken instrument. That is a 5/7 waste rate on a
+carefully built harness, and every one of them was avoidable.
+
+### The record: what actually cost the rounds
+
+| Round | Reported result | Real cause |
+|---|---|---|
+| 1 | three triggers, user did not move | **criterion wrong** — the fallback "learning" bound the *sprint* records as the *prone* records, so the trigger source was `Shift`, not `Z` |
+| 2 | zero triggers | **criterion wrong** — it required state bits 75 **and** 79 to be set together; live they flicker independently |
+| 3 | 6 clean triggers, `total writes=0` | **instrument wrong, twice** — see below; both defects produce a silent `zero writes` |
+| 4 | triggers fired, 20 bytes written, user still did not move | hypothesis genuinely falsified — **the only informative failure of the four** |
+
+Round 3's two defects are worth memorising, because both look like a correct negative result:
+
+1. **Non-`Ex` address-space targeting.** `VirtualQuery` / `VirtualProtect` act on the
+   *calling* process. From outside the game they report a foreign heap address as `MEM_FREE`
+   (the 13:09 attempt logged `page not committed`), so the write never happens. Cross-process
+   needs `VirtualQueryEx(handle, …)` / `VirtualProtectEx(handle, …)`.
+2. **A handle without write rights.** The existing *reader* handle was opened with
+   `PROCESS_QUERY_INFORMATION | PROCESS_VM_READ`. `VirtualProtectEx` then fails with no
+   explanation (the 13:10 attempt: `VirtualProtectEx failed`), because it needs
+   `PROCESS_VM_OPERATION` — and `WriteProcessMemory` needs that **plus** `PROCESS_VM_WRITE`.
+   The correct set is `0x0400 | 0x0010 | 0x0008 | 0x0020`.
+
+A tool that reuses a read-only handle for a write path is a category error, and it fails as
+"nothing was written" rather than "permission denied" unless you look for it.
+
+### Rules that follow
+
+1. **A gate that never opens is not a negative result — it is an untested tool.** Distinguish
+   "the hypothesis failed" from "my trigger never fired" *in the log*, or you will report the
+   second as the first. Print the gate's own inputs on every check.
+2. **A learned / discovered value is not evidence until it is verified on its own.** Using
+   "what the tool learned" as the precondition for acting means a bad learn silently disables
+   the experiment. Validate the value with an independent signal first, and log the vote
+   count so a 1/1 and a 20/20 look different. **If learning has failed six rounds running
+   (it did), stop improving the learner and replace it with a deterministic read.** That is
+   what `find_key_state.py` is: diff snapshots holding nothing / holding the key / released,
+   and report the offsets that change *only* in the middle one — no learning, no heuristic,
+   no session-dependent assumption. "Make the measurement deterministic" beats "make the
+   inference smarter" almost every time.
+3. **Sampling indices are session-scoped.** Records that were `19, 95, 207` in one session
+   were different in the next, and a stale learned set looked plausible while being wrong.
+   Never hard-code an index, and re-validate at the start of every session.
+4. **Check your address-space assumption every time you cross a process boundary.** Querying,
+   protecting and reading have non-`Ex` and `Ex` forms, and the non-`Ex` form silently means
+   "mine": `VirtualQuery` / `VirtualProtect` act on the calling process, `VirtualQueryEx` /
+   `VirtualProtectEx` take a target handle. A cross-process tool that uses the non-`Ex` form
+   reports a truthful answer about the wrong process. **And a write path needs a handle with
+   write rights** — reusing a read-only handle makes `VirtualProtectEx` / `WriteProcessMemory`
+   fail, which surfaces as "zero writes", not as "permission denied". See the failure catalog §5.
+5. **A single write is not a durable write.** The feature cleared a state once; live, the game
+   recomputed it **every frame**, so the clear was overwritten within 50 ms. The earlier
+   evidence that "a write happens once" came from a different code path (standing still vs
+   actually running). **Test the mechanism under the conditions you will ship it in**, and
+   prefer "is my write still there N frames later?" over "did my write succeed?".
+6. **Prove the signal offline before you go live.** A validation run costs a deployment and a
+   restart; a checker costs seconds. If the criterion can be evaluated against a recorded log
+   or a captured buffer, do it there first, then use the live run to test the hypothesis
+   rather than the plumbing.
+7. **Anything two tools must agree on gets exactly one implementation.** In the input tools
+   shipped with `hd2-mission-entry`, two callers each decided "which window is the game" — and
+   one of them matched against the *class* field while reading the *title* field, so the check
+   could never fail. The fix was a single `game_window()` that both call. Duplicated criteria
+   drift silently; a shared entry point is testable once.
+
+### The two-line self-check before any live validation run
+
+```text
+1. Can I state, in the log, that the criterion fired — independently of the effect?
+2. If the answer is "nothing happened", can my tool tell me which of these it was:
+      criterion never matched | matched but no write | wrote but no effect?
+```
+
+If either answer is no, fix the tool before spending the run. A run that cannot distinguish
+those three outcomes is not an experiment; it is a coin flip with a log file.
+
+---
 
 ## 7. Comments carry the evidence
 
@@ -198,3 +286,17 @@ what make a tool trustworthy.
 `hd2-addon-build`, `hd2-addon-package-inspector`, `hd2-ffi-audit`,
 `hd2-bingus-toolchain-setup`, `hd2-bilingual-doc-verify`, `hd2-offline-engine-harness` — each
 is one tool, with its prerequisites written down, and is a worked example of the rules above.
+
+`hd2-mission-entry` ships three input tools (`hd2_window.py`, `hd2_verified_input.py`,
+`hd2_click.py`) that show §2 (never inject without proving foreground) and §6b rule 7 (one
+shared `game_window()` instead of two callers each deciding what the game window is).
+
+## Where the evidence for §6b comes from
+
+`mods/mobility-optimization/docs/LIVE-EVIDENCE-2026-10-04.md` in the parent workspace: a
+single feature, one afternoon, seven live rounds, four recorded as attributable to the
+criterion/tooling rather than the hypothesis — including the two round-3 write-path defects
+(non-`Ex` address space, and a read-only handle on a write path) and the retraction of an
+earlier "the state byte is written once" observation. The tool headers carry the same
+findings: `tools/ability1_live.py` (the write primitive's docstring) and
+`tools/find_key_state.py` (which replaced the failed learner with a deterministic diff).
