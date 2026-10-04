@@ -7,7 +7,7 @@ description: 在 Helldivers 2 中通过热键（F7）打开一个游戏内面板
 
 > **置信度:** 读来的。没有执行任何代码;来源一节说明了哪些部分是 copyleft。
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-native-panel-input-lock/SKILL.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-native-panel-input-lock/SKILL.md) / 简体中文
 
 取自 **Super Earth Armory Forge v6.2.1**（F7 面板）——其注释将此部分归功于
 **SHODAN Stat Editor v1.4.1**——并与 Custom Armor Kit 更简单的指针处理做了交叉核对。

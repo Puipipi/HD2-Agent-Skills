@@ -1,6 +1,6 @@
 # template/ — a minimal, contract-correct HD2 mod skeleton
 
-English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/template/SKELETON_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/template/SKELETON_cn.md)
 
 > 中文版：[SKELETON_cn.md](SKELETON_cn.md)
 

@@ -5,7 +5,7 @@ description: 让一套双语文档保持诚实 —— 通过在 LuaJIT 上重新
 
 # HD2 双语文档校验
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-bilingual-doc-verify/SKILL.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-bilingual-doc-verify/SKILL.md) / 简体中文
 
 > **置信度:** 已在本地验证；它的两种失败模式都是被刻意触发的。
 
@@ -53,8 +53,8 @@ python -B scripts/verify_translations.py --no-luajit         # 强制进入降�
    读者选择技能时看到的东西）。
 7. **语言切换行存在、只有一条，并指向对侧** —— 在双方的头块里，当前语言不加链接：
    ```
-   English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/README_cn.md)
-   [English](https://github.com/YC426/HD2-Agent-Skills/blob/main/README.md) / 简体中文
+   English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/README_cn.md)
+   [English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/README.md) / 简体中文
    ```
    绝对 URL 是有意为之 —— 抄自 DeepSeek 自己的仓库，因为切换行是读者在能导航到别处之前
    唯一需要的那个链接。它被检查而不是被信任：删掉一条、指向错误的文件、或者在头块里留下

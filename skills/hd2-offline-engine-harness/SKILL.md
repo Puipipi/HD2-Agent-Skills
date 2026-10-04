@@ -5,7 +5,7 @@ description: Test a Helldivers 2 Lua mod offline by faking the engine boundary w
 
 # hd2-offline-engine-harness
 
-English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-offline-engine-harness/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-offline-engine-harness/SKILL_cn.md)
 
 > **Confidence:** verified here against a fake engine on real LuaJIT; it found two real bugs. It proves your control flow, not the engine's behaviour.
 

@@ -1,6 +1,6 @@
 # Verification status
 
-English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/docs/verification-status_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/verification-status_cn.md)
 
 What has actually been run or measured **in this repository**, and what has not. Confidence is
 not uniform across these skills, so it is stated per skill instead of implied by the tone of the

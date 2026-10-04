@@ -5,7 +5,7 @@ description: 分析 Helldivers 2 某个 mod 的运行时日志，回答“它到
 
 # HD2 mod 日志分析
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-mod-log-analysis/SKILL.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-mod-log-analysis/SKILL.md) / 简体中文
 
 > **置信度:** 来自报告。它背后的事故是真实的；这里没有执行任何脚本。
 

@@ -7,7 +7,7 @@ description: 静态检查一个 Helldivers 2 Lua mod 调用的每个 C 符号是
 
 > **置信度:** 扫描器能跑,但其规则是读来的,不是从加载器重新推导的。已知盲区见下。见[验证状态](../../docs/verification-status.md)。
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-ffi-audit/SKILL.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-ffi-audit/SKILL.md) / 简体中文
 
 `scripts/ffi_audit.py` 把 Lua 源码当作文本来读取，并报告两类都曾在这个生态中发布出去的
 破坏：

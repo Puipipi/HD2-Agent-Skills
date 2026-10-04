@@ -5,7 +5,7 @@ description: 通过在真实 LuaJIT 上用 lupa 伪造引擎边界，离线测�
 
 # HD2 离线引擎测试台
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-offline-engine-harness/SKILL.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-offline-engine-harness/SKILL.md) / 简体中文
 
 > **置信度:** 已在本地针对真实 LuaJIT 上的伪造引擎验证过；它找出了两个真实缺陷。它证明的是你的控制流，而不是引擎的行为。
 

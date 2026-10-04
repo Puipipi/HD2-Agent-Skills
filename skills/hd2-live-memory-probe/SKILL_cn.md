@@ -5,7 +5,7 @@ description: 针对正在运行的 Helldivers 2 进程编写并运行一个只�
 
 # HD2 实时内存探针
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-live-memory-probe/SKILL.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-live-memory-probe/SKILL.md) / 简体中文
 
 > **置信度:** 该技术来自本工作区中探针的报告；探针骨架本身从未在这里对运行中的游戏跑过。
 

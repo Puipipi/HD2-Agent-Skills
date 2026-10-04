@@ -5,7 +5,7 @@ description: 发布一个其辅助脚本能挺过 mod 站点扫描的 mod ——
 
 # 打包 mod，使其辅助脚本不被查杀
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-no-quarantine-packaging/SKILL.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-no-quarantine-packaging/SKILL.md) / 简体中文
 
 > **置信度:** 该机制是从 SmoothBoot 的源码读出来的，并未复现。拒绝含脚本归档的那个构建闸门*确实*在本地验证过。
 

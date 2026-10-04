@@ -7,7 +7,7 @@ description: Package and publish a Helldivers 2 Bingus/MDL Lua mod — project l
 
 > **Confidence:** reported; §1 lists the per-item status, including what is environment-specific.
 
-English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-mod-release-operations/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-mod-release-operations/SKILL_cn.md)
 
 This is the operations half of HD2 mod work: how the project is laid out, how the package is
 named and archived, the seven steps a release actually consists of, and what breaks on the

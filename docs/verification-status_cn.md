@@ -1,6 +1,6 @@
 # 验证状态
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/docs/verification-status.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/verification-status.md) / 简体中文
 
 本仓库**真正跑过或量过**什么,以及什么没跑过。这些 skill 的置信度并不一致,所以逐条写明,而不是靠行文的
 语气去暗示。

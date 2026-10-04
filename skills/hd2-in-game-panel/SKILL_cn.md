@@ -7,7 +7,7 @@ description: 仅使用引擎的 Gui.rect 原语在《Helldivers 2》里绘制一
 
 > **置信度:** 来自自定义护甲模组的源码与日志(读来的);本仓库未重建或运行。
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-in-game-panel/SKILL.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-in-game-panel/SKILL.md) / 简体中文
 
 一个能正常工作的游戏内面板，**没有引擎字体、没有材质、没有 Gui.text** —— 每一个像素，包括中文字符，都是一个 `Gui.rect`。来源：`Custom Armor Kit 2.5.10`（`mods/custom-armor-kit/work/standalone/multi_perk.lua`）。
 

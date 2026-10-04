@@ -1,6 +1,6 @@
 # 实战手册：什么会搞死一个 HD2 Lua 模组，以及怎么区分它们
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/docs/hd2-mod-failure-catalog.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/hd2-mod-failure-catalog.md) / 简体中文
 
 写给要写 Helldivers 2 模组的人（Bingus/MDL 加载器，LuaJIT FFI）。下面每一条都是
 **症状 → 根因 → 修法**，来自真实的失败尝试，主要取自本工作区的自定义护甲 2.5.10 与

@@ -1,6 +1,6 @@
 # HD2 Agent Skills
 
-English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/README_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/README_cn.md)
 
 
 Agent skills for driving **Helldivers 2** unattended on Windows — and for building,

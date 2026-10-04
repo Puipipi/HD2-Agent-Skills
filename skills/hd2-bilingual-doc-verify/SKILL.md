@@ -5,7 +5,7 @@ description: Keep a bilingual document set honest — verify that a translated m
 
 # hd2-bilingual-doc-verify
 
-English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-bilingual-doc-verify/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-bilingual-doc-verify/SKILL_cn.md)
 
 > **Confidence:** verified here; both of its failure modes were provoked deliberately.
 
@@ -56,8 +56,8 @@ Exit 0 = every pair passed; non-zero = at least one failed, with the pair named.
 7. **The language switcher exists, once, and points at the counterpart** — in the header block
    of both sides, with the current language left unlinked:
    ```
-   English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/README_cn.md)
-   [English](https://github.com/YC426/HD2-Agent-Skills/blob/main/README.md) / 简体中文
+   English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/README_cn.md)
+   [English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/README.md) / 简体中文
    ```
    Absolute URLs are deliberate — copied from DeepSeek's own repositories, because the
    switcher is the one link a reader needs before they can navigate anything else. It is

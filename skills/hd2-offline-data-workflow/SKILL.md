@@ -5,7 +5,7 @@ description: Locate and decode Helldivers 2 game data tables offline — from Fi
 
 # hd2-offline-data-workflow
 
-English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-offline-data-workflow/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-offline-data-workflow/SKILL_cn.md)
 
 A machine session costs a game restart, and Bingus Shared Loader has no hot reload, so every question you can answer on disk is a question you should never ask the running game. The plaintext mirror plus the typelib answer most of them. **Work offline first, go in-game last.**
 

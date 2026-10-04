@@ -1,6 +1,6 @@
 # template/ —— 一个最小、契约正确的 HD2 模组骨架
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/template/SKELETON.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/template/SKELETON.md) / 简体中文
 
 `panel_skeleton.lua` 是一个刻意无聊的起点。它不画任何有意义的东西；它的存在是为了让那三条
 最贵的规则从第一行就是对的，免得后面的功能代码把违规藏起来。

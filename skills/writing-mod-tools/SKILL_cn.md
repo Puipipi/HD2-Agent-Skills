@@ -7,7 +7,7 @@ description: 如何为 Helldivers 2 模组（或任何游戏模组项目）编�
 
 > **置信度:** 这些规则在本仓库写工具的过程中**再次撞上**过,因而可信;它们引用的事故是引自原文,不是重跑出来的。
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/writing-mod-tools/SKILL.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/writing-mod-tools/SKILL.md) / 简体中文
 
 这些经验提炼自本工作区各模组中约 120 个工具：四个构建脚本、一个有守卫的部署器、十几个实时内存探针、日志分析器、离线模拟器，以及一个静态 FFI 审计器。下面每一条规则，都是其中某个工具做对的事情 —— 通常是在先做错之后。
 

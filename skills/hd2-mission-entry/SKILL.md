@@ -7,7 +7,7 @@ description: Launch Helldivers 2 on Windows and drive it from ship into an activ
 
 > **Confidence:** reported from real runs. The shipped input tools need the game running to prove their clicking and focusing behaviour.
 
-English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-mission-entry/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-mission-entry/SKILL_cn.md)
 
 Goal: from a cold start, get the game **into a mission with a known loadout**, with
 verifiable evidence at every step. Written from real runs; every coordinate and

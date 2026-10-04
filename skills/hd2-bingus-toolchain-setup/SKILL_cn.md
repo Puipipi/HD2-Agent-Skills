@@ -7,7 +7,7 @@ description: 通过在本地机器上定位 Bingus/MDL 的 addon 打包工具（
 
 > **置信度:** 查找步骤在本仓库验证过;复制后构建、以及 `--url` 路径都没跑过。
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-bingus-toolchain-setup/SKILL.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-bingus-toolchain-setup/SKILL.md) / 简体中文
 
 `scripts/fetch_bingus_tools.py` 找到那两个编码了加载器 addon 信封的第三方文件，并把它们
 复制到 `vendor/bingus/`。

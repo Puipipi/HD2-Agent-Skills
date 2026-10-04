@@ -1,6 +1,6 @@
 # Field guide: what breaks an HD2 Lua mod, and how to tell it apart
 
-English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/docs/hd2-mod-failure-catalog_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/hd2-mod-failure-catalog_cn.md)
 
 > 中文版：[hd2-mod-failure-catalog_cn.md](hd2-mod-failure-catalog_cn.md)
 

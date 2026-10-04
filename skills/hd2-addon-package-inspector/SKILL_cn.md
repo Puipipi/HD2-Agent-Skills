@@ -7,7 +7,7 @@ description: 在发布前检查一个构建好的 Helldivers 2 addon ZIP —— 
 
 > **置信度:** 本仓库已验证 —— 哈希与加载器发布的三条向量一致,不一致就非零退出。见[验证状态](../../docs/verification-status.md)。
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-addon-package-inspector/SKILL.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-addon-package-inspector/SKILL.md) / 简体中文
 
 `scripts/inspect_package.py` 读取的是产物，不是构建日志。一个说「built OK」的构建并未
 证明关于该 ZIP 的任何事：加载器会**静默跳过**它无法读取的包，而 mod 站点的「import

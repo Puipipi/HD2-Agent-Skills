@@ -7,7 +7,7 @@ description: 把一个 Helldivers 2 的 Bingus/MDL Lua mod 构建成 mod 管理�
 
 > **置信度:** 五道门禁在本仓库跑过,且每一道都被证明会在被触发时失败。信封格式来自加载器自己的工具。**管理器能否导入**该产物,本仓库未验证 —— 见[验证状态](../../docs/verification-status.md)。
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-addon-build/SKILL.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-addon-build/SKILL.md) / 简体中文
 
 `scripts/build_mod.py` 把一个明文 Lua 入口转换成 mod 管理器所导入的 addon 信封，
 并在源码不适合发布时停止打包。

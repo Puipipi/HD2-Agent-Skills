@@ -5,7 +5,7 @@ description: Patch a running Helldivers 2 process from a LuaJIT addon — locati
 
 # HD2 injection: patching memory at runtime
 
-English / [简体中文](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-injection-runtime-patching/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-injection-runtime-patching/SKILL_cn.md)
 
 Scope: addons that run inside the game's LuaJIT VM and read/write the Helldivers 2 process memory
 through FFI at runtime. Asset-replacement mods (swapping `data/` resources) are a different class

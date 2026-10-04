@@ -5,7 +5,7 @@ description: 从 LuaJIT addon 对一个正在运行的 Helldivers 2 进程打运
 
 # HD2 注入：在运行时对内存打补丁
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-injection-runtime-patching/SKILL.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-injection-runtime-patching/SKILL.md) / 简体中文
 
 范围：在游戏的 LuaJIT VM 内部运行、并在运行时通过 FFI 读写 Helldivers 2 进程内存的 addon。
 资源替换类 mod（替换 `data/` 资源）属于另一个类别，

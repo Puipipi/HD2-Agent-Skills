@@ -5,7 +5,7 @@ description: 离线定位并解码《地狱潜者 2》的游戏数据表 —— 
 
 # HD2 离线数据工作流
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/skills/hd2-offline-data-workflow/SKILL.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-offline-data-workflow/SKILL.md) / 简体中文
 
 一次机器会话的代价是一次游戏重启，而 Bingus Shared Loader 没有热重载，所以每一个你能在磁盘上回答的问题，都是你不该去问正在运行的游戏的。明文镜像加上 typelib 能回答其中大部分问题。**先离线工作，最后才进游戏。**
 

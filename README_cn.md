@@ -1,6 +1,6 @@
 # HD2 Agent Skills
 
-[English](https://github.com/YC426/HD2-Agent-Skills/blob/main/README.md) / 简体中文
+[English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/README.md) / 简体中文
 
 在 Windows 上**无人值守**驱动 **Helldivers 2** 的 agent skills —— 以及构建、验证、打包那些让自动化成为
 可能的模组。这里的每个坐标、每个按键序列、每个失败模式都来自真实运行。
