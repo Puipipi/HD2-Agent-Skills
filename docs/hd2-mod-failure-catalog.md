@@ -1,5 +1,7 @@
 # Field guide: what breaks an HD2 Lua mod, and how to tell it apart
 
+> 中文版：[hd2-mod-failure-catalog.zh-CN.md](hd2-mod-failure-catalog.zh-CN.md)
+
 For people writing a Helldivers 2 mod (Bingus/MDL loader, LuaJIT FFI). Every entry below is
 a **symptom → root cause → fix** taken from a real attempt, mostly from the Custom Armor
 Kit 2.5.10 and SmoothBoot development logs in this workspace. The point is that you should
@@ -97,6 +99,46 @@ Fixes:
 The silent-skip behaviour is what makes the bytecode cap so expensive: you get a mod that
 "installed fine" and does nothing. When a mod produces **no log line at all**, suspect this
 first.
+
+### 4b. Two pure-Lua traps that read like engine bugs
+
+Both were hit while writing `template/panel_skeleton.lua`, and both are worth recognising
+because the symptom points at the engine instead of at your code.
+
+**A `local` declared below an earlier function is not in scope in that function.** It
+compiles, and the name silently becomes a *global* read:
+
+```lua
+local function frame()
+    if count >= FAIL_LIMIT then return end   -- FAIL_LIMIT is NOT the local below!
+end
+local FAIL_LIMIT = 5                          -- too late: out of scope above
+```
+
+`FAIL_LIMIT` inside `frame` is the global, i.e. `nil`, so `0 >= nil` raises
+`attempt to compare number with nil` on the first frame. Lua emits no warning. Declare
+limit constants above the functions that use them, and if a guard behaves as if a constant
+were nil, check the declaration order before the engine.
+
+**`local ok, a = pcall(fn, ...)` drops every return value after the first.** A two-value
+engine call then arrives with a nil second value, and every guard checking it fails
+forever:
+
+```lua
+local function call(what, fn, ...)
+    local ok, a = pcall(fn, ...)     -- resolution()'s second value is gone
+    return true, a
+end
+local ok, w, h = call('Gui.resolution', sr.Gui.resolution)   -- h is always nil
+```
+
+The symptom is a permanent `resolution not numeric` / "the engine never returns what the
+docs say" — you will go and re-derive an engine offset that was never wrong. Spell the
+arity out (`local ok, a, b = pcall(fn, ...)`) and grow it deliberately; do not paper over
+it with `select('#', ...)`, which makes the caller's destructuring unsafe.
+
+Both are covered by the offline harness in `tests/test_panel_skeleton.py`, which is the
+point of having one: these bugs are invisible in code review and instant in a test.
 
 ---
 
