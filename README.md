@@ -31,7 +31,7 @@ Each skill is one topic. Tool skills ship the tool itself, with its prerequisite
 | Skill | 中文 | Purpose |
 |---|---|---|
 | [`hd2-bingus-mod-development`](skills/hd2-bingus-mod-development/SKILL.md) | [中文](skills/hd2-bingus-mod-development/SKILL.zh-CN.md) | The whole pipeline for a Bingus/MDL Lua mod: repo layout, the source contract the loader enforces, the build gates, offline simulation, the addon ZIP, deployment paths and rollback, in-game log evidence, and the release discipline. |
-| [`hd2-mission-entry`](skills/hd2-mission-entry/SKILL.md) | — | Cold start to boots-on-ground: launch, skip intro, confirm ship readiness, star-map mission selection, briefing loadout, deploy, and the evidence to confirm each step. |
+| [`hd2-mission-entry`](skills/hd2-mission-entry/SKILL.md) | [中文](skills/hd2-mission-entry/SKILL.zh-CN.md) | Cold start to boots-on-ground: launch, skip intro, confirm ship readiness, star-map mission selection, briefing loadout, deploy, and the evidence to confirm each step. Ships the focus-verified key/mouse tools and lists the mods the sequence depends on. |
 | [`hd2-in-game-panel`](skills/hd2-in-game-panel/SKILL.md) | [中文](skills/hd2-in-game-panel/SKILL.zh-CN.md) | Draw a clickable mod panel inside the game with only `Gui.rect` — retained screen-GUI lifecycle, staged bring-up, layer/native-screen invalidation, region hit-testing, dragging, and a 4x5 pixel font plus packed CJK bitmaps. |
 | [`hd2-native-panel-input-lock`](skills/hd2-native-panel-input-lock/SKILL.md) | [中文](skills/hd2-native-panel-input-lock/SKILL.zh-CN.md) | Open the panel on a hotkey (F7), unlock the mouse, and keep the game from receiving keyboard/mouse while it is open — raw-input deregistration, a window-procedure filter, coordinate conversion, wheel notches, safe give-back. |
 | [`hd2-game-language-autodetect`](skills/hd2-game-language-autodetect/SKILL.md) | [中文](skills/hd2-game-language-autodetect/SKILL.zh-CN.md) | Decide automatically whether the client is Chinese or English — build-verified `game.dll` offsets, with an engine-font glyph-coverage fallback, and labels localized at draw time only. |
@@ -49,6 +49,10 @@ Each skill is one topic. Tool skills ship the tool itself, with its prerequisite
 | [`hd2-live-memory-probe`](skills/hd2-live-memory-probe/SKILL.md) | — (pattern + skeleton) | Write and run a read-only probe against the running game to verify an address chain without another mission. |
 | [`hd2-mod-log-analysis`](skills/hd2-mod-log-analysis/SKILL.md) | — (pattern + skeleton) | Turn "the mod does nothing" into a named stage, and write the analyzer that says so. |
 | [`writing-mod-tools`](skills/writing-mod-tools/SKILL.md) | — | How to write these tools well: prerequisites and graceful degradation, safe-by-default mutation, exit codes, `--json`, dry-run, self-tests that reproduce the original bug, honest limits. |
+
+`hd2-mission-entry` additionally ships `scripts/hd2_window.py`, `hd2_verified_input.py` and
+`hd2_click.py` — pid-based window focusing with foreground verification, and a clicker that
+survives the game re-centering the cursor.
 
 ## Reports
 
