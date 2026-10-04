@@ -57,6 +57,28 @@ def resource_hash(name):
     return value ^ (value >> 47)
 
 
+# Published test vectors for the name -> id hash, from the loader's own docs and
+# tests. Every check below depends on this hash being right, so the tool proves
+# its own implementation at startup instead of trusting a comment.
+KNOWN_HASHES = (
+    ("core/wwise/lua/wwise_flow_callbacks", 0x7251FDD9BB62480A),
+    ("mods/codex/gun_calibration", 0x9537023F38D32BCD),
+    ("mods/example_author/example_addon", 0x835DB1516CA1E1CA),
+)
+
+
+def hash_self_test(verbose=True):
+    bad = [(n, want, resource_hash(n)) for n, want in KNOWN_HASHES
+           if resource_hash(n) != want]
+    if verbose:
+        if bad:
+            for n, want, got in bad:
+                print(f"FAIL  hash vector {n}: want 0x{want:016X}, got 0x{got:016X}")
+        else:
+            print(f"hash self-test: {len(KNOWN_HASHES)} published vectors match")
+    return not bad
+
+
 class Findings:
     def __init__(self):
         self.rows = []
@@ -141,6 +163,14 @@ def main():
     args = ap.parse_args()
 
     f = Findings()
+
+    # The name -> hash mapping is the foundation of every identity check, so
+    # prove it against the published vectors before trusting any of them.
+    if not args.json:
+        hash_self_test()
+    if not hash_self_test(verbose=False):
+        print('FAIL  the name->hash implementation disagrees with the published vectors')
+        return 1
     if not zipfile.is_zipfile(args.package):
         Findings().check(False, "package is a readable zip")
         print("FAIL  package is not a zip: " + args.package)

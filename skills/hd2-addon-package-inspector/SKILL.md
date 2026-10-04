@@ -37,6 +37,7 @@ package size and SHA-256, which is what the next person uses to confirm they hav
 | manifest | `Version`, `Guid`, `Name` present; GUID is a UUID; `Version == 1`; `Options[].Include` contains `Addon`; **any declared `IconPath`/`Image` is actually packaged** (a dangling reference shows a blank manager entry) |
 | archive | magic `0xF0000011`, version 1, entry count, each entry's resource type, each entry's data range inside the file, each resource's 8-byte header (version 2, body length matches) |
 | identity | the resource name → 64-bit hash mapping resolves to a real entry; the name matches the allowed `mods/<author>/<entry>` shape |
+| hash self-test | before any of the above, the name→hash implementation is checked against the **three published vectors** (`core/wwise/lua/wwise_flow_callbacks` → `0x7251FDD9BB62480A`, `mods/codex/gun_calibration` → `0x9537023F38D32BCD`, `mods/example_author/example_addon` → `0x835DB1516CA1E1CA`). If the hash is wrong, every identity check below is meaningless, so the tool refuses to continue and exits 1 |
 | declaration | the resource carries a `-- HD2-Addon: <name>` line, and it matches `--resource` when given |
 | source (`--source`) | the packaged bytes contain the source you built, and its version string matches the ZIP's file name |
 
