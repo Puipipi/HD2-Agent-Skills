@@ -13,6 +13,9 @@ key sequence and failure mode here was verified in real runs.
 | Skill | Purpose |
 |---|---|
 | [`hd2-mission-entry`](skills/hd2-mission-entry/SKILL.md) | Cold start to boots-on-ground: launch, skip intro, confirm ship readiness, star-map mission selection, briefing loadout, deploy, and the evidence to confirm each step. |
+| [`hd2-in-game-panel`](skills/hd2-in-game-panel/SKILL.md) | Draw a clickable mod panel inside the game with only `Gui.rect` — retained screen-GUI lifecycle, staged bring-up, layer/native-screen invalidation, region hit-testing, dragging, and a 4x5 pixel font plus packed CJK bitmaps. No engine font or material needed. |
+| [`hd2-native-panel-input-lock`](skills/hd2-native-panel-input-lock/SKILL.md) | Open the panel on a hotkey (F7), unlock the mouse (show + clip, save and restore), and keep the game from receiving keyboard/mouse while it is open — raw-input deregistration, a `GWLP_WNDPROC` filter, client-pixel→Gui-unit conversion, wheel notches, safe give-back. |
+| [`hd2-game-language-autodetect`](skills/hd2-game-language-autodetect/SKILL.md) | Decide automatically whether the client is Chinese or English — read the selected Text Language by build-verified `game.dll` offsets, fall back to probing the engine font's glyph coverage, and localize labels at draw time only. |
 
 ## Reports
 
@@ -33,8 +36,13 @@ skill directory. Each skill is a self-contained `SKILL.md` with frontmatter
 
 - Coordinates are **logical pixels** on a 1707x1067 layout (the game runs at a
   non-100% DPI scale, so physical = logical x scale).
+- In-game panels use the engine's **Gui** coordinate space: bottom-left origin, y up,
+  sized from `Gui.resolution()` and scaled by `min(w/1920, h/1080)`. Convert a Win32
+  client pixel with `gui_y = height - y * height / client_h`.
 - Input injection always verifies the **target window is foreground** before sending.
 - Every step has a **log evidence line or screenshot** to confirm it actually happened.
+- Skills describe **techniques**, not other authors' code: reference implementations are
+  cited by file and line, and no third-party mod source is copied into this repository.
 
 ## License
 
