@@ -57,13 +57,26 @@ def split_code_blocks(text):
     return blocks
 
 
+
+PLACEHOLDER = re.compile(r"<[^>\n]{1,40}>")
+
+
+def canon_code(text):
+    """Replace reader-facing placeholders so a translated one is not a diff.
+
+    `<backup-file>` and `<备份文件>` are the same instruction to a human reader and
+    neither is executable syntax, so they are normalised before the code hash.
+    """
+    return PLACEHOLDER.sub("<P>", text)
+
 def strip_comments(body, lang):
     """Keep only code: comments are translated, code is not."""
     body = BLOCK_COMMENT.sub("", body)
     line_comment = "--" if lang in ("lua", "luajit") else None
     # `#` starts a comment in a shell command line AND in Python. Both appear in
     # these docs, and a trailing `# ...` comment is translatable text.
-    hash_comment = lang in ("powershell", "ps1", "bash", "sh", "shell", "cmd", "python", "py")
+    hash_comment = lang in ("powershell", "ps1", "bash", "sh", "shell", "cmd",
+                           "python", "py", "ini", "cfg", "conf", "toml", "yaml", "yml")
     out = []
     for line in body.split("\n"):
         cut, in_s, quote, esc = None, False, None, False
@@ -252,8 +265,8 @@ def check_pair(src_path, dst_path, label, root):
                     mismatches.append(f"#{i} documentation structure differs (branch/path lost?)")
             elif len(sbody.strip().split("\n")) != len(dbody.strip().split("\n")):
                 mismatches.append(f"#{i} prose fence changed line count")
-        elif hashlib.sha256(strip_comments(sbody, sl).encode()).hexdigest() != \
-                hashlib.sha256(strip_comments(dbody, dl).encode()).hexdigest():
+        elif (canon_code(strip_comments(sbody, sl))
+              != canon_code(strip_comments(dbody, dl))):
             mismatches.append(f"#{i} code differs after comment removal")
         if sl in ("lua", "luajit") and compiles_on_luajit(dbody):
             compiled += 1
