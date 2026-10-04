@@ -36,11 +36,13 @@ Exit 0 = every pair passed; non-zero = at least one failed, with the pair named.
 1. **Translated Lua still compiles on LuaJIT** — extracts every `lua` fence from the
    *translation* and compiles it. Catches a translation that touched code.
 2. **Code fences match the source after all comments are removed** — `--` and `--[[ ]]` for
-   Lua, `#` for shell/PowerShell, `;` for pseudo-code. Comments *are* translated; code is not.
-3. **Documentation fences match by structure** — directory trees and package layouts are
-   documentation inside a code fence, so their annotations are meant to be translated. Those
-   are compared by skeleton (tree glyphs, indentation, first token of each line), which still
-   catches a dropped branch or a renamed path.
+   Lua, `#` for shell/PowerShell **and Python** (an inline `# …` comment is translatable
+   text), `;` for pseudo-code. Comments *are* translated; code is not.
+3. **Documentation fences are compared as documentation** — a fence counts as documentation
+   when it has no executable code, i.e. a directory tree / package layout, a `text` block of
+   prose, or a code fence that quotes only a docstring or comments. Trees are compared by
+   skeleton (glyphs, indentation, first token per line), which still catches a dropped branch
+   or a renamed path; prose is compared by line count only, because every word is translated.
 4. **Heading structure matches** — count and levels, in order. Catches a dropped section.
 5. **Every relative link is carried over**, or is deliberately retargeted to a `.zh-CN` peer
    (reported as a note, not a failure). The source pointing *at* a `.zh-CN` file the
@@ -53,10 +55,20 @@ Exit 0 = every pair passed; non-zero = at least one failed, with the pair named.
 - **A verifier that assumes the obvious layout reports false failures.** The first version
   stripped only whole-line comments, so every code block containing a trailing `--` comment
   looked like a mismatch. Fixing the verifier, not the translations, was the right call —
-  and it was only obvious because the failure count was implausibly high.
+  and it was only obvious because the failure count was implausibly high. The same thing then
+  happened twice more: an inline `#` comment in a **Python** fence (the stripper only knew
+  shell), and a `python` fence that quoted **only a docstring** (no executable code at all, so
+  the whole block is prose). Each fix made check 3 narrower and truer: *compare code as code,
+  and documentation as documentation, and decide that from the content rather than the fence
+  label.*
 - **Check 3 exists because of a false positive too.** Four "code" fences in a new skill were
   directory trees; treating their translated annotations as a code change would have forced
   the translator to leave prose in English.
+
+**When a verifier reports failures, look at the failures before touching the translation.**
+In all three of the above cases the translations were correct — including the one where the
+"code" was a docstring explaining the deploy incident, translated on purpose. A linter that is
+wrong costs more than no linter: it teaches people to ignore it.
 
 ## Limitations
 

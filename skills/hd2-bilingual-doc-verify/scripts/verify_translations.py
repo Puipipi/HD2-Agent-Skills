@@ -61,7 +61,9 @@ def strip_comments(body, lang):
     """Keep only code: comments are translated, code is not."""
     body = BLOCK_COMMENT.sub("", body)
     line_comment = "--" if lang in ("lua", "luajit") else None
-    hash_comment = lang in ("powershell", "ps1", "bash", "sh", "shell", "cmd")
+    # `#` starts a comment in a shell command line AND in Python. Both appear in
+    # these docs, and a trailing `# ...` comment is translatable text.
+    hash_comment = lang in ("powershell", "ps1", "bash", "sh", "shell", "cmd", "python", "py")
     out = []
     for line in body.split("\n"):
         cut, in_s, quote, esc = None, False, None, False
@@ -94,6 +96,40 @@ def strip_comments(body, lang):
         if line:
             out.append(line)
     return "\n".join(out)
+
+
+TRIPLE = re.compile(r'"""(?:.|\n)*?"""|\'\'\'(?:.|\n)*?\'\'\'', re.S)
+
+
+def executable_lines(body, lang):
+    """Lines that carry code, ignoring comments AND docstrings.
+
+    A docstring is prose: when a code fence exists only to quote one (a worked
+    example in the docs), it contains no executable code and there is nothing to
+    compare but its shape.
+    """
+    text = strip_comments(body, lang)
+    if lang in ("python", "py"):
+        text = TRIPLE.sub("", text)
+    return [ln for ln in text.split("\n") if ln.strip()]
+
+
+TREE_GLYPHS = set("│├└─┌┐┘┴┬")
+
+
+def is_documentation_fence(lang, body):
+    """True when the fence carries no executable code.
+
+    Two cases:
+      * a directory tree / package layout -- annotations are translated, so the
+        skeleton must match
+      * prose in a fence: a `text` block, or a code fence quoting only a
+        docstring/comment
+    Deciding by the fence language alone gets the second case wrong.
+    """
+    if lang in DOC_FENCES:
+        return True
+    return not executable_lines(body, lang)
 
 
 def structural_fingerprint(body):
@@ -157,10 +193,15 @@ def check_pair(src_path, dst_path, label):
     for i, ((sl, sbody), (dl, dbody)) in enumerate(zip(sb, db)):
         if sl != dl:
             mismatches.append(f"#{i} fence language {sl!r} vs {dl!r}")
-        elif sl in DOC_FENCES:
+        elif is_documentation_fence(sl, sbody):
             doc_fences += 1
-            if structural_fingerprint(sbody) != structural_fingerprint(dbody):
-                mismatches.append(f"#{i} documentation structure differs (branch/path lost?)")
+            # a tree/layout must keep its skeleton; prose need only stay the same
+            # shape (same number of lines), since every word is translated
+            if any(ch in TREE_GLYPHS for line in sbody for ch in line):
+                if structural_fingerprint(sbody) != structural_fingerprint(dbody):
+                    mismatches.append(f"#{i} documentation structure differs (branch/path lost?)")
+            elif len(sbody.strip().split("\n")) != len(dbody.strip().split("\n")):
+                mismatches.append(f"#{i} prose fence changed line count")
         elif hashlib.sha256(strip_comments(sbody, sl).encode()).hexdigest() != \
                 hashlib.sha256(strip_comments(dbody, dl).encode()).hexdigest():
             mismatches.append(f"#{i} code differs after comment removal")
