@@ -45,6 +45,7 @@ down. A `_cn` file next to any document is its Chinese version.
 | [`hd2-bilingual-doc-verify`](skills/hd2-bilingual-doc-verify/SKILL.md) | `scripts/verify_translations.py` | Keep `X.md` / `X_cn.md` pairs honest: code fences, heading structure, links, frontmatter. |
 | [`hd2-live-memory-probe`](skills/hd2-live-memory-probe/SKILL.md) | — (pattern + skeleton) | Write and run a read-only probe against the running game to verify an address chain without another mission. |
 | [`hd2-mod-log-analysis`](skills/hd2-mod-log-analysis/SKILL.md) | — (pattern + skeleton) | Turn "the mod does nothing" into a named stage, and write the analyzer that says so. |
+| [`hd2-no-quarantine-packaging`](skills/hd2-no-quarantine-packaging/SKILL.md) | — | Ship a mod whose helper scripts survive site scanning: generate the `.bat`/`.ps1` at runtime into the user's config folder instead of putting it in the archive, and gate the build on it. |
 | [`writing-mod-tools`](skills/writing-mod-tools/SKILL.md) | — | How to write these tools well: prerequisites and graceful degradation, safe-by-default mutation, exit codes, `--json`, dry-run, self-tests, validating the criterion before a live run, honest limits. |
 
 `hd2-mission-entry` additionally ships `scripts/hd2_window.py`, `hd2_verified_input.py` and

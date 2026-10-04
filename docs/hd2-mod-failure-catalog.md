@@ -188,6 +188,34 @@ point of having one: these bugs are invisible in code review and instant in a te
   `2^48` as "looks like a pointer or garbage", and for the material slot it follows the
   pointer (the real id64 lives 24 bytes in) because feeding `G.material` a wrong id makes it
   return garbage ink and faults later at native level.
+- **The on-disk `game.dll` is packed: you can hash it, but you cannot read code from it.**
+  Measured on build 25480438 (`data/game/game.dll`, 15,522,408 bytes):
+
+  | Observation | Value |
+  |---|---|
+  | SHA-256 of the on-disk file | matches the loader's `GAME_DLL_SHA` gate constant exactly |
+  | PE header parse | fine — `PE\0\0`, 16 sections, `machine=0x8664` |
+  | section **names** of the main sections | blanked to spaces |
+  | Shannon entropy of the section holding the code | **7.9998** (8.0 = random) |
+  | custom sections present | `.winlice`, `.vm_sec`, `.boot` (a decompression stub) |
+  | a 16-byte code signature at its RVA, anywhere in the file | **absent** |
+
+  Consequences, in order of how much time they cost:
+
+  - **Hashing the disk file is correct and useful.** That is exactly what the loader's version
+    gate does, which is why the disk SHA-256 matches `GAME_DLL_SHA`. Fingerprint checks are fine.
+  - **Reading code, scanning for a byte signature, or mapping an RVA to a file offset on the
+    disk image is meaningless.** The RVAs resolve past the section's raw data (virtual size is
+    far larger than raw size) and the bytes there are not what the process executes. Scan the
+    file and you get "signature not found", from which it is easy to wrongly conclude the game
+    updated.
+  - **To analyse code offline, dump it from the process first and analyse the dump.** The
+    `melee-vehicle-rescue` tools are the right shape: `tools/dump_range.py` and friends write
+    `research/private/*.bin`, and `pe_sections.py` / `native_xrefs.py` / `raw_strings.py` /
+    `type_tables.py` read those snapshots — never the installed file. `c4_input_facts.py` scans
+    live process memory instead. Both work; reading the install does not.
+  - **Do not try to unpack it yourself.** Verify the build by hash, then read what you need
+    from the running process.
 
 ---
 

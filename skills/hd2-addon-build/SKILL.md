@@ -45,6 +45,8 @@ python -B scripts/build_mod.py --with-source      # also a source bundle, review
 
 ## What it checks
 
+Five gates. The first four run on the source; the fifth on the built archive.
+
 1. **LuaJIT compile.** The 65535-bytecode-instruction-per-function cap makes the loader
    skip an oversized mod **silently** — you get a mod that "installed fine" and does
    nothing, with no log line. A plain-Lua compile accepts it.
@@ -55,6 +57,12 @@ python -B scripts/build_mod.py --with-source      # also a source bundle, review
    call site; it once shipped as "clicking the card does nothing".
 4. **The README block exists**, and it is extracted from the source into `README.txt`, so
    the in-game guide cannot drift from the code.
+5. **No script-like file is inside the archive.** `.bat`, `.cmd`, `.ps1`, `.vbs`, `.js`,
+   `.exe` and `.dll` are all refused, checked on the *finished* archive so a later change
+   cannot quietly add one back, and the refusal deletes the archive so a failed publish
+   leaves nothing to upload by mistake. Mod sites quarantine archives containing scripts —
+   see `hd2-no-quarantine-packaging` for the pattern that replaces them (generate the helper
+   into the user's config folder at runtime).
 
 It also avoids two packaging mistakes: it advertises an icon only when the file is
 actually packaged (a dangling `IconPath` shows a blank manager entry), and it writes

@@ -40,6 +40,7 @@
 | [`hd2-bilingual-doc-verify`](skills/hd2-bilingual-doc-verify/SKILL.md) | `scripts/verify_translations.py` | 让 `X.md` / `X_cn.md` 成对保持诚实：代码块、标题结构、链接、frontmatter。 |
 | [`hd2-live-memory-probe`](skills/hd2-live-memory-probe/SKILL.md) | —（模式 + 骨架） | 写一个只读探针跑在运行中的游戏上，验证地址链，不必再打一局。 |
 | [`hd2-mod-log-analysis`](skills/hd2-mod-log-analysis/SKILL.md) | —（模式 + 骨架） | 把"模组没反应"变成具名阶段，并写出说清这件事的分析器。 |
+| [`hd2-no-quarantine-packaging`](skills/hd2-no-quarantine-packaging/SKILL.md) | — | 让模组的辅助脚本能过站点扫描：把 `.bat`/`.ps1` 在运行时生成到用户配置目录，而不是放进归档；并把它做成构建门禁。 |
 | [`writing-mod-tools`](skills/writing-mod-tools/SKILL.md) | — | 怎么把这些工具写好：前置条件与优雅降级、默认只读、退出码、`--json`、dry-run、自检、**实机前先验证判据**、诚实写出做不到什么。 |
 
 `hd2-mission-entry` 另外自带 `scripts/hd2_window.py`、`hd2_verified_input.py`、`hd2_click.py`——

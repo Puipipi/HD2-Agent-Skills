@@ -123,19 +123,37 @@ target = os.path.join(OUT, "%s-%s.zip" % (DISPLAY_NAME.replace(" ", "-"), ver))
 official.build_addon(RESOURCE, src.encode("utf-8"), GUID, target, DISPLAY_NAME)
 
 tmp = target + ".tmp"
-with zipfile.ZipFile(target) as zin, zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zout:
-    for info in zin.infolist():
-        data = zin.read(info.filename)
-        if info.filename == "manifest.json" and have_icon:
-            m = json.loads(data)
-            m["IconPath"] = os.path.basename(ICON)
-            for opt in m.get("Options", []):
-                opt.setdefault("Image", os.path.basename(ICON))
-            data = (json.dumps(m, indent=2) + "\n").encode()
-        zout.writestr(info, data)
-    if have_icon:
-        zout.write(ICON, os.path.basename(ICON))
-    zout.writestr("README.txt", readme_txt.replace("\n", "\r\n"))
+with zipfile.ZipFile(target) as zin:
+    # --- gate 5: no script-like file inside the published archive ------------
+    # Mod sites quarantine archives that contain scripts, and a quarantined
+    # release reads as a mysterious rejection. Ship helpers by generating them at
+    # runtime instead (see the hd2-no-quarantine-packaging skill). Checked on the
+    # finished archive, before anything is written, so a later change cannot
+    # quietly add one back and a refusal leaves no half-written file behind.
+    SCRIPT_EXT = (".bat", ".cmd", ".ps1", ".vbs", ".js", ".exe", ".dll")
+    offenders = [i.filename for i in zin.infolist() if i.filename.lower().endswith(SCRIPT_EXT)]
+    if offenders:
+        os.remove(target)
+        raise SystemExit(
+            "FAIL refusing to publish: script-like file(s) in the archive: %s\n"
+            "     Mod sites quarantine these. Generate the helper at runtime into the\n"
+            "     user's config folder instead, and say so in the in-game README."
+            % ", ".join(offenders))
+    print("archive contents: no script-like files")
+
+    with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zout:
+        for info in zin.infolist():
+            data = zin.read(info.filename)
+            if info.filename == "manifest.json" and have_icon:
+                m = json.loads(data)
+                m["IconPath"] = os.path.basename(ICON)
+                for opt in m.get("Options", []):
+                    opt.setdefault("Image", os.path.basename(ICON))
+                data = (json.dumps(m, indent=2) + "\n").encode()
+            zout.writestr(info, data)
+        if have_icon:
+            zout.write(ICON, os.path.basename(ICON))
+        zout.writestr("README.txt", readme_txt.replace("\n", "\r\n"))
 os.replace(tmp, target)
 print("built %s: %d bytes" % (os.path.basename(target), os.path.getsize(target)))
 
