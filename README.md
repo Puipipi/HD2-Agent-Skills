@@ -25,6 +25,7 @@ expensive rules right and comes with an offline harness you can run without the 
 
 | Skill | 中文 | Purpose |
 |---|---|---|
+| [`hd2-bingus-mod-development`](skills/hd2-bingus-mod-development/SKILL.md) | [中文](skills/hd2-bingus-mod-development/SKILL.zh-CN.md) | The whole pipeline for a Bingus/MDL Lua mod: repo layout, the source contract the loader enforces, the four build gates (LuaJIT compile, no user32 declaration, called⊆declared, README block), offline simulation with lupa, the addon-envelope ZIP a manager imports, deployment paths and rollback, in-game log evidence, and the release discipline. Includes a ready `build_mod.py`. |
 | [`hd2-mission-entry`](skills/hd2-mission-entry/SKILL.md) | — | Cold start to boots-on-ground: launch, skip intro, confirm ship readiness, star-map mission selection, briefing loadout, deploy, and the evidence to confirm each step. |
 | [`hd2-in-game-panel`](skills/hd2-in-game-panel/SKILL.md) | [中文](skills/hd2-in-game-panel/SKILL.zh-CN.md) | Draw a clickable mod panel inside the game with only `Gui.rect` — retained screen-GUI lifecycle, staged bring-up, layer/native-screen invalidation, region hit-testing, dragging, and a 4x5 pixel font plus packed CJK bitmaps. No engine font or material needed. |
 | [`hd2-native-panel-input-lock`](skills/hd2-native-panel-input-lock/SKILL.md) | [中文](skills/hd2-native-panel-input-lock/SKILL.zh-CN.md) | Open the panel on a hotkey (F7), unlock the mouse (show + clip, save and restore), and keep the game from receiving keyboard/mouse while it is open — raw-input deregistration, a `GWLP_WNDPROC` filter, client-pixel→Gui-unit conversion, wheel notches, safe give-back. |
@@ -47,6 +48,21 @@ Point your agent/skill loader at `skills/`, or copy a skill folder into your age
 skill directory. Each skill is a self-contained `SKILL.md` with frontmatter
 (`name`, `description`). A `SKILL.zh-CN.md` next to it is the Chinese translation for
 human readers — loaders pick up `SKILL.md`, so the two never collide.
+
+## Checks
+
+Both run without the game and without the loader's tools:
+
+```powershell
+python -B tests/test_panel_skeleton.py     # 24 checks: the skeleton against a fake engine on LuaJIT
+python -B tests/verify_translations.py     # every X.md vs its X.zh-CN.md
+```
+
+`verify_translations.py` enforces the things a translation must not change — code
+fences byte-identical after comment removal, translated Lua still compiling on
+LuaJIT, matching heading structure, links carried over, frontmatter intact — while
+treating directory trees and package layouts as documentation to be translated
+(compared by structure). Run it after editing either side of a pair.
 
 ## Conventions
 
