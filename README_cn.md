@@ -93,11 +93,6 @@ python -B skills/hd2-addon-package-inspector/scripts/inspect_package.py <zip>
 
 ## 贡献与来源
 
-**贡献者:[junze0910](https://github.com/junze0910)(君则)** —— `hd2-offline-data-workflow`、
-`hd2-injection-runtime-patching`、`hd2-mod-release-operations` 背后的注入型模组知识库,来自
-[junze-hd2-lua-mod](https://github.com/junze0910/junze-hd2-lua-mod)(MIT,`Copyright (c) 2026 DSH`)。
-他的笔记明确邀请别人去测他没测过的部分:其中若干内容尚未测试,这一点被如实记录,而不是抹平。
-
 这些 skill 的置信度并不一致,所以按 skill 逐条写在
 [`docs/verification-status.md`](docs/verification-status.md) 里:哪些是本仓库真正跑过或量过的、
 哪些只是从某处读来的、哪些绑定于某一个游戏 build。如果你想帮忙,那份文件把这些

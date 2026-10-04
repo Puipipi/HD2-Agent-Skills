@@ -103,12 +103,6 @@ fences as documentation. Run it after editing either side of a pair.
 
 ## Contributing and provenance
 
-**Contributor: [junze0910](https://github.com/junze0910) (君则)** — the injection-mod knowledge
-base behind `hd2-offline-data-workflow`, `hd2-injection-runtime-patching` and
-`hd2-mod-release-operations`, from [junze-hd2-lua-mod](https://github.com/junze0910/junze-hd2-lua-mod)
-(MIT, `Copyright (c) 2026 DSH`). Their notes explicitly invite others to test what they have not:
-several parts are untested, and that is recorded rather than smoothed over.
-
 Confidence is not uniform across these skills, so it is stated per skill in
 [`docs/verification-status.md`](docs/verification-status.md): what was actually run or measured
 here, what was only read from a source, and what is bound to one game build. If you want to help,
