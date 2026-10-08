@@ -39,6 +39,7 @@
 | [`hd2-offline-engine-harness`](skills/hd2-offline-engine-harness/SKILL.md) | `scripts/test_panel_skeleton.py` | 用假引擎边界在真 LuaJIT 上离线测模组——GUI 次数、分级状态、错误预算。 |
 | [`hd2-bilingual-doc-verify`](skills/hd2-bilingual-doc-verify/SKILL.md) | `scripts/verify_translations.py` | 让 `X.md` / `X_cn.md` 成对保持诚实：代码块、标题结构、链接、frontmatter。 |
 | [`hd2-live-memory-probe`](skills/hd2-live-memory-probe/SKILL.md) | —（模式 + 骨架） | 写一个只读探针跑在运行中的游戏上，验证地址链，不必再打一局。 |
+| [`hd2-ingame-probe-crash-safety`](skills/hd2-ingame-probe-crash-safety/SKILL.md) | [中文](skills/hd2-ingame-probe-crash-safety/SKILL_cn.md) | 让**游戏内**探针不至于把进程带崩：`pcall` 挡不住的崩溃类别、临时内存区与调用成本纪律、启动期与菜单期闸门，以及区分「空闲」与「什么都没读到」的状态行。 |
 | [`hd2-mod-log-analysis`](skills/hd2-mod-log-analysis/SKILL.md) | —（模式 + 骨架） | 把"模组没反应"变成具名阶段，并写出说清这件事的分析器。 |
 | [`hd2-lua-forward-declarations`](skills/hd2-lua-forward-declarations/SKILL.md) | [中文](skills/hd2-lua-forward-declarations/SKILL_cn.md) | Lua 里函数调用定义在它后面的函数:调用解析成 `nil`、框架把错误吞掉、设置静默无效。教你怎么从**调用图**去定位,而不是靠猜。 |
 | [`hd2-mod-options-menu`](skills/hd2-mod-options-menu/SKILL.md) | [中文](skills/hd2-mod-options-menu/SKILL_cn.md) | 做游戏内设置页:ModOptionsMenu 的真实契约、为什么 `slider` 会被拒、2–16 项上限、取序号而非文本的 `choice`、单一主人规则,以及让整棵选项树消失的管理器侧故障。 |
