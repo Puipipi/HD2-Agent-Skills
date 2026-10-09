@@ -302,6 +302,32 @@ Verified dead ends. Do not spend time here.
 - **Launch through Steam (`-applaunch`), not the exe.** Running `helldivers2.exe` directly leaves a
   ~92 MB Steam DRM stub spinning, which presents as a black screen or a hang and gets blamed on the
   game or on a mod. The symptom disappears when the game is started the way Steam starts it.
+- **A separate startup crash: AutoChat's early native localization scan.** AutoChat 0.8.0
+  logged its first update observation, then its log ended before the next heartbeat. Code inspection
+  found that this interval included a bulk catalogue scan that called native localization thunks
+  while discovering records. In 0.8.1 the scanner stopped localizing each discovered
+  record and instead used a guarded `debug_name` read, while retaining the catalogue IDs, rules and
+  discovery. The exact access-violation cause was not established from a stack trace, so treat the
+  unsafe startup call context as the supported risk, not as a proven AV mechanism. The standard
+  0.8.1 deployment was launched through Arsenal → Steam; the loader reported 73 mods loaded and 0
+  failed, AutoChat ran for 19,801 frames with 0 errors and observed 149 stratagem entries, and the
+  game reached the interactive ship bridge with its character and full HUD after the connection
+  modal was continued with Space. This verifies startup for that build and session; it does not
+  verify every menu or message feature.
+
+  **When discovering records, keep native localization out of an implicit bulk scan.** A valid
+  function signature and a Lua `pcall` do not establish that a native callback is safe at that
+  startup phase. Prefer a guarded passive name read for discovery, and resolve localized display
+  text only where the feature needs it and the runtime is ready. Keep IDs and discovery separate
+  from display names so the fallback does not change matching rules. Do not generalize this case
+  into a ban on native calls: establish the call's purpose, context and evidence individually.
+
+  **Verify offline and live separately.** Offline LuaJIT/Lupa regressions can prove catalogue and
+  rule invariants, but cannot prove that the native startup path is safe. For a candidate build,
+  check the active Arsenal layer against the packaged version/resource before launch, then capture
+  begin/complete markers and a heartbeat, loader loaded/failed counts, the mod's error/count line,
+  and arrival at an interactive scene. A log ending at begin identifies the last observed phase;
+  without a stack trace it does not prove which native call caused the termination.
 - **A stale package in the mod manager's library will overwrite a newer layer.** With an old package
   in the library and a hand-placed newer layer on disk, pressing Deploy applies the old one. Either
   re-import the new package before deploying, or use only the layer already in place — and prefer

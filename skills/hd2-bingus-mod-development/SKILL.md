@@ -181,6 +181,12 @@ Where files land:
 the manager library belongs to the game or to another author: never read, write or depend
 on it. Some build scripts sync both locations; if yours does, still verify both afterwards.
 
+For a startup-safety change, validate the candidate ZIP and the active game layer after Arsenal
+deploys it: confirm the resource declaration, version and content match the candidate. A newer
+file on disk does not prove it is the copy Arsenal enabled; a stale library package can replace
+it. Start through the normal Arsenal → Steam path and verify the loader's completion line and
+the actual destination scene before calling startup fixed.
+
 **Rollback before you experiment.** Keep a copy of a build you have actually seen run
 without crashing, record its byte size and a hash prefix, and know both paths to overwrite.
 If an experimental build crashes the game, restore both copies and restart — do not debug on
@@ -210,6 +216,10 @@ A mod without a log is undebuggable, and a claim without a log is not a result.
 - **Log one line per state change**, plus a heartbeat while stuck — never per frame.
 - **Write a `-STATUS.txt`** on load and on a heartbeat, so "the panel never opened" still
   produces a file to send.
+- For startup-sensitive native work, log a distinct begin and completion marker around the
+  operation, plus a low-rate heartbeat. A begin marker without completion localises the last
+  observed phase; it does not identify an access-violation cause by itself. Record whether the
+  game reached an interactive scene, not just whether the process or loader appeared.
 - **Logs append across launches and are UTC.** To judge "this run", filter by timestamp
   (`12:xx:xxZ` = 20:xx local at UTC+8), not by file position. This has caused real
   mis-readings.
@@ -217,6 +227,11 @@ A mod without a log is undebuggable, and a claim without a log is not a result.
   entry. Then your own log.
 - Note in the log by name **why** anything was skipped or held. "blocked" costs hours;
   "held: ship world not resolved" costs seconds.
+- Keep discovery reads separate from localized display text. During a bulk startup scan, do
+  not implicitly call `env.localize` for every discovered record; use a guarded passive name
+  read such as `debug_name`, and localize only where the feature needs display text and its
+  runtime context is ready. A valid-looking signature and `pcall` do not establish that a
+  native call's ABI or timing is safe.
 
 ## 8. Release discipline
 
@@ -256,6 +271,8 @@ This is the part that keeps the project honest, and it is cheap:
   features: drawing, input/cursor, localisation.
 - [`docs/hd2-mod-failure-catalog.md`](../../docs/hd2-mod-failure-catalog.md) — when something
   breaks: symptom → root cause → fix, including the traps that do not raise.
+- The catalog's startup native-callback case is relevant when discovery or logging invokes game
+  APIs before their runtime context is ready; it does not prohibit native calls in general.
 
 ## What is not verified
 
