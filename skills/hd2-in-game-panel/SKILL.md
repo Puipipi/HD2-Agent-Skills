@@ -314,6 +314,47 @@ local zcell = math.max(1, math.floor(1.15 * scale + 0.5))     -- 1 unit per font
 `W8 = {8,4,2,1}` bit test, and returns `x + (bm.w + 2) * zcell` so the next glyph
 advances correctly.
 
+### Responsive layout when a text path is verified
+
+Keep the rect-only renderer as the safe default. Call `Gui.text` or
+`Gui.text_extents` only after the font path and its lifecycle are verified; do not probe an
+unverified engine API just to measure. For a rect/CJK fallback, measure with the same glyph
+advance and fallback rules that the renderer actually uses, including mixed CJK/ASCII runs.
+
+Lay out labels and help by measured width at the same font, size, scale, and locale used to
+draw them. Wrap on UTF-8 codepoint boundaries, normalize CRLF as one line break, and keep
+explicit leading, interior, and trailing blank lines. Use line count and line spacing to calculate
+the required text-block and control-row heights, then advance later y positions. Keep the font,
+spacing, and padding readable; apply one consistent scale to padding, line height, and control
+sizes. Reducing the font is not a substitute for fitting the content.
+
+Use a side-by-side label/value or input only when both fit the available width. Otherwise stack
+them and move later controls down. Apply the same rule to tabs, navigation, and buttons. Keep
+each hit region aligned with the visible control after wrapping or clipping; fully clipped
+controls must not remain clickable. Static help should wrap instead of silently truncating.
+Long user-entered values may scroll horizontally to keep the caret and visible tail in view
+without changing the stored value.
+
+Give independently scrollable content its own viewport and offset. Clip both drawing and hit
+regions to that viewport, clamp offsets after content or size changes, and make the last item
+reachable. For long lists, draw only visible rows plus a small overscan instead of traversing
+and drawing every item each frame. A retained panel should redraw only when its signature is
+dirty; do not add a cross-frame measurement cache without a clear invalidation key. Keep
+measurement work inside the redraw path rather than repeating it on ordinary frames.
+
+Verify through the production draw and hit-test path, not only a wrapping helper: capture the
+drawn text and rectangles, assert their bounds against each viewport, and compare visible
+controls with their hit regions. Include narrow resolutions, wide CJK metrics, English and
+Chinese, long help/name samples, scroll-to-end, and an input-tail case when those paths exist.
+Keep these layout assertions separate from performance timing; see
+[`hd2-offline-engine-harness`](../hd2-offline-engine-harness/SKILL.md) for offline cost comparisons.
+AutoChat's [panel source](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/src/auto_chat.lua)
+and tests cover low-resolution bilingual timer/forms ([`test_ui_preview.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_ui_preview.py)),
+enemy help and clipped hitboxes ([`test_alert_layout.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_alert_layout.py)),
+and the last-row interaction in a 105-task list ([`test_panel_interaction.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_panel_interaction.py));
+that evidence does not cover every font or every mod. For lifecycle and focus/input ownership, use
+[`hd2-native-panel-input-lock`](../hd2-native-panel-input-lock/SKILL.md).
+
 ## 8. Logging that makes a hidden panel diagnosable
 
 One line per state change, plus a heartbeat every N frames while blocked — never per

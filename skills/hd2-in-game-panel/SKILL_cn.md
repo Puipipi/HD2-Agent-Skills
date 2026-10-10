@@ -298,6 +298,38 @@ local zcell = math.max(1, math.floor(1.15 * scale + 0.5))     -- 每个字体像
 `zhdraw(x, y, bm, c)` 会遍历 `bm.r`，通过 `W8 = {8,4,2,1}` 位测试把每个十六进制半字节展开成
 4 个像素，并返回 `x + (bm.w + 2) * zcell`，好让下一个字形正确推进。
 
+### 已验证文本路径下的自适应布局
+
+保留 rect-only 绘制作为安全默认。只有字体路径及其生命周期已经验证时才调用 `Gui.text` 或
+`Gui.text_extents`；不要为了测量去探测未验证的引擎 API。rect/CJK 回退应使用与实际绘制相同的
+字形 advance 和回退规则测宽，包括中英混排的分段方式。
+
+按绘制时相同的字体、字号、比例和 locale 测量标签及说明，并依可用宽度换行。只能在 UTF-8
+码点边界断行；CRLF 作为一个换行符处理，保留开头、中间和结尾的显式空行。根据行数和行距
+计算文本块及控件行所需的高度，再推进后续 y 坐标。字体字号、间距和内边距都应保持可读
+下限；不要把缩小字号当成容纳内容的通用办法，padding、line-height 和控件尺寸也要使用
+统一的缩放规则。
+
+只有标签与值/输入框都放得下时才并排，否则改为上下堆叠并下移后续控件；窄屏下 tab、导航和
+按钮也应换行或堆叠。换行或裁剪后，命中区域必须与可见控件同步；完全裁掉的控件不能继续
+响应点击。静态帮助应换行显示，不能静默截断。用户输入过长时可横向滚动，让光标和可见尾部
+保持在框内，同时不改动保存的原值。
+
+独立滚动内容使用各自的 viewport 和 offset。绘制与命中区域都要裁到 viewport 内；内容或尺寸
+变化后夹紧 offset，并保证最后一项可达。长列表只绘制可见行及少量 overscan，避免每帧遍历并
+绘制全部项目。保留式面板只在签名变脏时重绘；没有明确失效键时不要增加跨帧测量缓存。测量
+留在重绘路径内，不要放到普通帧反复运行。
+
+从生产绘制和命中测试路径验证，而不只测换行 helper：捕获实际绘制文字与矩形，断言其边界
+位于 viewport 内，并检查可见控件的命中框一致。对实际支持的路径覆盖窄分辨率、偏宽 CJK
+字形、中英文本、长说明/名称、滚动到底和输入尾部。布局断言与性能计时分开；离线成本比较见
+[`hd2-offline-engine-harness`](../hd2-offline-engine-harness/SKILL_cn.md)。AutoChat 的[面板源码](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/src/auto_chat.lua)
+及测试覆盖低分辨率双语倒计时/表单（[`test_ui_preview.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_ui_preview.py)）、
+敌人说明及裁剪后的命中框（[`test_alert_layout.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_alert_layout.py)），
+以及 105 项任务列表末行交互（[`test_panel_interaction.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_panel_interaction.py)）；
+这些证据不涵盖所有字体或所有模组。生命周期、失焦和输入归还见
+[`hd2-native-panel-input-lock`](../hd2-native-panel-input-lock/SKILL_cn.md)。
+
 ## 8. 让隐藏面板可诊断的日志
 
 每次状态变化记一行，受阻时每 N 帧再加一次心跳 —— 绝不要每帧都记：
