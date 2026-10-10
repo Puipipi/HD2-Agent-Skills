@@ -1,6 +1,6 @@
 ---
 name: hd2-offline-engine-harness
-description: 通过在真实 LuaJIT 上用 lupa 伪造引擎边界，离线测试《Helldivers 2》的 Lua mod —— 统计 GUI 的创建/销毁，驱动一次分级建立过程依次经过 no-engine / no-world / full-engine / failing-body 状态，演练帧错误预算，并断言那些否则要付出一次实机运行代价的不变量。适用于为某个 mod 添加离线测试，或者想在不部署的情况下抓住启动顺序或拆解（teardown）缺陷的时候。
+description: 通过真实 LuaJIT 与 lupa 离线测试或比较《Helldivers 2》Lua mod —— 伪造引擎边界，统计 GUI 创建/销毁，覆盖分阶段启动与拆解、帧错误预算，或对照固定源码版本测量生产热路径。适用于添加离线模组测试、排查启动/拆解缺陷，或判断热路径改动是否降低成本，且无需部署。
 ---
 
 # HD2 离线引擎测试台
@@ -63,6 +63,34 @@ description: 通过在真实 LuaJIT 上用 lupa 伪造引擎边界，离线测�
 
 5. **也测试工具链**：在同一个测试台里跑静态 FFI 审计，并断言源码能在 LuaJIT 上编译通过。
    这些过不了的 mod 就不该走到实机运行。
+
+## 比较热路径的离线成本
+
+控制流测试回答“代码做了什么”；基准测量“这部分工作花了多久”。两者不能互相替代。可参考 [AutoChat build 10
+基准说明](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/docs/PERFORMANCE-OFFLINE-1.0.0.md)
+和
+[`bench_frame_performance.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/bench_frame_performance.py)。以下命令要在
+AutoChat checkout 根目录运行，不是在本技能仓库：
+
+```powershell
+python -B work/standalone/bench_frame_performance.py --source-ref 5237d9b --runs 3 --frames 12000 --warmup 1200
+python -B work/standalone/bench_frame_performance.py --runs 3 --frames 12000 --warmup 1200
+```
+
+加载同一个生产入口（本例为 `_G.update()`），对比固定旧 ref 与当前源码，并记录两者 SHA-256。每轮使用全新的 LuaJIT runtime，先预热，再在 Lua 内用 QPC
+收集样本，减少 Python/Lua 跨边界调用对逐帧计时的干扰。样本存放在 Lua table；曾有独立夹具扩展 FFI 采样数组时失败，这只是测量夹具失败，不能归因于游戏或引擎。GUI stub
+只统计绘制/测量调用，不保留每次 draw 的文本和图元，避免夹具数组及 GC 污染计时。
+
+分开报告稳定帧和周期工作。当前案例每种场景使用三个 fresh runtime 并报告 median：稳定帧 mean、周期 poll mean 与 p99、所有帧 overall mean、p99 与 max。评估
+**0.05 ms** 目标时，mean、p99、max 都要查看；overall mean 不代表逐帧上界。AutoChat 每 30
+帧做一次周期观察，这是该模组的场景，不是建议其他模组降低检查频率。记录任务数、角色、enabled/done/due 状态和调用计数。100/1000 条“未来任务”必须确实属于活动角色，且
+enabled、未完成、尚未到期。
+
+一个安全的调度优化例子是先检查是否有 enabled、未完成、可重试并已到期的任务；活动/默认角色选择与生产保持一致。检查发生在构造并排序任务数组快照之前，没有到期项就跳过该快照分配；每日任务也必须沿用相同日期条件。发现到期项后，保留完整任务快照与排序、逐项动态判断，以及发送、保存、重试等副作用。不要为了改善数字降低检查频率，也不要在没有状态失效机制时增加跨帧 deadline 缓存。
+
+调用次数变少不等于实测更快：AutoChat 曾试用 wrapped-text 缓存，但没有得到稳定收益，随后撤回。默认 open/redraw
+场景只绘制短提示，不代表长文本、中英混排或大量规则的重绘压力。要优化这些场景，应加入代表性输入并确认确实发生重绘；布局正确性断言与计时分开。伪引擎、字体 mock 和离线 QPC
+数据都不是实机延迟证据，也不能保证游戏每帧低于 0.05 ms。
 
 ## 它发现了什么 —— 这是它值得做的证据
 

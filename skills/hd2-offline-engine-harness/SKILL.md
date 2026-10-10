@@ -1,6 +1,6 @@
 ---
 name: hd2-offline-engine-harness
-description: Test a Helldivers 2 Lua mod offline by faking the engine boundary with lupa on real LuaJIT — count GUI creates/destroys, drive a staged bring-up through no-engine / no-world / full-engine / failing-body states, exercise a frame error budget, and assert invariants that otherwise cost a live run. Use when adding an offline test for a mod, or when you want to catch a boot-order or teardown bug without deploying.
+description: Test or compare a Helldivers 2 Lua mod offline with lupa on real LuaJIT — fake engine boundaries, count GUI creates/destroys, drive staged bring-up and teardown, exercise a frame error budget, or measure a production hot path against a fixed source ref. Use when adding offline mod tests, diagnosing boot-order/teardown bugs, or checking whether a hot-path change reduces cost without deploying.
 ---
 
 # hd2-offline-engine-harness
@@ -66,6 +66,50 @@ pollute the real one. Keep that directory out of version control.
 
 5. **Test the tooling too**: run the static FFI audit and assert the source compiles on
    LuaJIT, in the same harness. A mod that fails those should never reach a live run.
+
+## Comparing offline hot-path cost
+
+Control-flow tests answer what the code does; a benchmark measures how long that work takes. Neither
+replaces the other. For a worked example, see [AutoChat build 10's benchmark
+notes](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/docs/PERFORMANCE-OFFLINE-1.0.0.md)
+and
+[`bench_frame_performance.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/bench_frame_performance.py).
+Run these commands from the AutoChat checkout root, not this skills repository:
+
+```powershell
+python -B work/standalone/bench_frame_performance.py --source-ref 5237d9b --runs 3 --frames 12000 --warmup 1200
+python -B work/standalone/bench_frame_performance.py --runs 3 --frames 12000 --warmup 1200
+```
+
+Load the same production entry point (`_G.update()` in this example), compare a fixed old ref with
+the working source, and record both source SHA-256 values. Use a fresh LuaJIT runtime for each run,
+warm it up, then collect samples with QPC inside Lua so Python/Lua boundary calls do not dominate
+per-frame timing. Store samples in Lua tables. A standalone fixture once failed while extending an
+FFI sample array; that was an instrumentation failure, not evidence of a game or engine fault. Make
+GUI stubs count draw/measure calls without retaining every text/draw record, so fixture arrays and
+their GC do not pollute timing.
+
+Report steady frames separately from periodic work. The current example runs three fresh runtimes
+per case and reports the median: steady-frame mean; periodic-poll mean and p99; and overall mean,
+p99, and max. For a **0.05 ms** target, inspect mean, p99, and max together; an overall mean is not a
+per-frame upper bound. AutoChat's periodic observation runs every 30 frames; that interval belongs
+to this mod and is not a general recommendation to lower check frequency. Record task count, role,
+enabled/done/due state, and call counters. A 100/1,000 “future task” fixture must contain
+active-role tasks that are enabled, unfinished, and not yet due.
+
+A safe scheduler optimization example is to preflight for any enabled, unfinished, retry-ready
+task due for the role selected by the same active/default-role logic as production, before building
+and sorting the task-array snapshot. If none is due, skip that snapshot allocation; daily tasks
+must use the same date condition. Once something is due, preserve the full task snapshot and sort,
+per-item dynamic checks, and send/save/retry side effects. Do not improve numbers by lowering check
+frequency or by adding a cross-frame deadline cache without invalidation for changing state.
+
+Fewer calls do not prove faster execution: AutoChat tried a wrapped-text cache, found no stable
+gain, and removed it. The default open/redraw case draws only short hints; it does not represent
+long text, mixed CJK/English, or many rules. To optimize those cases, add representative inputs and
+verify each run really redraws; keep layout-correctness assertions separate from timing. Fake
+engine, font mocks, and offline QPC results are not in-game latency evidence and cannot guarantee
+that the game stays below 0.05 ms per frame.
 
 ## What it found, as evidence this is worth it
 
