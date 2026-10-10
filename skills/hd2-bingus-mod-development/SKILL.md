@@ -187,6 +187,18 @@ file on disk does not prove it is the copy Arsenal enabled; a stale library pack
 it. Start through the normal Arsenal → Steam path and verify the loader's completion line and
 the actual destination scene before calling startup fixed.
 
+When several patch builds keep the same product version, add a separate build identifier to
+the mod's startup and status logs. Compare that identifier with the candidate and the active
+resource hash before debugging a reported regression; the product version alone cannot tell
+which patch build ran. A build ID is a diagnostic clue, not a substitute for checking the
+manager's deployed payload and the game's active resource.
+
+AutoChat is one example of this distinction: its product version remained `1.0.0` while the
+source recorded `v1.0.0-build.10` in startup/status output ([source](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/src/auto_chat.lua#L22),
+[identity regression](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_auto_chat_probe.py#L911)
+at the immutable commit). This is code-level evidence of the diagnostic pattern, not proof
+that any particular user's manager deployed or ran that build.
+
 **Rollback before you experiment.** Keep a copy of a build you have actually seen run
 without crashing, record its byte size and a hash prefix, and know both paths to overwrite.
 If an experimental build crashes the game, restore both copies and restart — do not debug on

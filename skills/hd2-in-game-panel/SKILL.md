@@ -110,13 +110,31 @@ Two traps that both produce "the click does nothing":
 ```lua
 local function panel_clear()
     local sr = rawget(_G, 'stingray')
-    if sr then
-        if PANEL.draw_guis then
-            for _, entry in ipairs(PANEL.draw_guis) do
-                pcall(sr.World.destroy_gui, entry.world, entry.gui)   -- every world copy
+    if sr and sr.Application and sr.World then
+        local function owner_is_live(owner)
+            if not owner then return false end
+            local app = sr.Application
+            if type(app.main_world) == 'function' then
+                local ok, main = pcall(app.main_world)
+                if ok and main == owner then return true end
             end
-        elseif PANEL.gui and PANEL.world then
-            pcall(sr.World.destroy_gui, PANEL.world, PANEL.gui)
+            -- Use only this game's verified world-list API. If its snapshot is
+            -- unavailable, the old native owner is unknown and must not be touched.
+            if type(app.worlds) == 'function' then
+                local ok, worlds = pcall(app.worlds)
+                if ok and type(worlds) == 'table' then
+                    for i = 1, #worlds do
+                        if worlds[i] == owner then return true end
+                    end
+                end
+            end
+            return false
+        end
+        local entries = PANEL.draw_guis or {{world = PANEL.world, gui = PANEL.gui}}
+        for _, entry in ipairs(entries) do
+            if entry.gui and owner_is_live(entry.world) then
+                pcall(sr.World.destroy_gui, entry.world, entry.gui)
+            end
         end
     end
     PANEL.gui, PANEL.draw_guis, PANEL.sig = nil, nil, nil
@@ -127,12 +145,24 @@ local function panel_clear()
 end
 ```
 
-- **Destroy every GUI you created in every world.** The armory path builds a copy.
+- Destroy only a GUI this panel owns, and only after a fresh `main_world()` or `worlds()`
+  snapshot confirms its owner is still live. If the owner is missing or the snapshot fails,
+  clear the Lua handle and stop using it; do not call native destroy on an uncertain world.
+  `pcall` catches Lua errors, not native faults from stale engine objects. An owned GUI whose
+  owner remains live as an overlay may still be destroyed after current snapshot confirmation;
+  owner liveness does not guarantee every native destroy call is safe.
+- When the UI manager creates multiple owned GUI copies, apply that same live-owner check
+  separately to every copy; never destroy objects owned by another mod.
 - Reset the ladder so returning from a menu re-runs bring-up.
-- Never allocate a GUI in a world you do not own — that experiment caused a native crash.
+- Do not create a GUI in an unverified or unsupported world just to chase draw layers; use
+  the currently verified owner context. This panel may destroy only GUI objects it created,
+  never a game world.
 - Offline test: count live GUI objects before/after two frames and assert exactly one,
   then `panel_clear()` and assert the set is empty
   (`mods/custom-armor-kit/work/standalone/test_armor_ui.py` does this with `lupa`).
+- AutoChat's [`test_panel_interaction.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_panel_interaction.py)
+  also distinguishes a replaced main world whose old GUI owner is still in the live world
+  list (destroy it) from a missing/replaced owner that must be discarded without native access.
 
 ## 5. Geometry and layout
 

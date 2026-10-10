@@ -50,6 +50,19 @@ end
 - Default the key from the mod table and validate it (`^F%d%d?$` → in `VK`), so a
   hand-edited config can never leave the panel unopenable.
 
+### Context gates must still consume the key edge
+
+Focus is only one condition for opening. A native game chat view, loading transition,
+or unavailable drawing world may also forbid opening. Sample the hotkey and update its
+held-state before returning for any such gate; otherwise a key held across the blocked
+period can look like a new press as soon as the gate clears. Opening should then require
+a release followed by a fresh press. Keep the game-chat predicate separate from the
+panel's own text/IME editing state, so typing into the mod's field does not close it.
+
+AutoChat's offline regressions cover a native ChatView gate, its own IME editor, a held
+K across chat/world recovery, and world/overlay availability. They do not establish
+in-game behavior for another mod or another game build.
+
 ```lua
 panel_tick = function(now)
     if not input or not sr then return end
@@ -317,6 +330,30 @@ Keys tab) and log a one-line descriptor so a problem report says what happened:
 ```
 game input while open: blocked (held); dropped: 12 key presses, 3 clicks; raw input now: mouse, keyboard
 ```
+
+### (d) If the panel edits text, preserve the Windows IME lifecycle
+
+Do not assume `WM_CHAR` alone carries Chinese composition. A tested AutoChat path queues
+IME association changes to the game window's owner thread, records Unicode and relevant
+`WM_IME_*` events in a bounded native event ring, and lets the editor drain them on its
+normal update path. Keep the editor's IME state distinct from a native game-chat view;
+show an explicit unavailable/pending state when the window, IMM APIs, or context is not
+ready. While composition is active, pass candidate-selection Enter/Escape to the IME's
+default procedure; apply the editor's commit/cancel action after composition ends. Do not
+open a separate OS popup or call an unverified engine text API as a shortcut.
+
+Disable the IME association asynchronously on the owner thread. Keep the event ring alive
+until queued text is flushed, and retain an owned HIMC until restoring the exact prior
+context succeeds; a failed restore is pending state, not permission to destroy that context.
+
+This is a design reference, not a request to copy AutoChat's native thunk or machine
+bytes. Reuse only after independently verifying the ABI, message ownership, allocation,
+and teardown for the target mod. The supporting AutoChat tests exercise the bridge and
+failure states offline; its README still marks in-game IME acceptance as pending, so do
+not describe Chinese typing as game-verified.
+
+- AutoChat implementation: [`panel_input.lua`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/src/panel_input.lua), owner-thread transition and event drain.
+- Offline evidence: [`test_panel_input.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_panel_input.py) and [`test_panel_interaction.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_panel_interaction.py).
 
 ## 4. Per-frame order that works
 

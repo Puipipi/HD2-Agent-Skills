@@ -32,6 +32,8 @@ down. A `_cn` file next to any document is its Chinese version.
 | [`hd2-in-game-panel`](skills/hd2-in-game-panel/SKILL.md) | [中文](skills/hd2-in-game-panel/SKILL_cn.md) | Draw a clickable mod panel inside the game with only `Gui.rect` — retained screen-GUI lifecycle, staged bring-up, layer/native-screen invalidation, region hit-testing, dragging, and a 4x5 pixel font plus packed CJK bitmaps. |
 | [`hd2-native-panel-input-lock`](skills/hd2-native-panel-input-lock/SKILL.md) | [中文](skills/hd2-native-panel-input-lock/SKILL_cn.md) | Open the panel on a hotkey (F7), unlock the mouse, and keep the game from receiving keyboard/mouse while it is open — raw-input deregistration, a window-procedure filter, coordinate conversion, wheel notches, safe give-back. |
 | [`hd2-game-language-autodetect`](skills/hd2-game-language-autodetect/SKILL.md) | [中文](skills/hd2-game-language-autodetect/SKILL_cn.md) | Decide automatically whether the client is Chinese or English — build-verified `game.dll` offsets, with an engine-font glyph-coverage fallback, and labels localized at draw time only. |
+| [`hd2-event-chat-automation`](skills/hd2-event-chat-automation/SKILL.md) | [中文](skills/hd2-event-chat-automation/SKILL_cn.md) | AutoChat event cooldowns, welcome and scheduled sends, templates, role presets, and plugin boundaries. |
+| [`hd2-game-event-identification`](skills/hd2-game-event-identification/SKILL.md) | [中文](skills/hd2-game-event-identification/SKILL_cn.md) | Identify and classify HD2 map pins, mission actions, targets, stratagems, and enemies without conflating producers or guessing unknown identities. |
 
 ### Tools (each ships its own script)
 
@@ -67,6 +69,7 @@ survives the game re-centering the cursor.
 | [`template/SKELETON.md`](template/SKELETON.md) | [中文](template/SKELETON_cn.md) | A minimal contract-correct mod skeleton; pair it with the `hd2-offline-engine-harness`. |
 | [`tests/probe-build/`](tests/probe-build/README.md) | — | The pipeline probe: the one import-and-load step no simulation covers, with a one-minute verification procedure. |
 | [`docs/c4-quick-actions-performance-feedback-2026-10-04.md`](docs/c4-quick-actions-performance-feedback-2026-10-04.md) | — | Steady-state read-count and FPS evidence for HD2 C4 Quick Actions 1.11; submitted upstream as [issue #1](https://github.com/etxp/HD2-C4-Quick-Actions/issues/1). |
+| [`docs/autochat-lessons-coverage.md`](docs/autochat-lessons-coverage.md) | [中文](docs/autochat-lessons-coverage_cn.md) | Evidence map for reusable AutoChat lessons across panel/native input, event chat, and game-event identification; separates offline and build-pinned evidence from unverified live behavior. |
 
 ## Usage
 

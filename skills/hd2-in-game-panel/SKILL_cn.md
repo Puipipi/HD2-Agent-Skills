@@ -103,13 +103,30 @@ end
 ```lua
 local function panel_clear()
     local sr = rawget(_G, 'stingray')
-    if sr then
-        if PANEL.draw_guis then
-            for _, entry in ipairs(PANEL.draw_guis) do
-                pcall(sr.World.destroy_gui, entry.world, entry.gui)   -- 每一个 world 副本
+    if sr and sr.Application and sr.World then
+        local function owner_is_live(owner)
+            if not owner then return false end
+            local app = sr.Application
+            if type(app.main_world) == 'function' then
+                local ok, main = pcall(app.main_world)
+                if ok and main == owner then return true end
             end
-        elseif PANEL.gui and PANEL.world then
-            pcall(sr.World.destroy_gui, PANEL.world, PANEL.gui)
+            -- 只使用此游戏已验证的 world-list API；快照不可用时视为 owner 未知。
+            if type(app.worlds) == 'function' then
+                local ok, worlds = pcall(app.worlds)
+                if ok and type(worlds) == 'table' then
+                    for i = 1, #worlds do
+                        if worlds[i] == owner then return true end
+                    end
+                end
+            end
+            return false
+        end
+        local entries = PANEL.draw_guis or {{world = PANEL.world, gui = PANEL.gui}}
+        for _, entry in ipairs(entries) do
+            if entry.gui and owner_is_live(entry.world) then
+                pcall(sr.World.destroy_gui, entry.world, entry.gui)
+            end
         end
     end
     PANEL.gui, PANEL.draw_guis, PANEL.sig = nil, nil, nil
@@ -120,11 +137,18 @@ local function panel_clear()
 end
 ```
 
-- **销毁你在每一个 world 里创建的每一个 GUI。** 军械库那条路径会构建一份副本。
+- 只能销毁本面板创建的 GUI，并且要由新鲜的 `main_world()` 或 `worlds()` 快照确认其 owner 仍有效。
+  owner 已消失或快照读取失败时，只清 Lua 句柄并停止使用；不要对状态不确定的 world 调 native destroy。
+  `pcall` 只能捕获 Lua 错误，不能拦截 stale engine object 导致的 native fault。若自有 GUI 的 owner
+  仍以 live overlay 出现在当前快照中，可在确认后尝试销毁该 GUI；owner 有效并不保证每次 native destroy 都安全。
+- UI manager 若创建了多个自有 GUI 副本，逐个做同样的 live-owner 检查；绝不销毁其他 mod 拥有的对象。
 - 重置阶梯，这样从菜单返回时会重新跑一遍分级建立。
-- 永远不要在你并不拥有的 world 里分配 GUI —— 那次实验导致了原生崩溃。
+- 不要为了追图层而在未经验证或不受支持的 world 中创建 GUI；使用当前已验证的 owner context。
+  本面板只能销毁自己创建的 GUI 对象，绝不销毁游戏 world。
 - 离线测试：统计两帧前后的存活 GUI 对象数并断言恰好是一个，然后 `panel_clear()` 并断言
   集合为空（`mods/custom-armor-kit/work/standalone/test_armor_ui.py` 用 `lupa` 做了这件事）。
+- AutoChat 的 [`test_panel_interaction.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_panel_interaction.py)
+  还区分两种情况：主 world 更换但旧 GUI owner 仍在 live world 列表中时应销毁；owner 已消失/被替换时则丢弃句柄，不再调用 native。
 
 ## 5. 几何与布局
 

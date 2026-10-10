@@ -27,6 +27,8 @@
 | [`hd2-in-game-panel`](skills/hd2-in-game-panel/SKILL.md) | [中文](skills/hd2-in-game-panel/SKILL_cn.md) | 只用 `Gui.rect` 在游戏内画出可点击的面板——保留式 GUI 生命周期、分级建立、图层/原生界面失效、区域命中、拖拽，以及 5×4 点阵字体与打包的中文字形。 |
 | [`hd2-native-panel-input-lock`](skills/hd2-native-panel-input-lock/SKILL.md) | [中文](skills/hd2-native-panel-input-lock/SKILL_cn.md) | 用热键（F7）打开面板、解锁鼠标，并在面板打开时让游戏收不到键鼠——raw input 注销、窗口过程过滤、坐标换算、滚轮格数、安全归还。 |
 | [`hd2-game-language-autodetect`](skills/hd2-game-language-autodetect/SKILL.md) | [中文](skills/hd2-game-language-autodetect/SKILL_cn.md) | 自动判断客户端是中文还是英文——经 build 校验的 `game.dll` 偏移，带引擎字体字形覆盖率回退，标签只在绘制时翻译。 |
+| [`hd2-event-chat-automation`](skills/hd2-event-chat-automation/SKILL.md) | [中文](skills/hd2-event-chat-automation/SKILL_cn.md) | AutoChat 事件冷却、欢迎与定时消息、模板、角色预设及插件边界。 |
+| [`hd2-game-event-identification`](skills/hd2-game-event-identification/SKILL.md) | [中文](skills/hd2-game-event-identification/SKILL_cn.md) | 识别和分类 HD2 地图标记、任务动作、目标、战备与敌人，区分不同事件源，不猜未知身份。 |
 
 ### 工具（每个自带脚本）
 
@@ -61,6 +63,7 @@
 | [`template/SKELETON.md`](template/SKELETON.md) | [中文](template/SKELETON_cn.md) | 最小且契约正确的模组骨架；配合 `hd2-offline-engine-harness` 使用。 |
 | [`tests/probe-build/`](tests/probe-build/README.md) | — | 流水线探针：唯一无法用模拟覆盖的"导入并加载"步骤，附一分钟验证流程。 |
 | [`docs/c4-quick-actions-performance-feedback-2026-10-04.md`](docs/c4-quick-actions-performance-feedback-2026-10-04.md) | — | HD2 C4 Quick Actions 1.11 的稳态读取次数与 FPS 实测；已作为 [issue #1](https://github.com/etxp/HD2-C4-Quick-Actions/issues/1) 提交上游。 |
+| [`docs/autochat-lessons-coverage.md`](docs/autochat-lessons-coverage.md) | [中文](docs/autochat-lessons-coverage_cn.md) | AutoChat 面板/原生输入、事件消息与游戏事件识别的可复用经验及证据索引；区分离线、固定 build 观察和未验证的实机行为。 |
 
 ## 使用
 

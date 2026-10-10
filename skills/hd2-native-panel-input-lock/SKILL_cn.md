@@ -50,6 +50,16 @@ end
 - 从 mod 表中取得按键默认值并校验它（`^F%d%d?$` → 存在于 `VK` 中），这样
   手工编辑过的配置文件永远不会让面板变得无法打开。
 
+### 上下文禁止打开时仍要消费热键沿
+
+焦点只是打开条件之一。原生游戏聊天栏、加载切换或绘制 world 不可用时，也可能禁止打开。
+遇到这些门禁要先采样热键并更新 held 状态，再提前返回；否则按键跨过禁止期一直按住，
+门禁解除时会被误认成新按下。恢复后必须先松开，再重新按下。游戏聊天状态要独立于本
+模组的文字/IME 编辑状态，不能因在自己的输入框里打字就关闭面板。
+
+AutoChat 离线回归覆盖原生 ChatView 门禁、自有 IME 编辑框、K 跨聊天/世界恢复时保持按住，
+以及 world/overlay 可用性；这些测试不能证明其他模组或其他游戏版本的实机表现。
+
 ```lua
 panel_tick = function(now)
     if not input or not sr then return end
@@ -317,6 +327,25 @@ Keys 标签页中呈现），并记录一行描述，这样问题报告就能说
 ```
 game input while open: blocked (held); dropped: 12 key presses, 3 clicks; raw input now: mouse, keyboard
 ```
+
+### (d) 面板编辑文字时保留 Windows IME 生命周期
+
+不能假定中文组合输入只通过 `WM_CHAR` 传递。AutoChat 的一条离线测试路径会把 IME 关联切换
+排到游戏窗口所属线程执行，把 Unicode 和相关 `WM_IME_*` 消息记录在有界 native 事件环，再由
+编辑器的常规 update 路径读取。编辑器 IME 状态要与原生游戏聊天栏分开；窗口、IMM API 或
+输入上下文未就绪时，明确显示等待/不可用状态。组合输入期间，候选选择用的 Enter/Esc 应交给
+IME 默认过程；组合结束后才执行编辑器的确认/取消。不要另开 OS 输入弹窗，也不要用未经验证的
+引擎文本 API 代替。
+
+停用 IME 关联也要异步排到窗口所属线程。先让编辑器取完排队的文字，再清理事件环；只有准确恢复
+之前的 HIMC 后才释放本模组创建的上下文。恢复失败表示仍待重试，不能据此销毁该上下文。
+
+这是设计参考，不是复制 AutoChat native thunk 或机器码的许可。移植前必须独立验证目标模组的
+ABI、消息所属线程、分配与清理。AutoChat 的配套测试只离线覆盖桥接和失败状态；其 README 仍
+把游戏内 IME 验收列为待完成，因此不能称中文输入已通过实机验证。
+
+- AutoChat 实现：[`panel_input.lua`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/src/panel_input.lua)，含线程切换与事件读取。
+- 离线证据：[`test_panel_input.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_panel_input.py) 和 [`test_panel_interaction.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_panel_interaction.py)。
 
 ## 4. 行之有效的每帧顺序
 

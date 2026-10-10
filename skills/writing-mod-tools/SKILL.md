@@ -281,6 +281,14 @@ what make a tool trustworthy.
 3. Write the docstring first: prerequisites, what it checks, what it cannot do.
 4. Implement `main()` with `argparse`, real prerequisites, `--json`, meaningful exit codes,
    and a hash/size footer.
+   Before invoking an unfamiliar script, inspect its entry point and argument parser:
+   `--help` is read-only only when the script actually defines normal help handling, and
+   some no-parser scripts may ignore the flag and perform their default write/sync action.
+   New tools should let argparse exit for `--help` before any side effect, with a test that
+   verifies the command prints usage and leaves its targets unchanged.
+   On Windows, read UTF-8 source/config files with an explicit encoding. If an existing
+   validator uses Python's locale-default `Path.read_text()` on UTF-8 Markdown, invoke that
+   command with `python -X utf8`; do not change the machine-wide code page for one tool.
 5. Add the degraded path for each optional prerequisite, and a flag to force it.
 6. Add a test that drives the failure it was written to catch.
 7. State the verified/not-verified split in the skill or README that ships with it.
