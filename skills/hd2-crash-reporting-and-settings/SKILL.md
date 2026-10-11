@@ -10,6 +10,16 @@ English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/s
 Two things live here: the four keys people reach for when they want the crash popup gone, and the
 reason one of those four is not like the others.
 
+**The short answer:** set `crs_enabled`, `crash_dump` and `capture_image` to `false`, leave
+`floating_point_exceptions` at `true`, then delete `%APPDATA%\Arrowhead\Helldivers2\crash_data\` and
+`...\dumps\`. That is what the script does by default:
+
+```powershell
+python -B scripts/hd2_settings.py --off
+```
+
+Expect the keys to be put back by something eventually — see failure 4 — so re-run it after mod work.
+
 ## Provenance and confidence
 
 The key names, values, line numbers and paths below were **read off a real install**
@@ -92,15 +102,16 @@ Use the script rather than an editor, because three failure modes here are silen
 ```powershell
 python -B scripts/hd2_settings.py --show        # current values, with line numbers
 python -B scripts/hd2_settings.py --off --dry-run
-python -B scripts/hd2_settings.py --off                  # all four
-python -B scripts/hd2_settings.py --off --keys crs_enabled,crash_dump,capture_image
+python -B scripts/hd2_settings.py --off                  # the three reporting keys
+python -B scripts/hd2_settings.py --off --keys crs_enabled,crash_dump,capture_image,floating_point_exceptions
+python -B scripts/hd2_settings.py --on --keys floating_point_exceptions   # put the engine check back
 python -B scripts/hd2_settings.py --restore <backup-file>
 ```
 
 It refuses to edit while the game is running, writes a timestamped backup, and re-reads the file
 to confirm the change instead of trusting the write.
 
-### The three silent failure modes
+### The four silent failure modes
 
 1. **Editing while the game is running.** The game rewrites `settings.ini` when it exits, so your
    change disappears with no error. Close the game first. The script checks the process list and
@@ -110,6 +121,61 @@ to confirm the change instead of trusting the write.
    and a text-mode read-modify-write turns all 190 line endings into LF. The result is 186 bytes
    shorter, the four keys *do* change, and every diff tool reports the whole file as rewritten.
    The tool now reads and writes bytes so the only difference on disk is the lines it edited.
+4. **Something puts the keys back.** This is the one that wastes the most time, because a plain
+   re-read looks perfect and the popups keep coming anyway.
+
+### Failure 4 in detail: the values revert, and re-reading cannot tell you
+
+Measured on one install: the four keys were set false, and **seven days and several game sessions
+later only `capture_image` was still false** — `crs_enabled` and `crash_dump` had returned to
+`true`. Meanwhile crash dumps kept appearing, which looks exactly like "the switch does not work".
+
+Two plausible causes, and you cannot tell them apart from the current file:
+
+- the game rewrites those keys on exit, or
+- **another tool restored the file.** This is the more likely one in practice: any mod-maintenance
+  script that snapshots or "cleans up" the install can put a stock `settings.ini` back, and so can
+  restoring a backup taken before the change.
+
+**A re-read proves nothing here**, because the file you are re-reading is the one that was restored.
+What distinguishes them is a comparison against a **pristine original**:
+
+```powershell
+# keep one untouched copy of settings.ini from before any edit, then diff later
+python -c "import difflib,io; a=io.open(r'<pristine>').read().split('\n'); b=io.open(r'<game>\data\settings.ini').read().split('\n'); print('\n'.join(l for l in difflib.unified_diff(a,b,lineterm='') if l[:1] in '+-' and l[:3] not in ('---','+++')))"
+```
+
+If most of your keys are missing from that diff, they were reverted — by the game or by a tool —
+and the fix is to re-apply, not to keep re-reading the file.
+
+**If you do mod work on this install, expect this.** Re-run `--off` after any session where a tool
+touched the install, and treat "dumps are still appearing" as evidence to check the keys, not as
+evidence the keys do not work.
+
+### How much the switch is actually worth
+
+Counted on one install across three months of dumps:
+
+| | dumps written |
+|---|---|
+| before the switch (2026-06-10 → 10-04) | **210** |
+| after the switch (2026-10-04 → 10-11) | **4** |
+
+So the keys are effective but **not absolute**: an occasional crash still writes a dump. Do not
+promise "no more dump files" — promise "far fewer". If the goal is a clean folder, deleting
+`crash_data\` and `dumps\` is what actually empties it, and the game recreates them when needed.
+
+### Keep `floating_point_exceptions` on
+
+It is deliberately **not** in the default set the tool turns off. Disabling reporting is about
+diagnostics; disabling this changes execution. Recommended state:
+
+```
+crs_enabled                = false     reporting off
+crash_dump                 = false     no dump files
+capture_image              = false     no crash screenshot
+floating_point_exceptions  = true      keep faults loud and attributable
+```
 
 ### Prove the edit instead of believing it
 

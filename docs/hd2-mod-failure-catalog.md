@@ -94,7 +94,8 @@ Fixes:
 
 | Limit | Symptom | Fix / evidence |
 |---|---|---|
-| **65535 bytecode instructions per function** | `function too long` at load; the loader **silently skips the whole mod** — nothing in the log | Hit for real by a large bitmap table constructor. Pack data into a string and parse lazily at first use |
+| **65535 bytecode instructions per function** | `function too long` at load; the loader **silently skips the whole mod** — nothing in the log | Hit for real by a large bitmap table constructor. Pack data into a string and parse lazily at first use. **Corrected 2026-10-08:** on the LuaJIT that lupa links here this figure does *not* bind — a synthetic function with **200,004** instructions compiled successfully. See the constant limit below, which is the one that actually refuses |
+| **65536 constants per function** | `main function has more than 65536 constants`, named at the offending line; the loader **silently skips the whole mod** — nothing in the log | **Measured, not copied:** 50,000 constants compile; 70,000 are refused by name. This is the limit to check in practice. `mods/auto-chat/work/standalone/tools/bytecode_budget.py` compiles a source, reproduces this limit as a self-check, and reports the top-level instruction and constant counts |
 | **200 locals per function** | `too many local variables` | The panel is one big function for exactly this reason (`The whole panel lives in one function: Lua allows 200 locals per function`); if you hit it, split into closures or make the panel a table of methods |
 | **Calls made very early can hang the game** | One reporter's game hung at frame 120 | Spawning a shell / `CreateDirectoryW` from the update thread. Prefer `ffi` calls, do file work once at startup, never per frame |
 

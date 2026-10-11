@@ -193,8 +193,11 @@ def main():
     ap.add_argument("--show", action="store_true", help="print the current values")
     ap.add_argument("--off", action="store_true", help="set the selected keys to false")
     ap.add_argument("--on", action="store_true", help="set the selected keys to true")
-    ap.add_argument("--keys", default=",".join(ALL_KEYS),
-                    help="comma-separated keys (default: all of %s)" % ",".join(ALL_KEYS))
+    ap.add_argument("--keys", default=",".join(REPORTING_KEYS),
+                    help="comma-separated keys. Default: the reporting keys (%s). "
+                         "Pass %s explicitly to also silence floating-point faults, which "
+                         "changes execution and is usually not what you want."
+                         % (",".join(REPORTING_KEYS), ",".join(ENGINE_KEYS)))
     ap.add_argument("--dry-run", action="store_true", help="show what would change")
     ap.add_argument("--restore", metavar="BACKUP", help="restore settings.ini from a backup")
     ap.add_argument("--force", action="store_true",

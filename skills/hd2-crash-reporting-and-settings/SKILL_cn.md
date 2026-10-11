@@ -19,6 +19,12 @@ description: 通过编辑 data/settings.ini 来开关《绝地潜兵2》的崩�
 
 ## 文件位置
 
+```powershell
+python -B scripts/hd2_settings.py --off
+```
+
+预期这些键最终会被某样东西改回去 —— 见失败方式 4 —— 所以做完模组工作后请重新执行一次。
+
 ```
 <游戏目录>\data\settings.ini          # 例如 D:\...\steamapps\common\Helldivers 2\data\settings.ini
 ```
@@ -85,16 +91,17 @@ crash_dump_path = "%APPDATA%/Arrowhead/Helldivers2/dumps/dump-%DATE%-%TIME%-%SES
 用脚本而不是编辑器,因为这里有三种**静默**的失败方式:
 
 ```powershell
-python -B scripts/hd2_settings.py --show        # 当前值,带行号
+python -B scripts/hd2_settings.py --show        # 当前值，带行号
 python -B scripts/hd2_settings.py --off --dry-run
-python -B scripts/hd2_settings.py --off                  # 四个全关
-python -B scripts/hd2_settings.py --off --keys crs_enabled,crash_dump,capture_image
+python -B scripts/hd2_settings.py --off                  # 三个上报键
+python -B scripts/hd2_settings.py --off --keys crs_enabled,crash_dump,capture_image,floating_point_exceptions
+python -B scripts/hd2_settings.py --on --keys floating_point_exceptions   # 把引擎检查改回来
 python -B scripts/hd2_settings.py --restore <备份文件>
 ```
 
 它会在游戏运行时拒绝编辑,写出带时间戳的备份,并**重新读取文件**来确认改动,而不是相信写入本身。
 
-### 三种静默的失败方式
+### 四种静默的失败方式
 
 1. **在游戏运行时编辑。** 游戏退出时会重写 `settings.ini`,你的改动会**无声消失**,没有任何报错。
    先关游戏。脚本会检查进程并在必要时拒绝,除非你显式传 `--force`。
@@ -102,6 +109,54 @@ python -B scripts/hd2_settings.py --restore <备份文件>
 3. **把换行符重写了。** 这一条把工具的第一个版本坑了:该文件用的是 **CRLF**,而文本模式的"读—改—写"
    会把它全部 190 个换行符变成 LF。结果是文件少了 186 字节、四个键**确实**改了、而任何 diff 工具都会
    报告整个文件被重写。工具现在按**字节**读写,所以磁盘上的差异只有它真正编辑的那几行。
+4. **有东西把键又放了回去。** 这一条最浪费时间,因为单纯重读一遍文件看起来完美无缺,弹窗却照样不停出现。
+
+### 失败方式 4 详解:值会被改回去,而重读无法告诉你
+
+在一台安装上的实测:四个键被设为 false,而**七天、经过若干次游戏会话之后,只有 `capture_image` 还是 false** ——
+`crs_enabled` 与 `crash_dump` 都已经回到 `true`。与此同时崩溃转储还在不断出现,看起来完全就是"这个开关根本不起作用"。
+
+有两种说得通的原因,而从当前这个文件里**无法区分它们**:
+
+- 游戏在退出时重写了这几个键,或者
+- **另一个工具把文件还原了。** 实践中这一种更可能:任何会对安装做快照或"清理"的模组维护脚本,都可能把一份
+  原版的 `settings.ini` 放回去;把改动之前做的备份还原回去也一样。
+
+**在这里重读文件什么都证明不了**,因为你重读的正是那份被还原过的文件。能把它们区分开的是与**原始未改动副本**的对比:
+
+```powershell
+# 在任何编辑之前先留一份没被动过的 settings.ini 副本,之后再 diff
+python -c "import difflib,io; a=io.open(r'<pristine>').read().split('\n'); b=io.open(r'<game>\data\settings.ini').read().split('\n'); print('\n'.join(l for l in difflib.unified_diff(a,b,lineterm='') if l[:1] in '+-' and l[:3] not in ('---','+++')))"
+```
+
+如果那份 diff 里缺少你的大部分键,那它们就是被改回去的 —— 不管是游戏干的还是某个工具干的 ——
+而解决办法是重新应用,不是继续重读文件。
+
+**如果你在这台安装上做模组工作,就要预期会发生这种事。** 在任何有工具碰过这台安装的会话之后都重跑一遍 `--off`,
+并把"转储还在出现"当作**该去检查键值**的证据,而不是当作键值不起作用的证据。
+
+### 这个开关到底值多少
+
+在一台安装上,统计了三个月的转储:
+
+| | 写出的转储数 |
+|---|---|
+| 开关之前(2026-06-10 → 10-04) | **210** |
+| 开关之后(2026-10-04 → 10-11) | **4** |
+
+所以这些键是有效的,但**不是绝对的**:偶尔一次崩溃仍然会写出转储。不要承诺"不会再有转储文件" ——
+承诺"少得多"。如果目标是干净的文件夹,真正把目录清空的是删掉 `crash_data\` 与 `dumps\`,游戏会在需要时重建它们。
+
+### 让 `floating_point_exceptions` 保持开启
+
+它是**故意**不在工具默认关闭的那一组里的。关掉上报针对的是诊断;关掉这一项改变的是执行。推荐状态:
+
+```
+crs_enabled                = false     reporting off
+crash_dump                 = false     no dump files
+capture_image              = false     no crash screenshot
+floating_point_exceptions  = true      keep faults loud and attributable
+```
 
 ### 用证据证明改动,而不是相信它
 
