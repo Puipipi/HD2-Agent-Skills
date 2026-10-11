@@ -9,6 +9,16 @@ description: 通过编辑 data/settings.ini 来开关《绝地潜兵2》的崩�
 
 这里有两条内容:人们想关掉崩溃弹窗时会去找的那四个键,以及**其中一个和另外三个性质不同**的原因。
 
+**简短回答:** 把 `crs_enabled`、`crash_dump` 与 `capture_image` 设为 `false`,让
+`floating_point_exceptions` 保持 `true`,然后删掉 `%APPDATA%\Arrowhead\Helldivers2\crash_data\` 与
+`...\dumps\`。脚本默认做的就是这件事:
+
+```powershell
+python -B scripts/hd2_settings.py --off
+```
+
+预期这些键最终会被某样东西改回去 —— 见失败方式 4 —— 所以做完模组工作后请重新执行一次。
+
 ## 来源与置信度
 
 下面的键名、值、行号与路径都是**从一台真实安装上读出来的**(build 25480438,`helldivers2.exe` 1.8.46015.0)——
@@ -18,12 +28,6 @@ description: 通过编辑 data/settings.ini 来开关《绝地潜兵2》的崩�
 所以请把"弹窗不再出现"当作**预期效果**,而不是本仓库测出来的结论。
 
 ## 文件位置
-
-```powershell
-python -B scripts/hd2_settings.py --off
-```
-
-预期这些键最终会被某样东西改回去 —— 见失败方式 4 —— 所以做完模组工作后请重新执行一次。
 
 ```
 <游戏目录>\data\settings.ini          # 例如 D:\...\steamapps\common\Helldivers 2\data\settings.ini
