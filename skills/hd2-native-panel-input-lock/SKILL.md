@@ -71,6 +71,13 @@ panel_tick = function(now)
 end
 ```
 
+For a Mod Bindings Menu integration, inspect its current API, fixed-slot ownership,
+and packaged input resource before deciding how a default key is provided. A menu
+registration call alone may create an unbound action; the Ship Station Hotkeys
+defaults come from Mod Bindings Menu's packaged `content/input.config`. See the
+[Mod Bindings Menu hotkey reference](references/mod-bindings-menu.md) for the
+verified v2.2 contract, fallback and input-lock test limits.
+
 ## 2. Unlock the mouse — two cursors, both must be handled
 
 There are **two** cursors: the game's own (`stingray.Window.show_cursor` /

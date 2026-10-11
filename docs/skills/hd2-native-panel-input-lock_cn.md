@@ -68,6 +68,8 @@ panel_tick = function(now)
 end
 ```
 
+接入 Mod Bindings Menu 前，应核对当前 API、固定槽归属和它打包的输入资源，确认默认键究竟由哪一层提供。单独调用注册 API 可能只创建一个未绑定动作；Ship Station Hotkeys 的默认键来自 MBM 打包的 `content/input.config`。已核实的 v2.2 契约、兜底及输入锁测试边界见[MBM 热键参考](../../skills/hd2-native-panel-input-lock/references/mod-bindings-menu.md)。
+
 ## 2. 解锁鼠标——两个光标，都必须处理
 
 存在**两个**光标：游戏自身的（`stingray.Window.show_cursor` /
