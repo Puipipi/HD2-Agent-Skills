@@ -1,11 +1,11 @@
 ---
 name: hd2-no-quarantine-packaging
-description: Ship a mod whose helper scripts survive mod-site scanning — generate the .bat / .ps1 at runtime into the user's own config folder instead of putting it in the upload archive, because sites like Nexus quarantine mods that contain scripts. Use when a release keeps getting flagged, rejected or silently removed, when a companion helper must ship with a mod, or when a user is asked to run a script to collect logs.
+description: "Ship a mod whose helper scripts survive mod-site scanning: generate the .bat or .ps1 at runtime into the user's config folder, not the archive. Use when a release is flagged for scripts."
 ---
 
 # Packaging a mod so its helper scripts are not quarantined
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-no-quarantine-packaging/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-no-quarantine-packaging_cn.md)
 
 > **Confidence:** the mechanism is read from SmoothBoot's source, not reproduced. The build gate that refuses a script-bearing archive *is* verified here.
 

@@ -1,11 +1,11 @@
 ---
 name: hd2-injection-runtime-patching
-description: Patch a running Helldivers 2 process from a LuaJIT addon — locating a table by signature and relative offset, opening read-only pages safely, getting LuaJIT numbers, strings and FFI casts right, and choosing when to write. Use when a mod reads and writes the Helldivers 2 process memory through FFI, or when a write silently does nothing, corrupts a neighbour, or is wiped by a map load.
+description: "Patch a running HD2 process from a LuaJIT addon: signature and offset lookup, page safety, FFI casting, when to write. Use when a mod reads or writes memory, or a write silently does nothing."
 ---
 
 # HD2 injection: patching memory at runtime
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-injection-runtime-patching/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-injection-runtime-patching_cn.md)
 
 Scope: addons that run inside the game's LuaJIT VM and read/write the Helldivers 2 process memory
 through FFI at runtime. Asset-replacement mods (swapping `data/` resources) are a different class

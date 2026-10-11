@@ -1,13 +1,13 @@
 ---
 name: hd2-game-event-identification
-description: 根据只读游戏证据识别《地狱潜者 2》的 HUD 标记、战术地图标记、任务目标、敌人标记和战备激活。当 addon 需要区分事件来源、触发者、动作、稳定目标身份、本地化名称或类别，且不能凭通用标签猜测时使用。
+description: "从只读证据识别 HD2 的 HUD ping、地图标记、任务目标、敌人标记与战略配备激活。addon 需要说清事件的生产者、actor 与目标时用。"
 ---
 
 # HD2 游戏事件识别
 
 [English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-game-event-identification/SKILL.md) / 简体中文
 
-本技能用于识别**发生了什么，以及事件指向哪个对象**。到生成规范化事件为止；消息模板、身份权限、队列和冷却策略属于相邻的 [`hd2-event-chat-automation`](../hd2-event-chat-automation/SKILL_cn.md) 技能。需要解析表布局或资源哈希时使用 [`hd2-offline-data-workflow`](../hd2-offline-data-workflow/SKILL_cn.md)；需要窄范围外部只读地址核验时使用 [`hd2-live-memory-probe`](../hd2-live-memory-probe/SKILL_cn.md)；需要读取玩家选择的游戏语言时使用 [`hd2-game-language-autodetect`](../hd2-game-language-autodetect/SKILL_cn.md)。
+本技能用于识别**发生了什么，以及事件指向哪个对象**。到生成规范化事件为止；消息模板、身份权限、队列和冷却策略属于相邻的 [`hd2-event-chat-automation`](../skills/hd2-event-chat-automation_cn.md) 技能。需要解析表布局或资源哈希时使用 [`hd2-offline-data-workflow`](../skills/hd2-offline-data-workflow_cn.md)；需要窄范围外部只读地址核验时使用 [`hd2-live-memory-probe`](../skills/hd2-live-memory-probe_cn.md)；需要读取玩家选择的游戏语言时使用 [`hd2-game-language-autodetect`](../skills/hd2-game-language-autodetect_cn.md)。
 
 ## 证据与范围
 

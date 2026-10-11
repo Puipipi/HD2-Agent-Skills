@@ -1,6 +1,6 @@
 ---
 name: hd2-addon-package-inspector
-description: 在发布前检查一个构建好的 Helldivers 2 addon ZIP —— manifest 字段与 GUID、Addon 归档的二进制头、条目范围、资源名到哈希的映射、已声明但缺失的图标，以及打包的资源中是否真的含有你构建的那份源码。在一次构建之后、在上传或部署之前使用，或者在 mod 管理器拒绝了一次被构建判定为成功的导入时使用。
+description: "发布前检查构建出来的 addon ZIP：manifest、GUID、归档头、资源哈希、缺失图标。用于构建之后，或 mod 管理器拒绝导入时。"
 ---
 
 # hd2-addon-package-inspector —— 归档包体检

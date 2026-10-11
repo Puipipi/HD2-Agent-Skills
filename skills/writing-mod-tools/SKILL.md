@@ -1,13 +1,13 @@
 ---
 name: writing-mod-tools
-description: How to write a maintenance and diagnostics tool for a Helldivers 2 mod (or any game-mod project) so it is safe, honest about its prerequisites, machine-checkable, and actually catches the bug it was written for — safe-by-default mutation, exit codes, --json, dry-run, self-tests that reproduce the original failure, and the discipline of a README/status split. Use when adding a build script, a log analyzer, a live memory probe, a deployer, or any helper another person will run.
+description: "Write a maintenance or diagnostics tool for a game-mod project so it is safe and machine-checkable: exit codes, JSON output, dry-run, self-tests. Use when adding a build script, analyzer or deployer."
 ---
 
 # Writing mod tools
 
 > **Confidence:** the rules are verified by re-encountering them while building the tools in this repository; the incidents they cite are quoted, not re-run.
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/writing-mod-tools/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/writing-mod-tools_cn.md)
 
 Distilled from the ~120 tools across the mods in this workspace: four build scripts, a
 guarded deployer, a dozen live memory probes, log analyzers, offline simulators and a

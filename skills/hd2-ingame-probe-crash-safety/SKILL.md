@@ -1,11 +1,11 @@
 ---
 name: hd2-ingame-probe-crash-safety
-description: Write an in-game Lua probe or debug addon that cannot take the process down — covering the crash classes `pcall` does not catch, the per-tick script temp-arena discipline, measuring an engine call's cost before multiplying it, startup and menu guards, and the status line that separates "idle" from "reading nothing". Use when adding a diagnostic or measurement addon to Helldivers 2, when a probe is suspected of a crash or a hang, when the game dies with 0xC0000409 or another fail-fast code while a probe is loaded, or when a probe loads but its log shows nothing.
+description: "Write an in-game Lua probe that cannot take HD2 down: crash classes pcall misses, temp-arena and guard discipline. Use when adding a diagnostic, or when a probe crashes or logs nothing."
 ---
 
 # hd2-ingame-probe-crash-safety
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-ingame-probe-crash-safety/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-ingame-probe-crash-safety_cn.md)
 
 > **Confidence:** the crash classes and the guards below are **verified in this workspace** — two
 > probe builds really did terminate the game (both `0xC0000409` fail-fast), and both times the

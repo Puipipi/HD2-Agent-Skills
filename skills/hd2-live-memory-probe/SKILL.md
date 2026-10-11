@@ -1,11 +1,11 @@
 ---
 name: hd2-live-memory-probe
-description: Write and run a read-only live probe against the running Helldivers 2 process to verify a mod's pointer chain, module base, function signature or field offset without burning another in-game run — PROCESS_VM_READ handles, module enumeration, VirtualQuery page guards, version fingerprints, dual-source cross-checks, and --json output that an offline analyzer can consume later. Use when an address or signature is suspect, when a probe logged zeros, or before shipping anything that depends on absolute offsets.
+description: "Run a read-only live probe against the running HD2 process to verify a pointer chain, module base or offset without another in-game run. Use when an address is suspect or a probe logged zeros."
 ---
 
 # hd2-live-memory-probe
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-live-memory-probe/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-live-memory-probe_cn.md)
 
 > **Confidence:** the technique is reported from probes in this workspace; the probe skeleton itself has never been run against a live game here.
 

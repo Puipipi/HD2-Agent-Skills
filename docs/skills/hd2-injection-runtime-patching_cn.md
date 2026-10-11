@@ -1,6 +1,6 @@
 ---
 name: hd2-injection-runtime-patching
-description: 从 LuaJIT addon 对一个正在运行的 Helldivers 2 进程打运行时补丁 —— 通过特征码与相对偏移定位一张表、安全地打开只读页、正确处理 LuaJIT 的数字、字符串与 FFI cast，并选择何时写入。当某个 mod 通过 FFI 读写 Helldivers 2 的进程内存时使用，或当一次写入静默地什么也没做、破坏了相邻数据、或被一次地图加载抹掉时使用。
+description: "从 LuaJIT addon 给运行中的 HD2 打补丁：签名与偏移定位、页安全、FFI 转换、何时写入。mod 读写内存，或写入静默无效时用。"
 ---
 
 # HD2 注入：在运行时对内存打补丁

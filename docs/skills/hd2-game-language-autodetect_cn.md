@@ -1,6 +1,6 @@
 ---
 name: hd2-game-language-autodetect
-description: 判断正在运行的 Helldivers 2 客户端是中文还是英文 —— 通过经过验证的绝对偏移，从 game.dll 内存中读取游戏所选的 Text Language；失败时回退到探测引擎字体的字形覆盖率。当 mod／面板／工具必须自动选择 zh 或 en 标签时使用，或者当一个固定地址在游戏更新后失效、代码需要一条安全的「保留上一次已知值」路径时使用。
+description: "判断运行中的客户端是中文还是英文：按已验证偏移读 game.dll 的 Text Language，并带字体字形覆盖兜底。mod 需要自动选 zh 或 en 标签时用。"
 ---
 
 # HD2 游戏语言自动判断

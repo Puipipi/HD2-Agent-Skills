@@ -1,6 +1,6 @@
 ---
 name: hd2-crash-reporting-and-settings
-description: 通过编辑 data/settings.ini 来开关《绝地潜兵2》的崩溃上报、转储写入与崩溃截图,并清理它在 AppData 里留下的崩溃文件夹。当崩溃反馈弹窗妨碍你游玩、当你调试模组需要崩溃转储、或者你需要知道这几个键里哪一个改的是引擎行为而不只是上报时使用。
+description: "用 data/settings.ini 开关崩溃报告器、转储与截图，清理 AppData 里的崩溃目录，并知道哪个键会被改回去。弹窗打断游戏或需要转储时用。"
 ---
 
 # HD2 崩溃上报,以及控制它的 settings.ini 键

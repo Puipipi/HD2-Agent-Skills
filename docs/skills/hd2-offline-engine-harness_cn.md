@@ -1,6 +1,6 @@
 ---
 name: hd2-offline-engine-harness
-description: 通过真实 LuaJIT 与 lupa 离线测试或比较《Helldivers 2》Lua mod —— 伪造引擎边界，统计 GUI 创建/销毁，覆盖分阶段启动与拆解、帧错误预算，或对照固定源码版本测量生产热路径。适用于添加离线模组测试、排查启动/拆解缺陷，或判断热路径改动是否降低成本，且无需部署。
+description: "用 lupa 在真 LuaJIT 上离线测试或对比 HD2 Lua mod：假引擎边界、GUI 计数、分阶段启动、帧错误预算。加离线测试时用。"
 ---
 
 # HD2 离线引擎测试台

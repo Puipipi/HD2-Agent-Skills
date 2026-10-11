@@ -1,11 +1,11 @@
 ---
 name: hd2-mod-log-analysis
-description: Analyze a Helldivers 2 mod's runtime log to answer "did it actually do anything, and where did it stop?" — stage-by-stage classification of a stage-based log, append-across-launches and UTC timestamp handling, correlating two mods' logs in one session, and JSON output for reports. Use when a mod appears to do nothing, when a feature silently no-ops, or when you need in-game evidence without launching the game.
+description: "Analyze a HD2 mod's runtime log to answer whether it did anything and where it stopped: stage classification, timestamps, JSON output. Use when a mod appears to do nothing."
 ---
 
 # hd2-mod-log-analysis
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-mod-log-analysis/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-mod-log-analysis_cn.md)
 
 > **Confidence:** reported. The incident behind it is real; no script here was executed.
 

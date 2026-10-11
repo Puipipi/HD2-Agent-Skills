@@ -1,6 +1,6 @@
 ---
 name: hd2-bingus-mod-development
-description: 开发、验证并打包一个基于 Bingus/MDL 加载器的 Helldivers 2 Lua 模组——仓库结构、构建必须跑的 LuaJIT 编译门与 FFI 门、用 lupa 做的离线模拟、模组管理器可导入的信封包 ZIP、部署路径与回退、实机日志取证，以及"未经实机验证就不许称为完成"的发布纪律。用于新建 HD2 模组、给模组加功能、打包发布，或搭建完成这一切的构建流水线。
+description: "开发、验证并打包 Bingus/MDL 加载器的 HD2 Lua mod：仓库布局、构建门禁、离线模拟、addon 信封、部署与日志。新建或构建 HD2 mod 时用。"
 ---
 
 # HD2 Bingus 模组开发

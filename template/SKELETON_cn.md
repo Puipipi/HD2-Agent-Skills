@@ -48,8 +48,8 @@ python -B tests/test_panel_skeleton.py
    加载器的回调——**两条路都要让预算包装留在链路里**。
 3. 把你的每帧工作放进 `MOD.work`（或替换 `frame` 里标出的那段）。
 4. 任何涉及绘制或输入的东西，先读
-   [`../skills/hd2-in-game-panel/SKILL_cn.md`](../skills/hd2-in-game-panel/SKILL_cn.md) 和
-   [`../skills/hd2-native-panel-input-lock/SKILL_cn.md`](../skills/hd2-native-panel-input-lock/SKILL_cn.md)
+   [`../docs/skills/hd2-in-game-panel_cn.md`](../docs/skills/hd2-in-game-panel_cn.md) 和
+   [`../docs/skills/hd2-native-panel-input-lock_cn.md`](../docs/skills/hd2-native-panel-input-lock_cn.md)
    再加调用。
 5. 对结果重跑 `ffi_audit.py`——每个新增的 `ffi.cdef` 符号都要在列表里有声明，而一条错误的
    声明能静默顶掉另一个模组的声明。

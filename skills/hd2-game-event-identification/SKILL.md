@@ -1,11 +1,11 @@
 ---
 name: hd2-game-event-identification
-description: Identify Helldivers 2 HUD pings, tactical map pins, mission targets, enemy markers and stratagem activations from read-only game evidence. Use when an addon needs to distinguish the event producer, actor, action, stable target identity, localized display name or category without guessing from generic labels.
+description: "Identify HD2 HUD pings, map pins, mission targets, enemy markers and stratagem activations from read-only evidence. Use when an addon must name an event's producer, actor and target."
 ---
 
 # HD2 game event identification
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-game-event-identification/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-game-event-identification_cn.md)
 
 Use this skill to identify **what happened and what object it referred to**. It ends at a normalized event; message templates, role permissions, queues and cooldown policy belong to the neighboring [`hd2-event-chat-automation`](../hd2-event-chat-automation/SKILL.md) skill. For table layout and resource hashing, use [`hd2-offline-data-workflow`](../hd2-offline-data-workflow/SKILL.md). For a narrowly scoped external read-only address check, use [`hd2-live-memory-probe`](../hd2-live-memory-probe/SKILL.md); for the player's selected language, use [`hd2-game-language-autodetect`](../hd2-game-language-autodetect/SKILL.md).
 

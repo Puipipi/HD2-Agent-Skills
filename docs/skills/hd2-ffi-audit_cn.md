@@ -1,6 +1,6 @@
 ---
 name: hd2-ffi-audit
-description: 静态检查一个 Helldivers 2 Lua mod 调用的每个 C 符号是否都已声明，以及是否有任何声明会与另一个 mod 可能做过的声明冲突 —— 因为 LuaJIT 的 ffi.cdef 保留第一条声明，一个错误的原型会静默地让另一个 mod 失效。在打包任何使用 ffi 的 mod 之前使用，或者在某个 mod 能加载但某个动作抛出 "missing declaration for symbol" 时使用。
+description: "检查 HD2 Lua mod 调用的每个 C 符号是否已声明、是否与别的 mod 的 ffi.cdef 冲突。打包含 ffi 的 mod 前，或报缺声明时用。"
 ---
 
 # hd2-ffi-audit —— FFI 声明静态审计

@@ -1,13 +1,13 @@
 ---
 name: hd2-mod-release-operations
-description: Package and publish a Helldivers 2 Bingus/MDL Lua mod — project layout and package naming, multi-resource archives, the fixed seven-step release, GitHub push and Release publication, where the token lives, and the local/sandbox network traps that break HTTPS and proxy access. Use when shipping a HD2 mod, cutting or re-cutting a release, or debugging a failed push, upload or 403.
+description: "Package and publish a HD2 Bingus/MDL mod: layout, archives, the seven-step release, GitHub push and Release, network traps. Use when shipping a mod or debugging a failed push or 403."
 ---
 
 # HD2 mod release operations
 
 > **Confidence:** reported; §1 lists the per-item status, including what is environment-specific.
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-mod-release-operations/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-mod-release-operations_cn.md)
 
 This is the operations half of HD2 mod work: how the project is laid out, how the package is
 named and archived, the seven steps a release actually consists of, and what breaks on the

@@ -1,13 +1,13 @@
 ---
 name: hd2-game-language-autodetect
-description: Find out whether a running Helldivers 2 client is in Chinese or English — read the game's selected Text Language from game.dll memory by verified absolute offset, and fall back to probing the engine font's glyph coverage. Use when a mod/panel/tool must pick zh or en labels automatically, or when a fixed address broke after a game update and the code needs a safe "keep last known value" path.
+description: "Tell whether a running HD2 client is Chinese or English — read Text Language from game.dll memory, with a font-coverage fallback. Use when a mod must pick zh or en labels automatically."
 ---
 
 # HD2 game language auto-detect
 
 > **Confidence:** reported. The offline test seam exists in the armor kit's own tests but was read here, not run.
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-game-language-autodetect/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-game-language-autodetect_cn.md)
 
 Two **independent** methods, in the order they should be attempted. Both were taken
 from working HD2 Lua/JIT mods and confirmed live.

@@ -1,11 +1,11 @@
 ---
 name: hd2-offline-data-workflow
-description: Locate and decode Helldivers 2 game data tables offline — from FileDiver's plaintext mirror and the game's own typelib — computing type hashes, field offsets and record layouts before anything runs, then doing only the minimal in-game verification. Use when you need a table's contents, offsets or signature, or when you are about to spend an in-game run on a scan you could have solved on disk.
+description: "Decode HD2 game data tables offline from FileDiver's plaintext mirror and the typelib — type hashes, offsets, record layouts — before spending an in-game run. Use when you need a table or offset."
 ---
 
 # hd2-offline-data-workflow
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-offline-data-workflow/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-offline-data-workflow_cn.md)
 
 A machine session costs a game restart, and Bingus Shared Loader has no hot reload, so every question you can answer on disk is a question you should never ask the running game. The plaintext mirror plus the typelib answer most of them. **Work offline first, go in-game last.**
 

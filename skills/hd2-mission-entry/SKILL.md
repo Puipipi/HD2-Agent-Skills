@@ -1,13 +1,13 @@
 ---
 name: hd2-mission-entry
-description: Launch Helldivers 2 on Windows and drive it from ship into an active mission — window focus, key/mouse injection, the mods this sequence depends on, star-map mission selection, briefing loadout, and the verification evidence for each step. Use when an agent must start HD2 and enter a mission unattended (performance testing, mod validation, gameplay capture).
+description: "Launch HD2 on Windows and drive it from ship into a mission unattended: focus, input injection, star-map selection, loadout. Use when an agent must start HD2 and enter a mission."
 ---
 
 # HD2 Mission Entry (unattended)
 
 > **Confidence:** reported from real runs. The shipped input tools need the game running to prove their clicking and focusing behaviour.
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-mission-entry/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-mission-entry_cn.md)
 
 Goal: from a cold start, get the game **into a mission with a known loadout**, with
 verifiable evidence at every step. Written from real runs; every coordinate and

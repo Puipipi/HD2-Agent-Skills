@@ -1,13 +1,13 @@
 ---
 name: hd2-in-game-panel
-description: Draw a clickable mod panel inside Helldivers 2 using only the engine's Gui.rect primitive — retained screen GUI lifecycle, staged bring-up, z-layer and native-screen invalidation, region hit-testing, panel dragging with saved position, and a 4x5 pixel font (plus packed CJK bitmaps) so text needs no engine font or material. Use when building or fixing an in-game mod UI, especially when Gui.text / materials are unavailable or crash the game.
+description: "Draw a clickable mod panel inside HD2 using only Gui.rect — retained GUI lifecycle, hit-testing, dragging, a 4x5 pixel font with CJK bitmaps. Use when building or fixing an in-game mod UI."
 ---
 
 # HD2 in-game panel (rect-only, retained GUI)
 
 > **Confidence:** reported from Custom Armor Kit's source and logs; not rebuilt or run here.
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-in-game-panel/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-in-game-panel_cn.md)
 
 A working in-game panel with **no engine font, no material, no Gui.text** — every pixel,
 including Chinese characters, is a `Gui.rect`. Source: `Custom Armor Kit 2.5.10`

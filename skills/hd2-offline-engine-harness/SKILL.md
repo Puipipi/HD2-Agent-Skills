@@ -1,11 +1,11 @@
 ---
 name: hd2-offline-engine-harness
-description: Test or compare a Helldivers 2 Lua mod offline with lupa on real LuaJIT — fake engine boundaries, count GUI creates/destroys, drive staged bring-up and teardown, exercise a frame error budget, or measure a production hot path against a fixed source ref. Use when adding offline mod tests, diagnosing boot-order/teardown bugs, or checking whether a hot-path change reduces cost without deploying.
+description: "Test or compare a HD2 Lua mod offline with lupa on real LuaJIT: fake engine boundaries, GUI counts, staged bring-up, frame error budget. Use when adding offline mod tests."
 ---
 
 # hd2-offline-engine-harness
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-offline-engine-harness/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-offline-engine-harness_cn.md)
 
 > **Confidence:** verified here against a fake engine on real LuaJIT; it found two real bugs. It proves your control flow, not the engine's behaviour.
 

@@ -1,6 +1,6 @@
 ---
 name: hd2-bingus-toolchain-setup
-description: 通过在本地机器上定位 Bingus/MDL 的 addon 打包工具（build_addon.py、archive.py）而不是再分发它们，把它们放到构建所期望的位置 —— 搜索显式路径、每个已安装 mod 的 scripts/tools/vendor 文件夹以及本地检出，把找到的内容以清单形式报告，并且只在被要求时才复制。当构建以 "No module named build_addon" 失败时使用，或者在搭建一个新的 mod 仓库时使用。
+description: "在本机找到 Bingus/MDL 打包工具（build_addon.py、archive.py）并放到构建期望的位置。报 No module named build_addon 时用。"
 ---
 
 # hd2-bingus-toolchain-setup —— 打包工具链就位

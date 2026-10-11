@@ -1,11 +1,11 @@
 ---
 name: hd2-mod-options-menu
-description: Build an in-game settings page for a Helldivers 2 mod with the ModOptionsMenu (MOM) framework — the real registration contract, the two types it accepts, the 2-16 option limit, index-valued choices, and the single-owner rule for two controls writing one setting. Use when a mod needs user-facing options, when options silently fail to appear, or when a value changes in the page but nothing happens in game.
+description: "Build a HD2 mod's in-game settings page with ModOptionsMenu: registration contract, accepted types, the 2-16 limit, single-owner rule. Use when options fail to appear or a change does nothing."
 ---
 
 # ModOptionsMenu: the in-game settings page framework
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-mod-options-menu/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-mod-options-menu_cn.md)
 
 MOM is how a mod gives the player options without shipping a config file to hand-edit. Its contract
 is small, and almost every part of it fails **silently** — a rejected option simply does not appear,

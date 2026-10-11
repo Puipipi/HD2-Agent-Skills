@@ -1,11 +1,11 @@
 ---
 name: hd2-lua-forward-declarations
-description: Fix the Lua failure where a function is called before its definition, so the call resolves to nil and fails silently — the pattern behind "I changed the setting and nothing happens". Use when a callback, rescan or refresh does nothing with no error, when a feature silently stopped working after a refactor, or when writing a mod where one function calls another defined further down the file.
+description: "Fix the Lua failure where a function is called before its definition, so the call resolves to nil and fails silently. Use when a callback, rescan or refresh does nothing with no error."
 ---
 
 # Lua forward declarations: the bug that reports nothing
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-lua-forward-declarations/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-lua-forward-declarations_cn.md)
 
 ```lua
 local function rescan() ... end   -- defined at line 900

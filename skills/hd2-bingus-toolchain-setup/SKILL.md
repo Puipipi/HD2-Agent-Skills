@@ -1,13 +1,13 @@
 ---
 name: hd2-bingus-toolchain-setup
-description: Put the Bingus/MDL addon packaging tools (build_addon.py, archive.py) where a build expects them, by locating them on this machine instead of redistributing them — searches explicit paths, every installed mod's scripts/tools/vendor folders, and the local checkout, reports what it found as a checklist, and copies only when asked. Use when a build fails with "No module named build_addon", or when setting up a new mod repo.
+description: "Put the Bingus/MDL packaging tools (build_addon.py, archive.py) where a build expects them by locating them on this machine. Use when a build fails with No module named build_addon."
 ---
 
 # hd2-bingus-toolchain-setup
 
 > **Confidence:** discovery was verified here; the copy-then-build loop and `--url` were not run.
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-bingus-toolchain-setup/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-bingus-toolchain-setup_cn.md)
 
 `scripts/fetch_bingus_tools.py` finds the two third-party files that encode the loader's
 addon envelope and copies them into `vendor/bingus/`.

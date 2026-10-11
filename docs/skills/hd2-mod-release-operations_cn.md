@@ -1,6 +1,6 @@
 ---
 name: hd2-mod-release-operations
-description: 打包并发布一个 Helldivers 2 Bingus/MDL Lua mod —— 项目布局与包命名、多资源归档、固定的七步发布流程、GitHub push 与 Release 发布、token 存放在哪里，以及会破坏 HTTPS 与代理访问的本地/沙箱网络坑。适用于发布一个 HD2 mod、切分或重新切分一次发布，或排查失败的 push、上传或 403 时使用。
+description: "打包并发布 HD2 的 Bingus/MDL mod：布局、归档、七步发布、GitHub push 与 Release、网络坑。发布 mod 或排查 push 与 403 失败时用。"
 ---
 
 # HD2 mod 发布运维

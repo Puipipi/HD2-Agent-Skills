@@ -1,6 +1,6 @@
 ---
 name: hd2-ingame-probe-crash-safety
-description: 编写不会把游戏进程带崩的游戏内 Lua 探针或调试 addon——涵盖 `pcall` 挡不住的崩溃类别、每帧脚本临时内存区纪律、在放大调用次数之前先测引擎调用成本、启动期与菜单期的闸门，以及那条区分「空闲」与「读不到」的状态行。适用于给绝地潜兵 2 加诊断或测量 addon、怀疑探针导致崩溃或卡死、探针在载时游戏以 0xC0000409 或其他 fail-fast 码终止、或探针加载成功但日志什么都没有的时候。
+description: "写不会把 HD2 弄崩的游戏内 Lua 探针：pcall 抓不住的崩溃类、临时内存区与守卫纪律。加诊断，或探针崩溃、日志为空时用。"
 ---
 
 # hd2-ingame-probe-crash-safety

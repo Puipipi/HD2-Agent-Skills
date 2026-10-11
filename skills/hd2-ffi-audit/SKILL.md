@@ -1,13 +1,13 @@
 ---
 name: hd2-ffi-audit
-description: Static check that every C symbol a Helldivers 2 Lua mod calls is declared, and that no declaration conflicts with one another mod may have made — because LuaJIT's ffi.cdef keeps the first declaration, a wrong prototype silently disables another mod. Use before packaging any mod that uses ffi, or when a mod loads but an action throws "missing declaration for symbol".
+description: "Check that every C symbol a HD2 Lua mod calls is declared and does not conflict with another mod's ffi.cdef. Use before packaging an ffi mod, or on missing-declaration errors."
 ---
 
 # hd2-ffi-audit
 
 > **Confidence:** the scanner runs, but its rules are reported, not re-derived from the loader. Its known blind spots are listed below. See [verification status](../../docs/verification-status.md).
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-ffi-audit/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-ffi-audit_cn.md)
 
 `scripts/ffi_audit.py` reads Lua source as text and reports two classes of breakage that have
 both shipped in this ecosystem:

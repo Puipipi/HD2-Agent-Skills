@@ -1,7 +1,7 @@
 """Verify that a translated doc still matches its source.
 
-Run this after editing either side of an `X.md` / `X_cn.md` pair. It checks the
-things a translation must NOT change, so review attention can go to the prose:
+Run this after editing either side of a bilingual pair. It checks the things a
+translation must NOT change, so review attention can go to the prose:
 
   1. every Lua block extracted from the TRANSLATION still compiles on LuaJIT
   2. code fences match the source after all comments are removed
@@ -13,6 +13,12 @@ things a translation must NOT change, so review attention can go to the prose:
   5. every relative link is carried over, or deliberately retargeted to the `_cn`
      peer (reported, not failed)
   6. frontmatter keys are intact, `name:` is unchanged, `description:` translated
+
+Pairs are found in two layouts. A translation may sit beside its source
+(`X.md` / `X_cn.md`), or it may be kept out of the skill folder:
+`skills/<name>/SKILL.md` with `docs/skills/<name>_cn.md`. The second layout is
+deliberate: an agent that installs a skill copies the whole skill folder, so that
+folder holds English only and the Chinese text stays readable under `docs/`.
 
 Run:  python -B scripts/verify_translations.py [--root <repo>]
 
@@ -168,6 +174,31 @@ def links(text):
     return sorted(set(re.findall(r"\]\((?!https?:)([^)#]+)\)", text)))
 
 
+def resolved_links(text, path, root):
+    """Repo-relative link targets.
+
+    A pair may live in two different folders - a skill and its translation do - so
+    comparing raw link text would report a false failure for every link that
+    merely changed depth when it moved.
+    """
+    base = os.path.dirname(os.path.relpath(path, root))
+    return set(os.path.normpath(os.path.join(base, l)).replace(os.sep, "/")
+               for l in links(text))
+
+
+SKILL_DOC = re.compile(r"^skills/([^/]+)/SKILL\.md$")
+
+
+def cn_counterpart(rel):
+    """Where the Chinese side of the repo-relative `rel` lives, else None."""
+    m = SKILL_DOC.match(rel)
+    if m:
+        return "docs/skills/%s_cn.md" % m.group(1)
+    if rel.endswith(".md") and not rel.endswith("_cn.md"):
+        return rel[:-len(".md")] + "_cn.md"
+    return None
+
+
 def frontmatter(text):
     m = re.match(r"^---\n(.*?)\n---\n", text, re.S)
     if not m:
@@ -291,13 +322,15 @@ def check_pair(src_path, dst_path, label, root):
     else:
         print(f"  headings: {len(sh)} == {len(dh)}, levels match 1:1")
 
-    sl, dl = links(src), links(dst)
-    for l in [x for x in sl if x not in dl]:
-        # A language switcher and cross-language references move between the
-        # pair: allow the `_cn` retarget, and allow a source link that the
-        # translation does not need because the translation IS that file.
-        peer = l.replace(".md", "_cn.md")
-        if peer in dl:
+    sl, dl = resolved_links(src, src_path, root), resolved_links(dst, dst_path, root)
+    for l in sorted(x for x in sl if x not in dl):
+        # Links are compared as repo-relative targets: a pair may live in two
+        # different folders (a skill and its translation do). A language switcher
+        # and cross-language references move between the pair, so allow the `_cn`
+        # retarget, and allow a source link that the translation does not need
+        # because the translation IS that file.
+        peer = cn_counterpart(l)
+        if peer and peer in dl:
             print(f"  note: link retargeted to its Chinese peer: {l} -> {peer}")
         elif l.endswith("_cn.md"):
             print(f"  note: cross-language link not needed in the translation: {l}")
@@ -330,11 +363,16 @@ def check_pair(src_path, dst_path, label, root):
 
 
 def discover_pairs(root):
-    """Every X.md that has an X_cn.md sibling.
+    """Every translated document, and the source it must still match.
 
-    The `_cn` suffix follows the convention DeepSeek's own repositories use
-    (README.md / README_cn.md), so a reader of either language finds the
-    counterpart by name.
+    Two layouts, both by convention:
+      * a translation beside its source - `X.md` / `X_cn.md`, where the `_cn`
+        suffix follows the convention DeepSeek's own repositories use
+        (README.md / README_cn.md), so a reader of either language finds the
+        counterpart by name
+      * a skill translation kept out of the skill folder -
+        `skills/<name>/SKILL.md` / `docs/skills/<name>_cn.md`, so an agent that
+        installs the skill folder downloads English only
     """
     pairs = []
     for dirpath, _, names in os.walk(root):
@@ -345,7 +383,39 @@ def discover_pairs(root):
                 base = n[:-len("_cn.md")] + ".md"
                 if os.path.exists(os.path.join(dirpath, base)):
                     pairs.append((os.path.join(dirpath, base), os.path.join(dirpath, n)))
-    return sorted(pairs)
+    skills_dir = os.path.join(root, "skills")
+    zh_dir = os.path.join(root, "docs", "skills")
+    if os.path.isdir(skills_dir) and os.path.isdir(zh_dir):
+        for d in sorted(os.listdir(skills_dir)):
+            src = os.path.join(skills_dir, d, "SKILL.md")
+            dst = os.path.join(zh_dir, d + "_cn.md")
+            if os.path.exists(src) and os.path.exists(dst):
+                pairs.append((src, dst))
+    return sorted(set(pairs))
+
+
+GITHUB_BLOB = "https://github.com/Puipipi/HD2-Agent-Skills/blob/main/"
+
+
+def check_absolute_targets(path, root, verbose=True):
+    """9. every absolute repo URL in the header block must point at a real file.
+
+    The switchers use absolute URLs by convention, so a translation that moves -
+    as every skill translation did when it left the skill folder - leaves a dead
+    link on the rendered page that no relative-link check can see.
+    """
+    problems = []
+    text = io.open(path, encoding="utf-8").read()
+    head = text.split("\n## ")[0]
+    for m in re.finditer(re.escape(GITHUB_BLOB) + r"([^)\s]+)", head):
+        rel = m.group(1)
+        if not os.path.exists(os.path.join(root, rel.replace("/", os.sep))):
+            problems.append("%s points at a missing file: %s"
+                            % (os.path.relpath(path, root), rel))
+    if verbose:
+        for p in problems:
+            print("  FAIL " + p)
+    return problems
 
 
 if __name__ == "__main__":
@@ -367,17 +437,27 @@ if __name__ == "__main__":
 
     all_ok = True
 
-    # Every skill file must carry its own switcher, even before its
-    # translation exists: the pair loop below skips a file whose counterpart
-    # is absent, which is how five English skills lost their switcher while
-    # their Chinese files kept one.
+    # Every skill file must carry its own switcher, even before its translation
+    # exists, and so must every relocated translation: the pair loop below skips a
+    # file whose counterpart is absent, which is how five English skills lost
+    # their switcher while their Chinese files kept one.
+    to_check = []
     skills_dir = os.path.join(ROOT, "skills")
     if os.path.isdir(skills_dir):
         for d in sorted(os.listdir(skills_dir)):
-            for f in ("SKILL.md", "SKILL_cn.md"):
-                p = os.path.join(skills_dir, d, f)
-                if os.path.exists(p) and check_header_switcher(p, ROOT):
-                    all_ok = False
+            p = os.path.join(skills_dir, d, "SKILL.md")
+            if os.path.exists(p):
+                to_check.append(p)
+    zh_dir = os.path.join(ROOT, "docs", "skills")
+    if os.path.isdir(zh_dir):
+        for n in sorted(os.listdir(zh_dir)):
+            if n.endswith("_cn.md"):
+                to_check.append(os.path.join(zh_dir, n))
+    for p in to_check:
+        if check_header_switcher(p, ROOT):
+            all_ok = False
+        if check_absolute_targets(p, ROOT):
+            all_ok = False
 
     pairs = discover_pairs(ROOT)
     if not pairs:

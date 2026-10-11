@@ -1,13 +1,13 @@
 ---
 name: hd2-bingus-mod-development
-description: Develop, validate and package a Helldivers 2 Lua mod for the Bingus/MDL loader — repo layout, the LuaJIT compile and FFI gates a build must run, offline simulation with lupa, the addon envelope ZIP a mod manager can import, deployment paths and rollback, in-game log evidence, and the release discipline that stops an unverified build from being called done. Use when creating a new HD2 mod, adding a feature to one, packaging a release, or setting up the build pipeline that does all of it.
+description: "Develop, validate and package a Helldivers 2 Bingus/MDL Lua mod: repo layout, build gates, offline simulation, addon envelope, deployment, logs. Use when creating or building a HD2 mod."
 ---
 
 # HD2 Bingus mod development
 
 > **Confidence:** the pipeline structure was exercised here; deployment paths, slot numbers and log locations are observed values from one install — re-derive them.
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-bingus-mod-development/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-bingus-mod-development_cn.md)
 
 The pipeline that produced the mods in this workspace. A HD2 mod is **not** "write Lua and
 drop it in the game folder" — it is:

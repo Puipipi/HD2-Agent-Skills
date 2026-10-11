@@ -21,19 +21,24 @@ without the game.
 ## Skills
 
 Each skill is one topic. Tool skills ship the tool itself, with its prerequisites written
-down. A `_cn` file next to any document is its Chinese version.
+down.
+
+**Skill folders are English only.** An agent that installs a skill copies that whole folder, so
+nothing but `SKILL.md` and its scripts travels with it. Every Chinese translation lives in
+[`docs/skills/`](docs/skills/) instead, for a human reader who wants to see what a skill does
+before installing it.
 
 ### Pipeline and techniques
 
 | Skill | 中文 | Purpose |
 |---|---|---|
-| [`hd2-bingus-mod-development`](skills/hd2-bingus-mod-development/SKILL.md) | [中文](skills/hd2-bingus-mod-development/SKILL_cn.md) | The whole pipeline for a Bingus/MDL Lua mod: repo layout, the source contract the loader enforces, the build gates, offline simulation, the addon ZIP, deployment paths and rollback, in-game log evidence, and the release discipline. |
-| [`hd2-mission-entry`](skills/hd2-mission-entry/SKILL.md) | [中文](skills/hd2-mission-entry/SKILL_cn.md) | Cold start to boots-on-ground: launch, skip intro, confirm ship readiness, star-map mission selection, briefing loadout, deploy, and the evidence to confirm each step. Ships the focus-verified key/mouse tools and lists the mods the sequence depends on. |
-| [`hd2-in-game-panel`](skills/hd2-in-game-panel/SKILL.md) | [中文](skills/hd2-in-game-panel/SKILL_cn.md) | Draw a clickable mod panel inside the game with only `Gui.rect` — retained screen-GUI lifecycle, staged bring-up, layer/native-screen invalidation, region hit-testing, dragging, and a 4x5 pixel font plus packed CJK bitmaps. |
-| [`hd2-native-panel-input-lock`](skills/hd2-native-panel-input-lock/SKILL.md) | [中文](skills/hd2-native-panel-input-lock/SKILL_cn.md) | Open the panel on a hotkey (F7), unlock the mouse, and keep the game from receiving keyboard/mouse while it is open — raw-input deregistration, a window-procedure filter, coordinate conversion, wheel notches, safe give-back. |
-| [`hd2-game-language-autodetect`](skills/hd2-game-language-autodetect/SKILL.md) | [中文](skills/hd2-game-language-autodetect/SKILL_cn.md) | Decide automatically whether the client is Chinese or English — build-verified `game.dll` offsets, with an engine-font glyph-coverage fallback, and labels localized at draw time only. |
-| [`hd2-event-chat-automation`](skills/hd2-event-chat-automation/SKILL.md) | [中文](skills/hd2-event-chat-automation/SKILL_cn.md) | AutoChat event cooldowns, welcome and scheduled sends, templates, role presets, and plugin boundaries. |
-| [`hd2-game-event-identification`](skills/hd2-game-event-identification/SKILL.md) | [中文](skills/hd2-game-event-identification/SKILL_cn.md) | Identify and classify HD2 map pins, mission actions, targets, stratagems, and enemies without conflating producers or guessing unknown identities. |
+| [`hd2-bingus-mod-development`](skills/hd2-bingus-mod-development/SKILL.md) | [中文](docs/skills/hd2-bingus-mod-development_cn.md) | The whole pipeline for a Bingus/MDL Lua mod: repo layout, the source contract the loader enforces, the build gates, offline simulation, the addon ZIP, deployment paths and rollback, in-game log evidence, and the release discipline. |
+| [`hd2-mission-entry`](skills/hd2-mission-entry/SKILL.md) | [中文](docs/skills/hd2-mission-entry_cn.md) | Cold start to boots-on-ground: launch, skip intro, confirm ship readiness, star-map mission selection, briefing loadout, deploy, and the evidence to confirm each step. Ships the focus-verified key/mouse tools and lists the mods the sequence depends on. |
+| [`hd2-in-game-panel`](skills/hd2-in-game-panel/SKILL.md) | [中文](docs/skills/hd2-in-game-panel_cn.md) | Draw a clickable mod panel inside the game with only `Gui.rect` — retained screen-GUI lifecycle, staged bring-up, layer/native-screen invalidation, region hit-testing, dragging, and a 4x5 pixel font plus packed CJK bitmaps. |
+| [`hd2-native-panel-input-lock`](skills/hd2-native-panel-input-lock/SKILL.md) | [中文](docs/skills/hd2-native-panel-input-lock_cn.md) | Open the panel on a hotkey (F7), unlock the mouse, and keep the game from receiving keyboard/mouse while it is open — raw-input deregistration, a window-procedure filter, coordinate conversion, wheel notches, safe give-back. |
+| [`hd2-game-language-autodetect`](skills/hd2-game-language-autodetect/SKILL.md) | [中文](docs/skills/hd2-game-language-autodetect_cn.md) | Decide automatically whether the client is Chinese or English — build-verified `game.dll` offsets, with an engine-font glyph-coverage fallback, and labels localized at draw time only. |
+| [`hd2-event-chat-automation`](skills/hd2-event-chat-automation/SKILL.md) | [中文](docs/skills/hd2-event-chat-automation_cn.md) | AutoChat event cooldowns, welcome and scheduled sends, templates, role presets, and plugin boundaries. |
+| [`hd2-game-event-identification`](skills/hd2-game-event-identification/SKILL.md) | [中文](docs/skills/hd2-game-event-identification_cn.md) | Identify and classify HD2 map pins, mission actions, targets, stratagems, and enemies without conflating producers or guessing unknown identities. |
 
 ### Tools (each ships its own script)
 
@@ -46,14 +51,14 @@ down. A `_cn` file next to any document is its Chinese version.
 | [`hd2-offline-engine-harness`](skills/hd2-offline-engine-harness/SKILL.md) | `scripts/test_panel_skeleton.py` | Test a mod offline against a faked engine boundary on real LuaJIT — GUI counts, staged states, error budget. |
 | [`hd2-bilingual-doc-verify`](skills/hd2-bilingual-doc-verify/SKILL.md) | `scripts/verify_translations.py` | Keep `X.md` / `X_cn.md` pairs honest: code fences, heading structure, links, frontmatter. |
 | [`hd2-live-memory-probe`](skills/hd2-live-memory-probe/SKILL.md) | — (pattern + skeleton) | Write and run a read-only probe against the running game to verify an address chain without another mission. |
-| [`hd2-ingame-probe-crash-safety`](skills/hd2-ingame-probe-crash-safety/SKILL.md) | [中文](skills/hd2-ingame-probe-crash-safety/SKILL_cn.md) | Keep an *in-game* probe from taking the process down: the crash classes `pcall` does not catch, the temp-arena and call-cost disciplines, startup and menu guards, and the status line that separates "idle" from "reading nothing". |
+| [`hd2-ingame-probe-crash-safety`](skills/hd2-ingame-probe-crash-safety/SKILL.md) | [中文](docs/skills/hd2-ingame-probe-crash-safety_cn.md) | Keep an *in-game* probe from taking the process down: the crash classes `pcall` does not catch, the temp-arena and call-cost disciplines, startup and menu guards, and the status line that separates "idle" from "reading nothing". |
 | [`hd2-mod-log-analysis`](skills/hd2-mod-log-analysis/SKILL.md) | — (pattern + skeleton) | Turn "the mod does nothing" into a named stage, and write the analyzer that says so. |
-| [`hd2-lua-forward-declarations`](skills/hd2-lua-forward-declarations/SKILL.md) | [中文](skills/hd2-lua-forward-declarations/SKILL_cn.md) | The Lua bug where one function calls another defined further down: the call resolves to `nil`, the framework swallows it, and a setting silently does nothing. How to find it from the call graph instead of guessing. |
-| [`hd2-mod-options-menu`](skills/hd2-mod-options-menu/SKILL.md) | [中文](skills/hd2-mod-options-menu/SKILL_cn.md) | Build the in-game settings page: the real ModOptionsMenu contract, why `slider` is refused, the 2–16 option limit, index-valued choices, the single-owner rule, and the manager-side failures that hide the whole option tree. |
-| [`hd2-crash-reporting-and-settings`](skills/hd2-crash-reporting-and-settings/SKILL.md) | [中文](skills/hd2-crash-reporting-and-settings/SKILL_cn.md) | Turn the crash reporter, dump writer and crash screenshot on or off in `data/settings.ini`, control the crash folders in `%APPDATA%`, and see why `floating_point_exceptions` is not just another reporting switch. |
-| [`hd2-mod-release-operations`](skills/hd2-mod-release-operations/SKILL.md) | [中文](skills/hd2-mod-release-operations/SKILL_cn.md) | Packaging and publishing: project layout, package naming, the byte-level archive format, the seven-step release checklist, GitHub mechanics, token handling and the network traps. |
-| [`hd2-injection-runtime-patching`](skills/hd2-injection-runtime-patching/SKILL.md) | [中文](skills/hd2-injection-runtime-patching/SKILL_cn.md) | The runtime half: a safe write primitive, FFI and LuaJIT semantics that bite, when and how often to write, and reading a data table at runtime. |
-| [`hd2-offline-data-workflow`](skills/hd2-offline-data-workflow/SKILL.md) | [中文](skills/hd2-offline-data-workflow/SKILL_cn.md) | Work offline first, go in-game last: locate a data table by signature, decode it from the plaintext mirror, the LDLD block format and both hashes, scanner design, and the one-shot reconnaissance addon. Ships the full 106-item pitfall inventory as evidence. |
+| [`hd2-lua-forward-declarations`](skills/hd2-lua-forward-declarations/SKILL.md) | [中文](docs/skills/hd2-lua-forward-declarations_cn.md) | The Lua bug where one function calls another defined further down: the call resolves to `nil`, the framework swallows it, and a setting silently does nothing. How to find it from the call graph instead of guessing. |
+| [`hd2-mod-options-menu`](skills/hd2-mod-options-menu/SKILL.md) | [中文](docs/skills/hd2-mod-options-menu_cn.md) | Build the in-game settings page: the real ModOptionsMenu contract, why `slider` is refused, the 2–16 option limit, index-valued choices, the single-owner rule, and the manager-side failures that hide the whole option tree. |
+| [`hd2-crash-reporting-and-settings`](skills/hd2-crash-reporting-and-settings/SKILL.md) | [中文](docs/skills/hd2-crash-reporting-and-settings_cn.md) | Turn the crash reporter, dump writer and crash screenshot on or off in `data/settings.ini`, control the crash folders in `%APPDATA%`, and see why `floating_point_exceptions` is not just another reporting switch. |
+| [`hd2-mod-release-operations`](skills/hd2-mod-release-operations/SKILL.md) | [中文](docs/skills/hd2-mod-release-operations_cn.md) | Packaging and publishing: project layout, package naming, the byte-level archive format, the seven-step release checklist, GitHub mechanics, token handling and the network traps. |
+| [`hd2-injection-runtime-patching`](skills/hd2-injection-runtime-patching/SKILL.md) | [中文](docs/skills/hd2-injection-runtime-patching_cn.md) | The runtime half: a safe write primitive, FFI and LuaJIT semantics that bite, when and how often to write, and reading a data table at runtime. |
+| [`hd2-offline-data-workflow`](skills/hd2-offline-data-workflow/SKILL.md) | [中文](docs/skills/hd2-offline-data-workflow_cn.md) | Work offline first, go in-game last: locate a data table by signature, decode it from the plaintext mirror, the LDLD block format and both hashes, scanner design, and the one-shot reconnaissance addon. Ships the full 106-item pitfall inventory as evidence. |
 | [`hd2-no-quarantine-packaging`](skills/hd2-no-quarantine-packaging/SKILL.md) | — | Ship a mod whose helper scripts survive site scanning: generate the `.bat`/`.ps1` at runtime into the user's config folder instead of putting it in the archive, and gate the build on it. |
 | [`writing-mod-tools`](skills/writing-mod-tools/SKILL.md) | — | How to write these tools well: prerequisites and graceful degradation, safe-by-default mutation, exit codes, `--json`, dry-run, self-tests, validating the criterion before a live run, honest limits. |
 
@@ -74,8 +79,9 @@ survives the game re-centering the cursor.
 ## Usage
 
 Point your agent/skill loader at `skills/`, or copy a skill folder into your agent's skill
-directory. Each skill is a self-contained `SKILL.md` with frontmatter (`name`,
-`description`); loaders pick up `SKILL.md`, so a `SKILL_cn.md` beside it never collides.
+directory. Each skill is a self-contained `SKILL.md` with frontmatter (`name`, `description`),
+plus whatever scripts it ships. A skill folder holds no Chinese text, so a loader that copies
+the folder downloads English only; the translations sit in [`docs/skills/`](docs/skills/).
 
 ## Checks
 

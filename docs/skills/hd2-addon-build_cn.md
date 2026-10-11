@@ -1,6 +1,6 @@
 ---
 name: hd2-addon-build
-description: 把一个 Helldivers 2 的 Bingus/MDL Lua mod 构建成 mod 管理器可导入的 ZIP；当源码未通过某项门禁时拒绝打包 —— LuaJIT 的每函数指令上限（过大的 mod 会被加载器静默跳过）、user32 的 ffi.cdef 声明（它会顶掉另一个 mod 的声明）、被调用但未声明的 C 符号，或缺少游戏内 README 块。用于打包一个 HD2 Lua mod，或者在某个 mod 能加载却什么也不做时使用。
+description: "把 HD2 的 Bingus/MDL Lua mod 打成 mod 管理器可导入的 ZIP；源码过不了门禁就拒绝打包。用于打包 HD2 mod，或 mod 加载后毫无反应时。"
 ---
 
 # hd2-addon-build —— 构建与打包

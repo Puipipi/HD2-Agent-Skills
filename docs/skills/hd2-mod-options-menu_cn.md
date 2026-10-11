@@ -1,6 +1,6 @@
 ---
 name: hd2-mod-options-menu
-description: 用 ModOptionsMenu（MOM）框架为 Helldivers 2 mod 构建游戏内设置页——真实的注册契约、它接受的两种类型、2–16 个选项的上限、以索引为取值的 choice，以及两个控件写同一个设置时的单一主人规则。当 mod 需要面向用户的选项、当选项静默地不出现、或当页面里的值变了但游戏内没有任何反应时使用。
+description: "用 ModOptionsMenu 做 HD2 mod 的游戏内设置页：注册契约、接受的类型、2 到 16 上限、单一所有者规则。选项不出现或改了没反应时用。"
 ---
 
 # ModOptionsMenu：游戏内设置页框架

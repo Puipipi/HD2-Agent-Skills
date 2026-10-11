@@ -1,13 +1,13 @@
 ---
 name: hd2-addon-build
-description: Build a Helldivers 2 Bingus/MDL Lua mod into a mod-manager-importable ZIP, refusing to package when the source fails a gate — LuaJIT's per-function instruction cap (an oversized mod is silently skipped by the loader), a user32 ffi.cdef declaration (it displaces another mod's declaration), a called-but-undeclared C symbol, or a missing in-game README block. Use to package a HD2 Lua mod, or when a mod loads but does nothing.
+description: "Build a Helldivers 2 Bingus/MDL Lua mod into a mod-manager-importable ZIP, refusing to package when a source gate fails. Use to package a HD2 Lua mod, or when a mod loads but does nothing."
 ---
 
 # hd2-addon-build
 
 > **Confidence:** the five gates were run here, and each was shown to fail when provoked. The envelope format is from the loader's tools. That a manager *imports* the artifact is not verified here — see [verification status](../../docs/verification-status.md).
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-addon-build/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-addon-build_cn.md)
 
 `scripts/build_mod.py` turns one plaintext Lua entry into the addon envelope a mod
 manager imports, and stops before packaging when the source is unsafe to ship.

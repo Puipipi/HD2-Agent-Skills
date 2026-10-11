@@ -1,13 +1,13 @@
 ---
 name: hd2-native-panel-input-lock
-description: Open an in-game panel on a hotkey (F7) inside Helldivers 2, unlock the mouse so it can be used as a pointer, and keep the game from receiving keyboard/mouse input while the panel is open — Windows raw-input deregistration, an optional user32 window-procedure filter, cursor show/clip save and restore, client-pixel to Gui-unit conversion, wheel notches, and safe give-back on close/unfocus. Use when a mod panel needs a usable cursor, when clicks pass through to the armory behind the panel, or when the camera still turns while typing.
+description: "Open an HD2 panel on a hotkey, unlock the mouse as a pointer, and keep the game from receiving input while it is open. Use when clicks pass through or the camera turns while typing."
 ---
 
 # HD2 native panel: hotkey, cursor unlock, input lock
 
 > **Confidence:** reported. No code was executed; the provenance section says which parts are copyleft.
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-native-panel-input-lock/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-native-panel-input-lock_cn.md)
 
 Taken from **Super Earth Armory Forge v6.2.1** (F7 panel) — the section its comments
 credit to **SHODAN Stat Editor v1.4.1** — cross-checked against the Custom Armor Kit's

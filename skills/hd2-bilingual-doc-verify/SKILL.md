@@ -1,19 +1,25 @@
 ---
 name: hd2-bilingual-doc-verify
-description: Keep a bilingual document set honest — verify that a translated markdown file still matches its source by recompiling its Lua blocks on LuaJIT, comparing code fences after comment removal, matching heading structure and links, and comparing directory trees by structure instead of prose. Use after editing either side of a docs pair, or when translations start drifting from the code.
+description: "Verify that a translated markdown file still matches its source — Lua blocks, code fences, headings, links, directory trees. Use after editing either side of a bilingual docs pair."
 ---
 
 # hd2-bilingual-doc-verify
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-bilingual-doc-verify/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-bilingual-doc-verify_cn.md)
 
 > **Confidence:** verified here; both of its failure modes were provoked deliberately.
 
 `scripts/verify_translations.py` checks the things a translation must **not** change, so review
 attention can go to the prose instead of to whether a code sample is still correct.
 
-Written after this repository grew an English/Chinese pair for every document: six pairs of
-`X.md` / `X_cn.md`, where a stale code block in the Chinese copy is a bug nobody notices.
+Written after this repository grew an English/Chinese pair for every document: the docs pairs,
+and a translation of every skill. A stale code block in the Chinese copy is a bug nobody
+notices, so the pairs are checked rather than assumed.
+
+The pairs come in two layouts, and the difference is deliberate. A doc translation sits beside
+its source (`X.md` / `X_cn.md`). A skill translation does not: an agent that installs a skill
+copies the whole skill folder, so that folder must contain English only. The Chinese text lives
+in `docs/skills/<name>_cn.md`.
 
 ## Prerequisites
 
@@ -21,7 +27,7 @@ Written after this repository grew an English/Chinese pair for every document: s
 |---|---|---|
 | Python 3.8+ | the script | — |
 | **`lupa`** | recompiles the translated Lua blocks on real LuaJIT (check 1) | the other five checks still run; the script prints what it skipped |
-| the pairs, in a repo layout | discovery finds any `X.md` with an `X_cn.md` beside it, anywhere in the tree | point it with `--root` |
+| the pairs, in a repo layout | discovery finds any `X.md` with an `X_cn.md` beside it anywhere in the tree, plus every `skills/<name>/SKILL.md` whose translation is `docs/skills/<name>_cn.md` | point it with `--root` |
 
 Nothing else: no game, no loader tools, no network. It writes nothing.
 
@@ -49,8 +55,9 @@ Exit 0 = every pair passed; non-zero = at least one failed, with the pair named.
    or a renamed path; prose is compared by line count only, because every word is translated.
 4. **Heading structure matches** — count and levels, in order. Catches a dropped section.
 5. **Every relative link is carried over**, or is deliberately retargeted to a `_cn` peer
-   (reported as a note, not a failure). The source pointing *at* a `_cn` file the translation
-   *is* is also a note.
+   (reported as a note, not a failure). Links are compared as repo-relative targets, so a pair
+   split across two folders (a skill and its translation) still has to match. The source
+   pointing *at* a `_cn` file the translation *is* is also a note.
 6. **Frontmatter is intact** — same keys, `name:` unchanged (it is an identifier), and
    `description:` translated (it is what a reader sees when choosing the skill).
 7. **The language switcher exists, once, and points at the counterpart** — in the header block
@@ -65,10 +72,10 @@ Exit 0 = every pair passed; non-zero = at least one failed, with the pair named.
    in the header all fail the run.
 
 8. **Every skill file carries its own switcher, even with no translation yet** — checked for
-   every `SKILL.md` and `SKILL_cn.md` under `skills/`, independently of pairing. The pair loop
-   only runs when both sides exist, so a skill with an English file and no translation escapes
-   it entirely: that is exactly how five English skills ended up without a switcher while their
-   Chinese files had one.
+   every `SKILL.md` under `skills/` and every translation under `docs/skills/`, independently of
+   pairing. The pair loop only runs when both sides exist, so a skill with an English file and
+   no translation escapes it entirely: that is exactly how five English skills ended up without
+   a switcher while their Chinese files had one.
 9. **Absolute GitHub URL targets must resolve** — reported by `check_absolute_targets()`,
    because the switchers use absolute URLs by convention and a missing counterpart is otherwise
    a dead link on the rendered page that nothing notices.

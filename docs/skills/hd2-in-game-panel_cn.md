@@ -1,6 +1,6 @@
 ---
 name: hd2-in-game-panel
-description: 仅使用引擎的 Gui.rect 原语在《Helldivers 2》里绘制一个可点击的 mod 面板 —— 保留式屏幕 GUI 生命周期、分级建立、z 图层与原生屏幕失效、区域命中、带位置保存的面板拖拽，以及 4x5 点阵字体（外加打包的 CJK 位图），使文本不需要引擎字体或材质。适用于构建或修复游戏内 mod UI，尤其是在 Gui.text / 材质不可用或会让游戏崩溃的时候。
+description: "只用 Gui.rect 在 HD2 里画可点击面板：常驻 GUI 生命周期、命中测试、拖拽、4x5 像素字体与 CJK 位图。做或修游戏内 mod UI 时用。"
 ---
 
 # HD2 游戏内面板（纯 rect、保留式 GUI）
@@ -347,12 +347,12 @@ local zcell = math.max(1, math.floor(1.15 * scale + 0.5))     -- 每个字体像
 从生产绘制和命中测试路径验证，而不只测换行 helper：捕获实际绘制文字与矩形，断言其边界
 位于 viewport 内，并检查可见控件的命中框一致。对实际支持的路径覆盖窄分辨率、偏宽 CJK
 字形、中英文本、长说明/名称、滚动到底和输入尾部。布局断言与性能计时分开；离线成本比较见
-[`hd2-offline-engine-harness`](../hd2-offline-engine-harness/SKILL_cn.md)。AutoChat 的[面板源码](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/src/auto_chat.lua)
+[`hd2-offline-engine-harness`](../skills/hd2-offline-engine-harness_cn.md)。AutoChat 的[面板源码](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/src/auto_chat.lua)
 及测试覆盖低分辨率双语倒计时/表单（[`test_ui_preview.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_ui_preview.py)）、
 敌人说明及裁剪后的命中框（[`test_alert_layout.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_alert_layout.py)），
 以及 105 项任务列表末行交互（[`test_panel_interaction.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_panel_interaction.py)）；
 这些证据不涵盖所有字体或所有模组。生命周期、失焦和输入归还见
-[`hd2-native-panel-input-lock`](../hd2-native-panel-input-lock/SKILL_cn.md)。
+[`hd2-native-panel-input-lock`](../skills/hd2-native-panel-input-lock_cn.md)。
 
 ## 8. 让隐藏面板可诊断的日志
 

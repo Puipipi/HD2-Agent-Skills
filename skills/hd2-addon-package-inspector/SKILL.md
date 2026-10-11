@@ -1,13 +1,13 @@
 ---
 name: hd2-addon-package-inspector
-description: Inspect a built Helldivers 2 addon ZIP before shipping — manifest fields and GUID, the Addon archive's binary header, entry ranges, the resource name-to-hash mapping, declared-but-missing icons, and whether the packaged resource really contains the source you built. Use after a build, before uploading or deploying, or when a mod manager refuses an import the build called successful.
+description: "Inspect a built HD2 addon ZIP before shipping: manifest, GUID, archive header, resource hashes, missing icons. Use after a build or when a mod manager refuses an import."
 ---
 
 # hd2-addon-package-inspector
 
 > **Confidence:** verified here — its hash matches the loader's three published vectors and it exits non-zero if they disagree. See [verification status](../../docs/verification-status.md).
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-addon-package-inspector/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-addon-package-inspector_cn.md)
 
 `scripts/inspect_package.py` reads the artifact, not the build log. A build that says "built
 OK" has proven nothing about the ZIP: the loader will **silently skip** a package it cannot

@@ -1,11 +1,11 @@
 ---
 name: hd2-crash-reporting-and-settings
-description: Turn Helldivers 2's crash reporter, dump writer and screenshot capture on or off by editing data/settings.ini, and clear the crash folders it leaves in AppData. Use when the crash-feedback popup is interrupting play, when you want crash dumps for a mod you are debugging, or when you need to know which of these keys change engine behaviour rather than just reporting.
+description: "Turn HD2 crash reporter, dump writer and screenshot capture on or off in data/settings.ini, clear the crash folders in AppData, and know which key gets reverted. Use when the crash popup interrupts play or you need dumps."
 ---
 
 # HD2 crash reporting and the settings.ini keys that control it
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-crash-reporting-and-settings/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-crash-reporting-and-settings_cn.md)
 
 Two things live here: the four keys people reach for when they want the crash popup gone, and the
 reason one of those four is not like the others.

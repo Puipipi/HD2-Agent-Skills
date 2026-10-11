@@ -1,13 +1,13 @@
 ---
 name: hd2-event-chat-automation
-description: 在构建或排查《绝地潜兵 2》的事件聊天提醒、消息模板、玩家冷却、欢迎或定时消息、AutoChat 主客机预设或插件时使用。本技能说明已核实的 AutoChat 契约；其他模组可以采用不同设计。
+description: "构建或调试 HD2 的事件驱动聊天提醒：模板、按玩家冷却、欢迎与定时消息、AutoChat 预设与插件。用于事件识别之后的发消息环节。"
 ---
 
 # HD2 事件聊天自动化
 
 [English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-event-chat-automation/SKILL.md) / 简体中文
 
-本技能说明游戏事件已经识别之后的消息处理路径。事件识别是另一个问题；不能只凭提醒文本或规则名推断触发条件。上游证据和规范化事件见 [HD2 游戏事件识别](../hd2-game-event-identification/SKILL_cn.md)。以下 AutoChat 行为依据[玩家模板文档](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/docs/PLAYER-TEMPLATES.md)、[插件 API 文档](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/docs/PLUGIN-API.md)及其链接的源码和测试核实。它们是 AutoChat 的产品契约，不是所有模组都必须遵循的规则。
+本技能说明游戏事件已经识别之后的消息处理路径。事件识别是另一个问题；不能只凭提醒文本或规则名推断触发条件。上游证据和规范化事件见 [HD2 游戏事件识别](../skills/hd2-game-event-identification_cn.md)。以下 AutoChat 行为依据[玩家模板文档](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/docs/PLAYER-TEMPLATES.md)、[插件 API 文档](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/docs/PLUGIN-API.md)及其链接的源码和测试核实。它们是 AutoChat 的产品契约，不是所有模组都必须遵循的规则。
 
 ## 事件、欢迎和定时消息
 
@@ -35,6 +35,6 @@ AutoChat 的战备规则批量编辑属于内部 UI/后端功能：按角色和�
 
 ## 另请参阅
 
-- [HD2 游戏内面板](../hd2-in-game-panel/SKILL_cn.md)：面板生命周期和布局。
-- [HD2 游戏事件识别](../hd2-game-event-identification/SKILL_cn.md)：上游触发与目标证据。
-- [HD2 离线引擎测试框架](../hd2-offline-engine-harness/SKILL_cn.md)：离线模拟引擎测试；产品行为证据仍以本文上方链接的 AutoChat 源码和测试为准。
+- [HD2 游戏内面板](../skills/hd2-in-game-panel_cn.md)：面板生命周期和布局。
+- [HD2 游戏事件识别](../skills/hd2-game-event-identification_cn.md)：上游触发与目标证据。
+- [HD2 离线引擎测试框架](../skills/hd2-offline-engine-harness_cn.md)：离线模拟引擎测试；产品行为证据仍以本文上方链接的 AutoChat 源码和测试为准。

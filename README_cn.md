@@ -15,20 +15,23 @@
 
 ## Skills
 
-每个 skill 只讲一件事。工具类 skill 自带工具本体，并把前置条件写清楚。任何文档旁边的 `_cn` 文件
-就是它的中文版。
+每个 skill 只讲一件事。工具类 skill 自带工具本体，并把前置条件写清楚。
+
+**技能目录只有英文。** agent 安装 skill 时是把整个目录复制走，所以跟着走的只有 `SKILL.md`
+和它自带的脚本。中文译文统一放在 [`docs/skills/`](docs/skills/)，供人先看懂这个 skill 是
+干什么的，再决定装不装。
 
 ### 流程与技术
 
 | Skill | 中文 | 用途 |
 |---|---|---|
-| [`hd2-bingus-mod-development`](skills/hd2-bingus-mod-development/SKILL.md) | [中文](skills/hd2-bingus-mod-development/SKILL_cn.md) | Bingus/MDL Lua 模组的完整流水线：仓库结构、加载器强制的源码契约、构建门禁、离线模拟、信封包 ZIP、部署路径与回退、实机日志取证，以及发布纪律。 |
-| [`hd2-mission-entry`](skills/hd2-mission-entry/SKILL.md) | [中文](skills/hd2-mission-entry/SKILL_cn.md) | 从冷启动到落地：启动、跳过片头、确认舰船就绪、星图选任务、简报配装、部署，以及每一步的验证证据。自带带聚焦校验的键鼠工具，并列出该流程依赖的模组。 |
-| [`hd2-in-game-panel`](skills/hd2-in-game-panel/SKILL.md) | [中文](skills/hd2-in-game-panel/SKILL_cn.md) | 只用 `Gui.rect` 在游戏内画出可点击的面板——保留式 GUI 生命周期、分级建立、图层/原生界面失效、区域命中、拖拽，以及 5×4 点阵字体与打包的中文字形。 |
-| [`hd2-native-panel-input-lock`](skills/hd2-native-panel-input-lock/SKILL.md) | [中文](skills/hd2-native-panel-input-lock/SKILL_cn.md) | 用热键（F7）打开面板、解锁鼠标，并在面板打开时让游戏收不到键鼠——raw input 注销、窗口过程过滤、坐标换算、滚轮格数、安全归还。 |
-| [`hd2-game-language-autodetect`](skills/hd2-game-language-autodetect/SKILL.md) | [中文](skills/hd2-game-language-autodetect/SKILL_cn.md) | 自动判断客户端是中文还是英文——经 build 校验的 `game.dll` 偏移，带引擎字体字形覆盖率回退，标签只在绘制时翻译。 |
-| [`hd2-event-chat-automation`](skills/hd2-event-chat-automation/SKILL.md) | [中文](skills/hd2-event-chat-automation/SKILL_cn.md) | AutoChat 事件冷却、欢迎与定时消息、模板、角色预设及插件边界。 |
-| [`hd2-game-event-identification`](skills/hd2-game-event-identification/SKILL.md) | [中文](skills/hd2-game-event-identification/SKILL_cn.md) | 识别和分类 HD2 地图标记、任务动作、目标、战备与敌人，区分不同事件源，不猜未知身份。 |
+| [`hd2-bingus-mod-development`](skills/hd2-bingus-mod-development/SKILL.md) | [中文](docs/skills/hd2-bingus-mod-development_cn.md) | Bingus/MDL Lua 模组的完整流水线：仓库结构、加载器强制的源码契约、构建门禁、离线模拟、信封包 ZIP、部署路径与回退、实机日志取证，以及发布纪律。 |
+| [`hd2-mission-entry`](skills/hd2-mission-entry/SKILL.md) | [中文](docs/skills/hd2-mission-entry_cn.md) | 从冷启动到落地：启动、跳过片头、确认舰船就绪、星图选任务、简报配装、部署，以及每一步的验证证据。自带带聚焦校验的键鼠工具，并列出该流程依赖的模组。 |
+| [`hd2-in-game-panel`](skills/hd2-in-game-panel/SKILL.md) | [中文](docs/skills/hd2-in-game-panel_cn.md) | 只用 `Gui.rect` 在游戏内画出可点击的面板——保留式 GUI 生命周期、分级建立、图层/原生界面失效、区域命中、拖拽，以及 5×4 点阵字体与打包的中文字形。 |
+| [`hd2-native-panel-input-lock`](skills/hd2-native-panel-input-lock/SKILL.md) | [中文](docs/skills/hd2-native-panel-input-lock_cn.md) | 用热键（F7）打开面板、解锁鼠标，并在面板打开时让游戏收不到键鼠——raw input 注销、窗口过程过滤、坐标换算、滚轮格数、安全归还。 |
+| [`hd2-game-language-autodetect`](skills/hd2-game-language-autodetect/SKILL.md) | [中文](docs/skills/hd2-game-language-autodetect_cn.md) | 自动判断客户端是中文还是英文——经 build 校验的 `game.dll` 偏移，带引擎字体字形覆盖率回退，标签只在绘制时翻译。 |
+| [`hd2-event-chat-automation`](skills/hd2-event-chat-automation/SKILL.md) | [中文](docs/skills/hd2-event-chat-automation_cn.md) | AutoChat 事件冷却、欢迎与定时消息、模板、角色预设及插件边界。 |
+| [`hd2-game-event-identification`](skills/hd2-game-event-identification/SKILL.md) | [中文](docs/skills/hd2-game-event-identification_cn.md) | 识别和分类 HD2 地图标记、任务动作、目标、战备与敌人，区分不同事件源，不猜未知身份。 |
 
 ### 工具（每个自带脚本）
 
@@ -41,14 +44,14 @@
 | [`hd2-offline-engine-harness`](skills/hd2-offline-engine-harness/SKILL.md) | `scripts/test_panel_skeleton.py` | 用假引擎边界在真 LuaJIT 上离线测模组——GUI 次数、分级状态、错误预算。 |
 | [`hd2-bilingual-doc-verify`](skills/hd2-bilingual-doc-verify/SKILL.md) | `scripts/verify_translations.py` | 让 `X.md` / `X_cn.md` 成对保持诚实：代码块、标题结构、链接、frontmatter。 |
 | [`hd2-live-memory-probe`](skills/hd2-live-memory-probe/SKILL.md) | —（模式 + 骨架） | 写一个只读探针跑在运行中的游戏上，验证地址链，不必再打一局。 |
-| [`hd2-ingame-probe-crash-safety`](skills/hd2-ingame-probe-crash-safety/SKILL.md) | [中文](skills/hd2-ingame-probe-crash-safety/SKILL_cn.md) | 让**游戏内**探针不至于把进程带崩：`pcall` 挡不住的崩溃类别、临时内存区与调用成本纪律、启动期与菜单期闸门，以及区分「空闲」与「什么都没读到」的状态行。 |
+| [`hd2-ingame-probe-crash-safety`](skills/hd2-ingame-probe-crash-safety/SKILL.md) | [中文](docs/skills/hd2-ingame-probe-crash-safety_cn.md) | 让**游戏内**探针不至于把进程带崩：`pcall` 挡不住的崩溃类别、临时内存区与调用成本纪律、启动期与菜单期闸门，以及区分「空闲」与「什么都没读到」的状态行。 |
 | [`hd2-mod-log-analysis`](skills/hd2-mod-log-analysis/SKILL.md) | —（模式 + 骨架） | 把"模组没反应"变成具名阶段，并写出说清这件事的分析器。 |
-| [`hd2-lua-forward-declarations`](skills/hd2-lua-forward-declarations/SKILL.md) | [中文](skills/hd2-lua-forward-declarations/SKILL_cn.md) | Lua 里函数调用定义在它后面的函数:调用解析成 `nil`、框架把错误吞掉、设置静默无效。教你怎么从**调用图**去定位,而不是靠猜。 |
-| [`hd2-mod-options-menu`](skills/hd2-mod-options-menu/SKILL.md) | [中文](skills/hd2-mod-options-menu/SKILL_cn.md) | 做游戏内设置页:ModOptionsMenu 的真实契约、为什么 `slider` 会被拒、2–16 项上限、取序号而非文本的 `choice`、单一主人规则,以及让整棵选项树消失的管理器侧故障。 |
-| [`hd2-crash-reporting-and-settings`](skills/hd2-crash-reporting-and-settings/SKILL.md) | [中文](skills/hd2-crash-reporting-and-settings/SKILL_cn.md) | 在 `data/settings.ini` 里开关崩溃上报、转储写入与崩溃截图,管理 `%APPDATA%` 下的崩溃文件夹,并说明为什么 `floating_point_exceptions` 不只是又一个上报开关。 |
-| [`hd2-mod-release-operations`](skills/hd2-mod-release-operations/SKILL.md) | [中文](skills/hd2-mod-release-operations/SKILL_cn.md) | 打包与发布：工程布局、包命名、字节级归档格式、七步发布清单、GitHub 操作、token 处理与网络坑。 |
-| [`hd2-injection-runtime-patching`](skills/hd2-injection-runtime-patching/SKILL.md) | [中文](skills/hd2-injection-runtime-patching/SKILL_cn.md) | 运行时那一半：安全的写入原语、FFI 与本 VM 的 LuaJIT 语义陷阱、何时写与写多频繁，以及运行时读取数据表。 |
-| [`hd2-offline-data-workflow`](skills/hd2-offline-data-workflow/SKILL.md) | [中文](skills/hd2-offline-data-workflow/SKILL_cn.md) | 离线优先、实机在后：按签名定位数据表、从明文镜像解码、LDLD 块格式与两个哈希、扫描器设计，以及一次性的只读侦察 addon。随附完整 106 项踩坑清单作为证据。 |
+| [`hd2-lua-forward-declarations`](skills/hd2-lua-forward-declarations/SKILL.md) | [中文](docs/skills/hd2-lua-forward-declarations_cn.md) | Lua 里函数调用定义在它后面的函数:调用解析成 `nil`、框架把错误吞掉、设置静默无效。教你怎么从**调用图**去定位,而不是靠猜。 |
+| [`hd2-mod-options-menu`](skills/hd2-mod-options-menu/SKILL.md) | [中文](docs/skills/hd2-mod-options-menu_cn.md) | 做游戏内设置页:ModOptionsMenu 的真实契约、为什么 `slider` 会被拒、2–16 项上限、取序号而非文本的 `choice`、单一主人规则,以及让整棵选项树消失的管理器侧故障。 |
+| [`hd2-crash-reporting-and-settings`](skills/hd2-crash-reporting-and-settings/SKILL.md) | [中文](docs/skills/hd2-crash-reporting-and-settings_cn.md) | 在 `data/settings.ini` 里开关崩溃上报、转储写入与崩溃截图,管理 `%APPDATA%` 下的崩溃文件夹,并说明为什么 `floating_point_exceptions` 不只是又一个上报开关。 |
+| [`hd2-mod-release-operations`](skills/hd2-mod-release-operations/SKILL.md) | [中文](docs/skills/hd2-mod-release-operations_cn.md) | 打包与发布：工程布局、包命名、字节级归档格式、七步发布清单、GitHub 操作、token 处理与网络坑。 |
+| [`hd2-injection-runtime-patching`](skills/hd2-injection-runtime-patching/SKILL.md) | [中文](docs/skills/hd2-injection-runtime-patching_cn.md) | 运行时那一半：安全的写入原语、FFI 与本 VM 的 LuaJIT 语义陷阱、何时写与写多频繁，以及运行时读取数据表。 |
+| [`hd2-offline-data-workflow`](skills/hd2-offline-data-workflow/SKILL.md) | [中文](docs/skills/hd2-offline-data-workflow_cn.md) | 离线优先、实机在后：按签名定位数据表、从明文镜像解码、LDLD 块格式与两个哈希、扫描器设计，以及一次性的只读侦察 addon。随附完整 106 项踩坑清单作为证据。 |
 | [`hd2-no-quarantine-packaging`](skills/hd2-no-quarantine-packaging/SKILL.md) | — | 让模组的辅助脚本能过站点扫描：把 `.bat`/`.ps1` 在运行时生成到用户配置目录，而不是放进归档；并把它做成构建门禁。 |
 | [`writing-mod-tools`](skills/writing-mod-tools/SKILL.md) | — | 怎么把这些工具写好：前置条件与优雅降级、默认只读、退出码、`--json`、dry-run、自检、**实机前先验证判据**、诚实写出做不到什么。 |
 
@@ -68,8 +71,8 @@
 ## 使用
 
 把 `skills/` 指向你的 agent/skill 加载器，或把某个 skill 目录复制进你的 skill 目录。每个 skill 都是
-自包含的 `SKILL.md`，带 frontmatter（`name`、`description`）；加载器只认 `SKILL.md`，所以旁边的
-`SKILL_cn.md` 不会冲突。
+自包含的 `SKILL.md`，带 frontmatter（`name`、`description`），需要脚本的还会自带脚本。skill 目录里
+没有任何中文，所以复制目录的加载器只会拿到英文；译文都在 [`docs/skills/`](docs/skills/)。
 
 ## 检查
 

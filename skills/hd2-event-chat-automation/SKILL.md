@@ -1,11 +1,11 @@
 ---
 name: hd2-event-chat-automation
-description: Use when building or debugging Helldivers 2 event-driven chat alerts, message templates, per-player cooldowns, welcome or scheduled messages, host/client AutoChat presets, or an AutoChat plugin. This describes AutoChat's verified contract; other mods may choose different behavior.
+description: "Build or debug HD2 event-driven chat alerts: templates, per-player cooldowns, welcome and scheduled messages, AutoChat presets and plugins. Use for the message path after an event is identified."
 ---
 
 # HD2 event chat automation
 
-English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-event-chat-automation/SKILL_cn.md)
+English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-event-chat-automation_cn.md)
 
 Use this for the message path after a game event is identified. Event recognition is a separate concern; do not infer a trigger from an alert's message or rule name. Use [HD2 game event identification](../hd2-game-event-identification/SKILL.md) for the upstream evidence and normalized event. AutoChat-specific behavior below is verified against [PLAYER-TEMPLATES.md](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/docs/PLAYER-TEMPLATES.md), [PLUGIN-API.md](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/docs/PLUGIN-API.md), and their linked source/tests. Treat these as that product's contract, not a requirement for every mod.
 
