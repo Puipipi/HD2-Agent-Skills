@@ -46,16 +46,17 @@ description: "打包并发布 HD2 的 Bingus/MDL mod：布局、归档、七步�
 | `hd2-mod\build\_probes\` | 侦察 / 探测包 | 未追踪 |
 | `junze-hd2-lua-mod\dist\` | 发布区，随 git 仓库分发，并附带 `SHA256SUMS.txt` | **已追踪** |
 
-不要在某个 mod 子目录里创建你自己的 `dist/` 或 `build/` —— mod 本地的 `dist/`
-会与纳入追踪的发布线打架。
+这些路径和已追踪的 `dist/` 布局是本仓库的约定。应遵循目标 mod 仓库的发布契约或用户指定的
+路径；mod 本地的 `dist/` 或 `build/` 本身没有错。保留现有产物，只有所选发布流程要求时才移动
+或删除它们。
 
 ## 3. 命名：包、归档产物、GUID
 
 | 规则 | 取值 / 形式 | 为何存在 |
 |---|---|---|
 | 包名 | `<Mod-Name>-v<X.Y.Z>.zip`，**纯 ASCII** | mod 管理器把 manifest 的 `Name` 当作文件夹名；中文字符会产生「目标名/目录名或卷标语法不正确」并导致安装失败 |
-| 绝不覆盖此前的包 | 把旧包连同原因移入 `_deprecated\`。在 **2026-10-02**，那个显示"page 5 tab crashes"的包被覆盖了，证据随之丢失 | 被覆盖的产物无法再被诊断 |
-| 跳过对完全相同重建的归档 | 先写入 `.tmp`，再与现有产物做字节比较；字节完全相同意味着**不要归档** | 否则 `_deprecated` 会被一次毫无损失的重建淹没在噪声里 |
+| 不要覆盖此前的包 | 在原路径或用户指定路径保留；只有仓库策略或用户请求的流程要求时，才连同原因归档副本。**2026-10-02**，那个显示"page 5 tab crashes"的包被覆盖了，证据随之丢失 | 覆盖会让产物无法诊断；移动用户指定的产物也可能破坏输出约定 |
+| 跳过对完全相同重建的归档 | 对需要归档重建产物的流程，先写入 `.tmp`，再与现有产物做字节比较；字节完全相同意味着**不要归档** | 否则 `_deprecated` 会被一次毫无损失的重建淹没在噪声里 |
 | 归档名 | `<original name>_被同名重建覆盖_<timestamp>[_index].zip` | 时间戳只有秒级精度，所以同一秒内的重建会撞名 —— 序号是必需的 |
 | 已弃用名要写明原因 | `AC8-Rack-Backpack-v1_census无门控+漏WriteCopy.zip`、`TD-110-Co-Op-v1.3_复查有bug.zip`、`TD-110-Co-Op-v1.7_射界未收紧.zip`、`More-Balanced-Exosuit-Emancipator-v1.0_兜底无退避.zip` | 名称里不写原因，同一个错误就会被重复 |
 | manifest GUID | 永不改变（例如 AC-8 的 `2b8e6c51-…`、实弹狗的 `7f2c8a04-…`） | GUID 一旦改变，管理器会把升级当成一个新 mod，与旧版本并排安装 |
@@ -115,23 +116,24 @@ python tools/build_addon.py --name mods/<author>/<name> --entry x.lua --guid <st
 
 两者都是识别归档中 Lua 资源、并避开加载器自身资源所必需的。
 
-## 7. 发布清单（固定的七步）
+## 7. 发布清单（按请求范围调整）
 
-1. **在源码中编辑 `local VERSION`** —— 唯一的真相来源。然后
-   `python tools\build_mod.py --list` 查看 key 名称，再 `python tools\build_mod.py <key>`。
-   Scanner 用自己的 `hd2-scanner\build.py`（多资源归档）。两者都不覆盖：
-   同名或旧版本会自动进入 `build\_deprecated\`，而字节完全相同
-   的内容既不会被重建也不会被归档。
-2. **把新包复制到 `dist\`**；把被取代的旧包移入
-   `build\_deprecated\from_dist\`。
-3. **重新计算 `dist\SHA256SUMS.txt`** —— 小写哈希 + **两个空格** + 文件名，这样
-   `sha256sum -c` 能直接对它工作。
-4. **更新 `README.md`**（安装表 + 发布线说明）和 **`RELEASE-NOTES.md`**
-   （新增小节；发布脚本从这里提取正文）。
-5. `git add -A` → 提交（中文，带 `release:` / `docs:` 前缀）→ `git tag -a <tag> -m "…"`。
-6. `push` —— **必须走代理**，见 §10。
-7. `python tools\gh_publish.py`（为该发布线创建 Release，只附带该线的
-   包和它自己的 `SHA256SUMS.txt`；可重复执行），然后 `python tools\gh_verify.py`。
+1. 先确定目标 mod 的版本字段、builder 和输出约定。在本文所在仓库，编辑 `local VERSION`，用
+   `python tools\build_mod.py --list` 查看 key，再运行 `python tools\build_mod.py <key>`；scanner
+   使用 `hd2-scanner\build.py` 构建多资源归档。这些仓库专用 builder 会把冲突归档到
+   `build\_deprecated\`，并跳过字节完全相同的重建；不要假设其他 mod 也有相同行为。
+2. **把包写入所选发布路径。** 保留旧包；只有仓库策略或用户请求要求时才归档它们。
+3. **如果仓库维护校验和文件，就更新它。** 让校验和与该仓库要求的包集合一致，保留无关条目，
+   不要悄悄删除旧 ZIP 或其记录。如果清单覆盖整个目录，就保持这一覆盖范围。本仓库使用小写哈希、
+   两个空格和每行一个文件名，以兼容 `sha256sum -c`。
+4. 仅当所请求的发布范围包含文档/发布说明时，才更新安装文档和发布说明；不要默认把本地打包
+   扩展为文档或发布任务。
+5. 检查 `git status`，只暂存本次预期的发布文件。只有整个工作树已检查，且请求的提交明确包含
+   全部内容时，才用 `git add -A`。仅在范围包含时创建 commit 和 tag。
+6. 仅在用户请求或已授权时推送，并使用当前主机配置的传输方式。下文代理是单台机器的测量结果，
+   不是通用要求。
+7. 仅在用户请求或已授权时创建/更新 GitHub Release，然后核验附件。这里描述的
+   `gh_publish.py` 和 `gh_verify.py` 行为属于本仓库。
 
 发布线与标签：
 
@@ -150,10 +152,10 @@ python tools/build_addon.py --name mods/<author>/<name> --entry x.lua --guid <st
 
 | 规则 | 细节 | 原因 |
 |---|---|---|
-| `gh_publish.py` 从不覆盖同名附件 | 它只上传尚不存在的名字；同名附件（尤其是 `SHA256SUMS.txt`）会被跳过。每当附件集合发生变化（版本变化、删除了旧包），**先在 release 页面删除同名 / 多余的旧附件**，再运行它 | 过期的校验和文件列出了已经不存在的包（**2026-10-04** 踩到） |
+| `gh_publish.py` 从不覆盖同名附件 | 它只上传尚不存在的名字；同名附件（尤其是 `SHA256SUMS.txt`）会被跳过。对已授权的 release 资产更新，重新运行前先移除同名或多余的旧附件；除非替换或删除属于当前范围，否则保留现有资产 | 过期的校验和文件列出了已经不存在的包（**2026-10-04** 踩到） |
 | `gh_verify.py` 比较 API digest | 它使用 `assets[].digest`，不下载附件，因为代理到 `objects.githubusercontent.com` 的 TLS 经常是坏的（会下载的那个版本拿到 SSL EOF） | 通过代理下载附件失败；digest 这条路更快且不受影响 |
 | 标签的指向不可回收 | 一旦推送，就不要删除标签或改变它指向的对象 —— 不要 `git tag -f` + force push。一条空的发布线只占用一个标签加一个占位 Release，没有包（`logistics-v0.1alpha` 就是这样留下的） | 移动标签会破坏"一次发布包含什么"的可复现性。*(冲突：这与"强制移动标签来修正一次发布"的常见习惯相矛盾；来源保留这条禁令。)* |
-| 标签之上的 release 内容是可变的，但有一个告诫 | 为补丁包更换附件：删除旧附件 → 上传新包 → 重新计算该线的 `SHA256SUMS.txt`；标题和正文也可以改 —— 在正文里留一行 `附件已更新（日期）`。`tools\gh_refresh_releases.py` 是幂等的、可重复运行的。**告诫：** "Source code (zip)" 快照是该标签当时的树，因此正文里的下载链接必须指向 **`main` 分支的 `dist/`**，而不是指向标签快照 | 标签快照是冻结的，指向它的链接会把过期的包交给用户 |
+| 标签之上的 release 内容是可变的，但有一个告诫 | 对已授权的 release 资产更新，可按以下步骤替换补丁包附件：删除旧附件 → 上传新包 → 重新计算该线的 `SHA256SUMS.txt`；标题和正文也可以改 —— 在正文里留一行 `附件已更新（日期）`。除非替换或删除属于当前范围，否则保留现有资产。`tools\gh_refresh_releases.py` 是幂等的、可重复运行的。**告诫：** "Source code (zip)" 快照是该标签当时的树，因此正文里的下载链接必须指向 **`main` 分支的 `dist/`**，而不是指向标签快照 | 标签快照是冻结的，指向它的链接会把过期的包交给用户 |
 | 两种重切方式，不要混用 | 可变的 release 内容（见上）**或**一个新的补丁标签（例如 `infantry-v2.0.1`），当用户仍应能拿到旧包时后者有用 | 两种都可行；混用会让用户不确定哪个产物才是当前的 |
 | 不要用 `git push --tags` | 一个历史上打错成大写 `V1.0` 的标签在本地仍然存在 | 推送所有标签会把那个打错的标签也发布出去 |
 
@@ -182,14 +184,14 @@ python tools/build_addon.py --name mods/<author>/<name> --entry x.lua --guid <st
 
 ## 10. 网络坑（本地与沙箱）
 
-**坑 1 —— 在这台主机上 PowerShell HTTPS 是坏的（沙箱/主机特定）。** 证书
-存储被锁定 —— `schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS` —— 所以连
-`https://github.com` 都会让 `Invoke-RestMethod` / `curl.exe` 返回 `HTTP=000`。出站
-访问请**只用 git（自带 OpenSSL）和 python（自带 OpenSSL）**。这是这台
-沙箱机器的属性，不是通用的 Windows 规则。
+**坑 1 —— 一台测量主机上的 HTTPS 失败。** 在该环境中，PowerShell 证书存储返回
+`schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS`，连 `https://github.com` 都让
+`Invoke-RestMethod` / `curl.exe` 返回 `HTTP=000`。先核实当前主机上的实际客户端错误；若相符，再用
+配置正常的客户端，例如使用自带 OpenSSL 的 git 或 python。不要把这个 workaround 推广到其他 Windows 主机。
 
-**坑 2 —— 代理只存在于 WinINET 注册表里。** 它由 VPN 客户端设置，既不在
-环境变量里，也不在 git config 里：
+**坑 2 —— 本机代理只存在于 WinINET 注册表里。** 它由 VPN 客户端设置；在测量的机器上，
+它不在环境变量或 git config 里。其他主机可能没有代理或使用不同配置；检查当前主机，
+不要照抄测得的地址：
 
 ```
 HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings -> ProxyServer
@@ -203,13 +205,13 @@ git -c http.proxy=http://127.0.0.1:6382 push <url>
 $env:HTTPS_PROXY='http://127.0.0.1:6382'    # python
 ```
 
-没有这个，git 和 python 就没有配置任何代理，完全无法访问
-GitHub。
+在那台机器上，没有这项配置时 git 和 python 无法连接 GitHub。不要把相同网络故障或代理要求
+套用到其他主机。
 
-**坑 3 —— push 用一次性的内联凭据，绝不持久化。** URL 形如
-`https://x-access-token:<token>@github.com/junze0910/junze-hd2-lua-mod.git`：它完成
-push 的认证，而不把 token 写进 git config。回显这类命令时，把 token
-替换为 `***`。`sh.exe: couldn't create signal pipe` 是 MSYS 噪声，可以忽略。
+**坑 3 —— 不要把凭据放进远程 URL 或命令输出。** 优先使用已认证的 GitHub CLI 会话、当前主机的
+凭据管理器，或仓库已选定的 CI secret 机制。如果任务确实需要一次性 secret，应通过工具支持的
+受保护输入或环境机制传递；从日志中脱敏，绝不写入远程 URL 或仓库配置。`sh.exe: couldn't create
+signal pipe` 在测量主机上是无害的 MSYS 噪声；在当前主机仍应先核实错误再忽略。
 
 ## 11. 必须落盘的诊断
 
@@ -224,6 +226,5 @@ push 的认证，而不把 token 写进 git config。回显这类命令时，把
 
 ## 12. 未解决
 
-在发布、打包或面向发布的日志材料中，没有任何内容自相矛盾。唯一保留下来的
-矛盾是 §8 里的标签规则：来源禁止强制移动标签，同时指出这是常见习惯 ——
-禁令被保留，该习惯并未与之调和。
+发布、打包或面向发布的日志材料中没有自相矛盾。唯一保留的来源张力在 §8 标签规则：它禁止强制移动标签，
+同时指出这是一种常见习惯；保留禁令，但不调和该习惯。

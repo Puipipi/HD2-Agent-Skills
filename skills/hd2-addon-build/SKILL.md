@@ -5,7 +5,7 @@ description: "Build a Helldivers 2 Bingus/MDL Lua mod into a mod-manager-importa
 
 # hd2-addon-build
 
-> **Confidence:** the five gates were run here, and each was shown to fail when provoked. The envelope format is from the loader's tools. That a manager *imports* the artifact is not verified here — see [verification status](../../docs/verification-status.md).
+> **Confidence:** the five gates were run here, and each was shown to fail when provoked. The envelope format is from the loader's tools. That a manager *imports* the artifact is not verified here. Optional repository details: [verification status](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/verification-status.md); this skill does not require network access.
 
 English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-addon-build_cn.md)
 
@@ -60,7 +60,9 @@ Five gates. The first four run on the source; the fifth on the built archive.
 3. **Every called C symbol is declared.** A missing declaration is a hard error at the
    call site; it once shipped as "clicking the card does nothing".
 4. **The README block exists**, and it is extracted from the source into `README.txt`, so
-   the in-game guide cannot drift from the code.
+   the in-game guide cannot drift from the code. Extraction alone does not catch stale user-facing
+   version labels or candidate/debug notes; review the extracted README against the formal package
+   version and intended audience.
 5. **No script-like file is inside the archive.** `.bat`, `.cmd`, `.ps1`, `.vbs`, `.js`,
    `.exe` and `.dll` are all refused, checked on the *finished* archive so a later change
    cannot quietly add one back, and the refusal deletes the archive so a failed publish

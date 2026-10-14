@@ -14,13 +14,16 @@ drop it in the game folder" — it is:
 
 > 独立 git 仓库 → 纯文本 LuaJIT 源码 → 离线沙盒自检 → 信封包 ZIP → 管理器手动部署 → 实机日志取证
 
-and it has a hard release discipline: a build that fails its gates **deploys nothing**, and
-no change counts as done until it has run in the real game.
+and it has a hard release discipline: a build that fails its gates **deploys nothing**. Runtime
+behavior changes need appropriate runtime evidence before they are called verified; documentation
+and offline-only changes can be completed and validated within their scope. User confirmation is
+distinct from direct runtime sampling.
 
-Two related skills carry the parts that are about *what breaks* rather than *how to build*:
-[`docs/hd2-mod-failure-catalog.md`](../../docs/hd2-mod-failure-catalog.md) (symptom → cause)
-and the code-level techniques in `hd2-in-game-panel`, `hd2-native-panel-input-lock`,
-`hd2-game-language-autodetect`. Read this skill for the pipeline; read those for a feature.
+The optional repository [failure catalog](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/hd2-mod-failure-catalog.md)
+maps symptoms to causes. The code-level techniques are covered by `hd2-in-game-panel`,
+`hd2-native-panel-input-lock`, and `hd2-game-language-autodetect` if those skills are installed
+alongside this one. This skill contains the build pipeline itself and does not require those
+references or network access.
 
 ---
 
@@ -129,6 +132,14 @@ A test that has been failing for months is worse than no test: this workspace ca
 (`test_smoothboot.py` has 6 known failures; `test_sb4_writerhold.py` requires a different
 version) and the rule is to **say so** rather than quietly counting them as passing. If you
 cannot fix a stale test, mark it in the README as known-failing with the reason.
+
+Before packaging generated or synchronized sources, identify the canonical input and inspect the
+sync tool's actual argument parser. Do not assume `--check` is read-only: an unrecognized option can
+be ignored by a script that still writes files. Edit canonical fragments, run the intended sync, then
+run it a second time and compare hashes to confirm idempotence. Freeze the canonical source before
+validation and packaging; report the raw source hash and, when a builder normalizes line endings, its
+separate LF-normalized hash. After building, compare the extracted payload with that frozen source
+using only the builder's documented normalization.
 
 ## 5. Packaging: the addon envelope
 
@@ -280,9 +291,8 @@ This is the part that keeps the project honest, and it is cheap:
 - `hd2-addon-build` — the build script with all four gates, icon handling and README
   extraction. Adapt the CONFIG block; it runs as-is.
 - `hd2-in-game-panel`, `hd2-native-panel-input-lock`, `hd2-game-language-autodetect` —
-  features: drawing, input/cursor, localisation.
-- [`docs/hd2-mod-failure-catalog.md`](../../docs/hd2-mod-failure-catalog.md) — when something
-  breaks: symptom → root cause → fix, including the traps that do not raise.
+  optional feature skills if installed alongside this one: drawing, input/cursor, localisation.
+- Optional repository companion: [failure catalog](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/hd2-mod-failure-catalog.md) — when something breaks: symptom → root cause → fix, including the traps that do not raise. No network lookup is required for this skill.
 - The catalog's startup native-callback case is relevant when discovery or logging invokes game
   APIs before their runtime context is ready; it does not prohibit native calls in general.
 

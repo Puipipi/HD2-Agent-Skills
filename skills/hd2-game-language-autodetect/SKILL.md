@@ -21,7 +21,7 @@ Method A needs a build proof before it is allowed to read a single byte. Method 
 nothing but a live GUI handle. Use A for accuracy, B as the portable fallback, and the
 config override (`lang=zh` / `lang=en`) as the manual escape hatch.
 
-> Companion reading: [`docs/hd2-mod-failure-catalog.md`](../../docs/hd2-mod-failure-catalog.md)
+> Optional repository companion: [failure catalog](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/hd2-mod-failure-catalog.md). This skill remains usable on its own; no network lookup is required.
 > — §5 (memory-read safety: build proof, torn reads, id validation) and §6 (config parsing)
 > are the rules this skill applies to a single value.
 

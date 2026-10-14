@@ -7,7 +7,7 @@ description: "构建或调试 HD2 的事件驱动聊天提醒：模板、按玩�
 
 [English](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/skills/hd2-event-chat-automation/SKILL.md) / 简体中文
 
-本技能说明游戏事件已经识别之后的消息处理路径。事件识别是另一个问题；不能只凭提醒文本或规则名推断触发条件。上游证据和规范化事件见 [HD2 游戏事件识别](../skills/hd2-game-event-identification_cn.md)。以下 AutoChat 行为依据[玩家模板文档](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/docs/PLAYER-TEMPLATES.md)、[插件 API 文档](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/docs/PLUGIN-API.md)及其链接的源码和测试核实。它们是 AutoChat 的产品契约，不是所有模组都必须遵循的规则。
+本技能说明游戏事件已经识别之后的消息处理路径。事件识别是另一个问题；不能只凭提醒文本或规则名推断触发条件。若游戏事件识别技能与本技能一同安装，可用它核验上游证据和规范化事件。以下 AutoChat 行为依据[玩家模板文档](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/docs/PLAYER-TEMPLATES.md)、[插件 API 文档](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/docs/PLUGIN-API.md)及其链接的源码和测试核实。它们是 AutoChat 的产品契约，不是所有模组都必须遵循的规则。
 
 ## 事件、欢迎和定时消息
 
@@ -18,6 +18,8 @@ AutoChat 的默认事件冷却桶按触发玩家共享，普通事件规则共�
 AutoChat 通过本地聊天发送，因此在当前实现中，显示发送者仍是本机玩家。`creator_id` 用于触发归属和筛选，不负责选择或伪造网络发送者。这项针对产品的事实不代表所有游戏引擎或模组都无法更改身份。
 
 模板变量是格式化器替换的固定别名，不是正则表达式。玩家别名包括 `{player}`、`{player_name}`、`{name}`、`{short}`、`{abbr}`、`{slot}` 和 `{number}`；事件和任务别名包括 `{category}`、`{target}`、`{stratagem}`、`{action}`、`{objective}`、`{task}`、`{objective_type}`、`{task_type}` 和 `{position}`。欢迎、定时和插件消息可以使用玩家变量；事件变量仅在对应事件或任务上下文提供值时才有内容。变量只替换一遍：玩家名里的花括号或百分号会原样插入，不会再解释成第二个模板变量；未知变量保持原文。完整变量表和示例见上方模板文档。
+
+支持哪些别名及其语义，应以格式化器为准，而不是以本地化帮助文字为准。在本地验证的 AutoChat 源码快照中（SHA-256 `D07B39FB32B7FB553FEB8D2C63158D7EF1FE041C57F647FB08E018FF98CD3EC3`；尚无公开代码提交），中文别名 `{玩家名}`、`{名字}`、`{触发者}`、`{缩写}`、`{编号}` 与英文别名都可用。欢迎格式使用加入者身份及欢迎池时区；定时格式使用本机发送者身份及系统本地时间。`{count}` 是当前小队人数，`{joinnum}` 是下一次成功欢迎的序号；定时发送不会推进它。以上是 AutoChat 特定行为；其他模组应从自身格式化器确认变量和语义。
 
 AutoChat 核心提醒会把已知的完整玩家名整体包成一次 `[名字]`；身份缺失时使用不带方括号的队友回退文本。变量替换前，格式化器会移除名称中的控制字符和字面 `<`、`>` 分隔符；类似标签内部的文字会作为普通名称文本保留，因此不能保留玩家名自带的标记语法。单次替换后，花括号和百分号仍按字面处理。只有开启 `ping_sender_color` 时，核心才会给玩家名和标记前缀着色。插件消息会添加方括号，但不会自动着色。正文前会自动添加一个换行符。正文预算为 511 字节且包含颜色标记，因此开头换行符加正文必须不超过聊天的 512 字节限制。截断时既要保持 UTF-8 字符完整，也要在该预算内闭合活动颜色标记。主机输出默认是小队聊天，客机默认仅本地可见，但实际发送渠道由所选角色配置的 `output` 决定。本地输出失败时不会回退到公开聊天。
 
@@ -35,6 +37,6 @@ AutoChat 的战备规则批量编辑属于内部 UI/后端功能：按角色和�
 
 ## 另请参阅
 
-- [HD2 游戏内面板](../skills/hd2-in-game-panel_cn.md)：面板生命周期和布局。
-- [HD2 游戏事件识别](../skills/hd2-game-event-identification_cn.md)：上游触发与目标证据。
-- [HD2 离线引擎测试框架](../skills/hd2-offline-engine-harness_cn.md)：离线模拟引擎测试；产品行为证据仍以本文上方链接的 AutoChat 源码和测试为准。
+- 若与本技能一同安装，[HD2 游戏内面板](../skills/hd2-in-game-panel_cn.md)涵盖面板生命周期和布局。
+- 若与本技能一同安装，[HD2 游戏事件识别](../skills/hd2-game-event-identification_cn.md)涵盖上游触发与目标证据。
+- 若与本技能一同安装，[HD2 离线引擎测试框架](../skills/hd2-offline-engine-harness_cn.md)涵盖离线模拟引擎测试；产品行为证据仍以本文上方链接的 AutoChat 源码和测试为准。

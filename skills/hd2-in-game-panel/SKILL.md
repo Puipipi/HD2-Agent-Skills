@@ -18,7 +18,7 @@ font/material libraries faults at **native** level — `pcall` does not catch it
 the log stopped at `building the panel`, the process threw `ntdll 0xc0000026` every few
 seconds, and the frame callback stayed dead. Rects carry no such dependency.
 
-> Companion reading: [`docs/hd2-mod-failure-catalog.md`](../../docs/hd2-mod-failure-catalog.md)
+> Optional repository companion: [failure catalog](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/hd2-mod-failure-catalog.md). This skill remains usable on its own; no network lookup is required.
 > — §1 (native crashes `pcall` cannot catch), §2 (engine build timing) and §3 (the three
 > reasons a retained panel goes invisible) are the failure modes this skill is shaped around.
 
@@ -376,14 +376,34 @@ Verify through the production draw and hit-test path, not only a wrapping helper
 drawn text and rectangles, assert their bounds against each viewport, and compare visible
 controls with their hit regions. Include narrow resolutions, wide CJK metrics, English and
 Chinese, long help/name samples, scroll-to-end, and an input-tail case when those paths exist.
-Keep these layout assertions separate from performance timing; see
-[`hd2-offline-engine-harness`](../hd2-offline-engine-harness/SKILL.md) for offline cost comparisons.
+Keep these layout assertions separate from performance timing. If the offline harness skill is
+installed alongside this one, use it for offline cost comparisons.
+
+When adapting an existing retained-GUI text editor that uses `Gui.text`, keep a source map from displayed tokens and wrapped spans back to UTF-8
+byte boundaries; display substitutions must not change storage, caret, or selection offsets.
+Initialize caret and scroll once when a new edit session opens. A wheel or redraw with an
+unchanged caret must preserve user scrolling; recompute caret-follow only when the session,
+value, or caret changes. If that changes a retained panel, mark its signature dirty; paint selection rectangles after applying
+the final viewport offset. Snap scrolling without floating-point oscillation. Derive both text
+measurement and drawing from the viewport's actual content width after scrollbar and padding
+reserves, and keep a positive scroll area for all reachable content.
+
+A fake `Gui.text` that records arguments does not model native markup interpretation. If an
+editor must show markup literally, isolate delimiters at the draw-call boundary while retaining
+the raw-byte map; use a markup-aware test shim to catch a complete tag sent in one call. This
+checks the call boundary only, not native rendering. Preview markup separately from the raw
+editor. Any cross-frame text cache needs a bounded invalidation key and should store plain data,
+not an engine `Color` object whose lifetime is temporary or undocumented. Idle frames should not reparse or remeasure unchanged
+content. The pinned AutoChat links below support only the older layout tests they name. The
+newer editor findings are indexed in [AutoChat lessons A8](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/autochat-lessons-coverage.md):
+they come from a local D07B snapshot and offline tests, with no corresponding public AutoChat
+code commit and no direct sampling of native markup rendering.
 AutoChat's [panel source](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/src/auto_chat.lua)
 and tests cover low-resolution bilingual timer/forms ([`test_ui_preview.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_ui_preview.py)),
 enemy help and clipped hitboxes ([`test_alert_layout.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_alert_layout.py)),
 and the last-row interaction in a 105-task list ([`test_panel_interaction.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_panel_interaction.py));
 that evidence does not cover every font or every mod. For lifecycle and focus/input ownership, use
-[`hd2-native-panel-input-lock`](../hd2-native-panel-input-lock/SKILL.md).
+the native panel input-lock skill if it is installed alongside this one.
 
 ## 8. Logging that makes a hidden panel diagnosable
 

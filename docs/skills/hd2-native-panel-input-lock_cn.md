@@ -14,7 +14,7 @@ description: "热键开 HD2 面板、解锁鼠标当指针，并在面板开着�
 **在复制任何内容之前，请先阅读 §6（来源与许可）**；
 其血统并不统一，其中一支属于 copyleft。
 
-> 配套阅读：[`docs/hd2-mod-failure-catalog.md`](../../docs/hd2-mod-failure-catalog.md)
+> 可选仓库补充资料：[故障目录](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/hd2-mod-failure-catalog_cn.md)。本技能可独立使用，无需联网查阅。
 > —— §1 与 §8 正是输入路径写得如此防御性的原因（半吊子的输入夺取
 > 比完全不夺取更糟）。
 

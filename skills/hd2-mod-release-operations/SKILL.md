@@ -53,16 +53,18 @@ Two artifact lines, never mixed:
 | `hd2-mod\build\_probes\` | recon / probe packages | untracked |
 | `junze-hd2-lua-mod\dist\` | release area, distributed with the git repository plus `SHA256SUMS.txt` | **tracked** |
 
-Do not create your own `dist/` or `build/` inside a mod subdirectory — a mod-local `dist/`
-fights the tracked release line.
+These paths and the tracked `dist/` layout describe this repository's convention. Follow the
+selected mod repository's release contract or the path the user specified; a mod-local `dist/`
+or `build/` is not inherently wrong. Preserve existing artifacts and do not relocate or delete
+them unless the chosen release procedure calls for it.
 
 ## 3. Naming: package, archived artifact, GUID
 
 | Rule | Value / form | Why it exists |
 |---|---|---|
 | Package name | `<Mod-Name>-v<X.Y.Z>.zip`, **pure ASCII** | The mod manager uses the manifest `Name` as a folder name; Chinese characters produce 「目标名/目录名或卷标语法不正确」 and the install fails |
-| Never overwrite a previous package | Move the old package into `_deprecated\` with the reason. On **2026-10-02** the package showing "page 5 tab crashes" was overwritten and the evidence was lost | An overwritten artifact cannot be re-diagnosed |
-| Skip archiving identical rebuilds | Write to `.tmp` first, byte-compare with the existing artifact; byte-identical means **do not archive** | Otherwise `_deprecated` drowns in noise for a rebuild that lost nothing |
+| Do not overwrite a previous package | Preserve it at its existing or user-selected path. Archive a copy with a reason only when the repository policy or user-requested workflow calls for it. On **2026-10-02** a package showing "page 5 tab crashes" was overwritten and the evidence was lost | An overwritten artifact cannot be re-diagnosed; moving a user-selected artifact can also break the requested output contract |
+| Skip archiving identical rebuilds | In workflows that archive rebuilt artifacts, write to `.tmp` first and byte-compare with the existing artifact; byte-identical means **do not archive** | Otherwise `_deprecated` drowns in noise for a rebuild that lost nothing |
 | Archive name | `<original name>_被同名重建覆盖_<timestamp>[_index].zip` | The timestamp is second-precision only, so same-second rebuilds collide — a sequence number is mandatory |
 | Deprecated names state the reason | `AC8-Rack-Backpack-v1_census无门控+漏WriteCopy.zip`, `TD-110-Co-Op-v1.3_复查有bug.zip`, `TD-110-Co-Op-v1.7_射界未收紧.zip`, `More-Balanced-Exosuit-Emancipator-v1.0_兜底无退避.zip` | Without the reason in the name, the same mistake gets repeated |
 | Manifest GUID | Never changes (e.g. AC-8 `2b8e6c51-…`, 实弹狗 `7f2c8a04-…`) | A changed GUID makes the manager treat an upgrade as a new mod, installing side by side with the old version |
@@ -123,23 +125,29 @@ Resource type markers:
 Both are needed to recognise a Lua resource inside an archive and to stay off the loader's own
 resource.
 
-## 7. The release checklist (the fixed seven steps)
+## 7. Release checklist (adapt these steps to the requested scope)
 
-1. **Edit `local VERSION` in the source** — the single source of truth. Then
-   `python tools\build_mod.py --list` to see the key names, then `python tools\build_mod.py <key>`.
-   Scanner uses its own `hd2-scanner\build.py` (multi-resource archive). Neither overwrites: the
-   same name or an old version automatically goes into `build\_deprecated\`, and byte-identical
-   content is neither rebuilt nor archived.
-2. **Copy the new package into `dist\`**; move the superseded old package into
-   `build\_deprecated\from_dist\`.
-3. **Recompute `dist\SHA256SUMS.txt`** — lowercase hash + **two spaces** + file name, so
-   `sha256sum -c` works on it directly.
-4. **Update `README.md`** (install table + release-line description) and **`RELEASE-NOTES.md`**
-   (new section; the publish script extracts the body from here).
-5. `git add -A` → commit (Chinese, with a `release:` / `docs:` prefix) → `git tag -a <tag> -m "…"`.
-6. `push` — **must go through the proxy**, see §10.
-7. `python tools\gh_publish.py` (creates the Release for that line, attaching only that line's
-   packages and its own `SHA256SUMS.txt`; repeatable), then `python tools\gh_verify.py`.
+1. Identify the target mod's version field, builder and output contract. In this repository, edit
+   `local VERSION`, use `python tools\build_mod.py --list` to see key names, and build with
+   `python tools\build_mod.py <key>`; the scanner uses `hd2-scanner\build.py` for multi-resource
+   archives. Those repository-specific builders archive conflicts into `build\_deprecated\`
+   and skip byte-identical rebuilds; do not assume another mod uses the same behavior.
+2. **Write the package to the selected release path.** Preserve prior packages; archive them
+   only if that repository's policy or the user's request calls for it.
+3. **Update the checksum file if the repository maintains one.** Keep checksums aligned with the
+   package set required by that repository, retain unrelated entries, and do not silently remove
+   old ZIPs or their records. If its manifest covers the whole directory, preserve that coverage.
+   This repository uses lowercase hashes, two spaces, and one filename per line for
+   `sha256sum -c` compatibility.
+4. Update install documentation and release notes when the requested release includes them;
+   do not expand a local packaging task into a documentation or publication task by default.
+5. Review `git status` and stage only the intended release files. Use `git add -A` only when the
+   entire worktree has been reviewed and the requested commit is meant to include all of it.
+   Create commits and tags only when they are in scope.
+6. Push only when requested or otherwise authorized, using the transport configured for the
+   current host. The proxy below is one machine's measured setup, not a general requirement.
+7. Create or update a GitHub Release only when requested or authorized, then verify its assets.
+   The `gh_publish.py` and `gh_verify.py` behavior described here belongs to this repository.
 
 Release lines and tags:
 
@@ -158,10 +166,10 @@ their own cadence.
 
 | Rule | Detail | Why |
 |---|---|---|
-| `gh_publish.py` never overwrites a same-named attachment | It uploads only names that do not already exist; a same-named attachment (especially `SHA256SUMS.txt`) is skipped. Whenever the attachment set changes (version change, deleted old package), **first delete the same-named / extra old attachments on the release page**, then run it | Stale checksum file listed packages that no longer existed (hit on **2026-10-04**) |
+| `gh_publish.py` never overwrites a same-named attachment | It uploads only names that do not already exist; a same-named attachment (especially `SHA256SUMS.txt`) is skipped. For an authorized release asset update, remove same-named or extra old attachments before rerunning it; preserve existing assets unless replacement or removal is in scope | Stale checksum file listed packages that no longer existed (hit on **2026-10-04**) |
 | `gh_verify.py` compares API digests | It uses `assets[].digest` and does not download attachments, because the proxy's TLS to `objects.githubusercontent.com` is frequently broken (the downloading version gets SSL EOF) | Attachment downloads failed through the proxy; the digest path is faster and unaffected |
 | A tag's pointer is not recyclable | Once pushed, do not delete a tag or change what it points at — no `git tag -f` + force push. An empty release line occupies only a tag plus a placeholder Release, with no packages (`logistics-v0.1alpha` was left that way) | Moving a tag breaks reproducibility of what a release contained. *(Conflict: this contradicts the common habit of force-moving a tag to fix a release; the source keeps the prohibition.)* |
-| Release content above a tag is mutable, with one caveat | Swap attachments for a patch package: delete the old attachment → upload the new package → recompute that line's `SHA256SUMS.txt`; title and body can also change — leave a line `附件已更新（日期）` in the body. `tools\gh_refresh_releases.py` is idempotent and re-runnable. **Caveat:** the "Source code (zip)" snapshot is the tree as of the tag, so download links in the body must point at the **`main` branch's `dist/`**, not at the tag snapshot | The tag snapshot is frozen, so links into it hand users stale packages |
+| Release content above a tag is mutable, with one caveat | For an authorized release asset update, replace a patch package by deleting the old attachment → uploading the new package → recomputing that line's `SHA256SUMS.txt`; title and body can also change — leave a line `附件已更新（日期）` in the body. Preserve existing assets unless replacement or removal is in scope. `tools\gh_refresh_releases.py` is idempotent and re-runnable. **Caveat:** the "Source code (zip)" snapshot is the tree as of the tag, so download links in the body must point at the **`main` branch's `dist/`**, not at the tag snapshot | The tag snapshot is frozen, so links into it hand users stale packages |
 | Two ways to re-cut, do not mix | Mutable release content (above) **or** a new patch tag (e.g. `infantry-v2.0.1`), which is useful when users should still be able to get the old package | Both work; mixing them leaves users unsure which artifact is current |
 | Do not use `git push --tags` | A historical mistyped uppercase `V1.0` tag still exists locally | Pushing all tags would publish the mistyped tag |
 
@@ -190,14 +198,16 @@ scope before debugging the network.
 
 ## 10. Network traps (local and sandbox)
 
-**Trap 1 — PowerShell HTTPS is broken on this host (sandbox/host-specific).** The certificate
-store is locked — `schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS` — so even
-`https://github.com` returns `HTTP=000` from `Invoke-RestMethod` / `curl.exe`. For outbound
-access use **only git (bundled OpenSSL) and python (bundled OpenSSL)**. This is a property of
-this sandboxed machine, not a general Windows rule.
+**Trap 1 — HTTPS failed in one measured host environment.** There, PowerShell's certificate
+store returned `schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS`, and even
+`https://github.com` returned `HTTP=000` from `Invoke-RestMethod` / `curl.exe`. First verify the
+actual client error on the current host; if it matches, use a working configured client such as
+git or python with its bundled OpenSSL. Do not generalize this workaround to other Windows hosts.
 
-**Trap 2 — the proxy lives only in the WinINET registry.** It is set by the VPN client, and it is
-in neither environment variables nor git config:
+**Trap 2 — this host's proxy lives only in the WinINET registry.** It is set by the VPN client,
+and on the measured machine it is in neither environment variables nor git config. Other hosts
+may have no proxy or a different configuration; inspect the current host rather than copying
+the measured address:
 
 ```
 HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings -> ProxyServer
@@ -211,12 +221,15 @@ git -c http.proxy=http://127.0.0.1:6382 push <url>
 $env:HTTPS_PROXY='http://127.0.0.1:6382'    # python
 ```
 
-Without this, git and python have no proxy configured and cannot reach GitHub at all.
+On that machine, without this configuration git and python could not reach GitHub. Do not assume
+the same network failure or proxy requirement on another host.
 
-**Trap 3 — push with a one-shot inline credential, never persisted.** The URL shape is
-`https://x-access-token:<token>@github.com/junze0910/junze-hd2-lua-mod.git`: it authenticates the
-push without writing the token into git config. When echoing such a command, replace the token
-with `***`. `sh.exe: couldn't create signal pipe` is MSYS noise and can be ignored.
+**Trap 3 — do not put credentials in remote URLs or command output.** Prefer an authenticated
+GitHub CLI session, the host's credential manager, or the CI secret mechanism already selected
+for the repository. If a task requires a one-shot secret, pass it through a protected input or
+environment mechanism supported by that tool; redact it from logs and never persist it in a
+remote URL or repository config. `sh.exe: couldn't create signal pipe` was harmless MSYS noise
+on the measured host; verify errors on the current host before dismissing them.
 
 ## 11. Diagnostics that must reach disk
 
@@ -232,5 +245,5 @@ where a user finds it.
 ## 12. Unresolved
 
 Nothing in the release, packaging or release-facing logging material conflicts with itself. The
-one preserved contradiction is the tag rule in §8: the source forbids force-moving a tag while
-noting it is the common habit — the prohibition is kept, the habit is not reconciled with it.
+one source tension retained is the tag rule in §8: it forbids force-moving a tag while noting
+that this is a common habit; the prohibition is kept, and the habit is not reconciled with it.

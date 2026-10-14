@@ -14,7 +14,7 @@ credit to **SHODAN Stat Editor v1.4.1** — cross-checked against the Custom Arm
 simpler pointer handling. **Read §6 (provenance and licensing) before you copy anything**;
 the lineage is not uniform and one branch of it is copyleft.
 
-> Companion reading: [`docs/hd2-mod-failure-catalog.md`](../../docs/hd2-mod-failure-catalog.md)
+> Optional repository companion: [failure catalog](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/hd2-mod-failure-catalog.md). This skill remains usable on its own; no network lookup is required.
 > — §1 and §8 are why the input path is written defensively (a half-applied input grab is
 > worse than none).
 

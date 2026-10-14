@@ -5,7 +5,7 @@ description: "Check that every C symbol a HD2 Lua mod calls is declared and does
 
 # hd2-ffi-audit
 
-> **Confidence:** the scanner runs, but its rules are reported, not re-derived from the loader. Its known blind spots are listed below. See [verification status](../../docs/verification-status.md).
+> **Confidence:** the scanner runs, but its rules are reported, not re-derived from the loader. Its known blind spots are listed below. Optional repository details: [verification status](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/verification-status.md); this skill does not require network access.
 
 English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-ffi-audit_cn.md)
 

@@ -18,7 +18,7 @@ description: "判断运行中的客户端是中文还是英文：按已验证偏
 
 方法 A 在获准读取哪怕一个字节之前，都需要一份 build 校验。方法 B 除一个可用的 GUI 句柄之外不需要任何东西。要准确性用 A，要可移植的回退用 B，而要手动逃生舱口则用配置覆盖（`lang=zh` / `lang=en`）。
 
-> 配套阅读：[`docs/hd2-mod-failure-catalog.md`](../../docs/hd2-mod-failure-catalog.md)
+> 可选仓库补充资料：[故障目录](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/hd2-mod-failure-catalog_cn.md)。本技能可独立使用，无需联网查阅。
 > —— §5（内存读取安全：build 校验、撕裂读、id 校验）与 §6（配置解析）
 > 就是本技能应用于单个值上的那套规则。
 

@@ -130,6 +130,14 @@ Neither is visible by reading. Both are instant in a harness.
   shape until someone updates it. Treat the fake as part of the code under review.
 - It cannot catch native crashes caused by calling a real API at the wrong time; it can only
   catch that your code *tried* to, given the state you simulated.
+- A `Gui.text` stub that records its input does not simulate native markup parsing or rasterization.
+  When literal markup is a requirement, add a test-only markup-aware shim that flags complete tags
+  passed within one draw call, then assert that the production renderer splits calls and that the
+  visible source spans concatenate to the expected text. This validates the call boundary, not the
+  native renderer. For interactive text, drive the production mouse/key reducer and draw path; assert
+  actual emitted text/selection rectangles, viewport offsets, and retained redraws. A wrapped marker
+  can span several calls, so verify ordered source spans rather than requiring one call per line or
+  marker. Keep offline timing results separate from in-game latency claims.
 
 ## See also
 

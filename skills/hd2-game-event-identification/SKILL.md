@@ -7,7 +7,7 @@ description: "Identify HD2 HUD pings, map pins, mission targets, enemy markers a
 
 English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-game-event-identification_cn.md)
 
-Use this skill to identify **what happened and what object it referred to**. It ends at a normalized event; message templates, role permissions, queues and cooldown policy belong to the neighboring [`hd2-event-chat-automation`](../hd2-event-chat-automation/SKILL.md) skill. For table layout and resource hashing, use [`hd2-offline-data-workflow`](../hd2-offline-data-workflow/SKILL.md). For a narrowly scoped external read-only address check, use [`hd2-live-memory-probe`](../hd2-live-memory-probe/SKILL.md); for the player's selected language, use [`hd2-game-language-autodetect`](../hd2-game-language-autodetect/SKILL.md).
+Use this skill to identify **what happened and what object it referred to**. It ends at a normalized event. If installed alongside this one, [`hd2-event-chat-automation`](../hd2-event-chat-automation/SKILL.md) covers templates, role permissions, queues and cooldown policy; [`hd2-offline-data-workflow`](../hd2-offline-data-workflow/SKILL.md) covers table layout and resource hashing; [`hd2-live-memory-probe`](../hd2-live-memory-probe/SKILL.md) covers narrowly scoped external read-only address checks; and [`hd2-game-language-autodetect`](../hd2-game-language-autodetect/SKILL.md) covers the player's selected language. This skill remains usable without those companion skills.
 
 ## Evidence and scope
 

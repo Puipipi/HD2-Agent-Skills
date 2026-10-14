@@ -28,6 +28,7 @@
 | [`hd2-bingus-mod-development`](skills/hd2-bingus-mod-development/SKILL.md) | [中文](docs/skills/hd2-bingus-mod-development_cn.md) | Bingus/MDL Lua 模组的完整流水线：仓库结构、加载器强制的源码契约、构建门禁、离线模拟、信封包 ZIP、部署路径与回退、实机日志取证，以及发布纪律。 |
 | [`hd2-mission-entry`](skills/hd2-mission-entry/SKILL.md) | [中文](docs/skills/hd2-mission-entry_cn.md) | 从冷启动到落地：启动、跳过片头、确认舰船就绪、星图选任务、简报配装、部署，以及每一步的验证证据。自带带聚焦校验的键鼠工具，并列出该流程依赖的模组。 |
 | [`hd2-in-game-panel`](skills/hd2-in-game-panel/SKILL.md) | [中文](docs/skills/hd2-in-game-panel_cn.md) | 只用 `Gui.rect` 在游戏内画出可点击的面板——保留式 GUI 生命周期、分级建立、图层/原生界面失效、区域命中、拖拽，以及 5×4 点阵字体与打包的中文字形。 |
+| [`hd2-world-overlay-always-on-top`](skills/hd2-world-overlay-always-on-top/SKILL.md) | [中文](docs/skills/hd2-world-overlay-always-on-top_cn.md) | 区分屏幕 UI 图层、世界线条的深度/透视批次、背面剔除与 WorldGUI 填充三角形，并保留证据的构建版本边界。 |
 | [`hd2-native-panel-input-lock`](skills/hd2-native-panel-input-lock/SKILL.md) | [中文](docs/skills/hd2-native-panel-input-lock_cn.md) | 用热键（F7）打开面板、解锁鼠标，并在面板打开时让游戏收不到键鼠——raw input 注销、窗口过程过滤、坐标换算、滚轮格数、安全归还。 |
 | [`hd2-game-language-autodetect`](skills/hd2-game-language-autodetect/SKILL.md) | [中文](docs/skills/hd2-game-language-autodetect_cn.md) | 自动判断客户端是中文还是英文——经 build 校验的 `game.dll` 偏移，带引擎字体字形覆盖率回退，标签只在绘制时翻译。 |
 | [`hd2-event-chat-automation`](skills/hd2-event-chat-automation/SKILL.md) | [中文](docs/skills/hd2-event-chat-automation_cn.md) | AutoChat 事件冷却、欢迎与定时消息、模板、角色预设及插件边界。 |
@@ -49,7 +50,7 @@
 | [`hd2-lua-forward-declarations`](skills/hd2-lua-forward-declarations/SKILL.md) | [中文](docs/skills/hd2-lua-forward-declarations_cn.md) | Lua 里函数调用定义在它后面的函数:调用解析成 `nil`、框架把错误吞掉、设置静默无效。教你怎么从**调用图**去定位,而不是靠猜。 |
 | [`hd2-mod-options-menu`](skills/hd2-mod-options-menu/SKILL.md) | [中文](docs/skills/hd2-mod-options-menu_cn.md) | 做游戏内设置页:ModOptionsMenu 的真实契约、为什么 `slider` 会被拒、2–16 项上限、取序号而非文本的 `choice`、单一主人规则,以及让整棵选项树消失的管理器侧故障。 |
 | [`hd2-crash-reporting-and-settings`](skills/hd2-crash-reporting-and-settings/SKILL.md) | [中文](docs/skills/hd2-crash-reporting-and-settings_cn.md) | 在 `data/settings.ini` 里开关崩溃上报、转储写入与崩溃截图,管理 `%APPDATA%` 下的崩溃文件夹,并说明为什么 `floating_point_exceptions` 不只是又一个上报开关。 |
-| [`hd2-mod-release-operations`](skills/hd2-mod-release-operations/SKILL.md) | [中文](docs/skills/hd2-mod-release-operations_cn.md) | 打包与发布：工程布局、包命名、字节级归档格式、七步发布清单、GitHub 操作、token 处理与网络坑。 |
+| [`hd2-mod-release-operations`](skills/hd2-mod-release-operations/SKILL.md) | [中文](docs/skills/hd2-mod-release-operations_cn.md) | 打包与发布：工程布局、包命名、归档格式、按请求范围调整的发布步骤、GitHub 认证和主机特定网络观察。 |
 | [`hd2-injection-runtime-patching`](skills/hd2-injection-runtime-patching/SKILL.md) | [中文](docs/skills/hd2-injection-runtime-patching_cn.md) | 运行时那一半：安全的写入原语、FFI 与本 VM 的 LuaJIT 语义陷阱、何时写与写多频繁，以及运行时读取数据表。 |
 | [`hd2-offline-data-workflow`](skills/hd2-offline-data-workflow/SKILL.md) | [中文](docs/skills/hd2-offline-data-workflow_cn.md) | 离线优先、实机在后：按签名定位数据表、从明文镜像解码、LDLD 块格式与两个哈希、扫描器设计，以及一次性的只读侦察 addon。随附完整 106 项踩坑清单作为证据。 |
 | [`hd2-no-quarantine-packaging`](skills/hd2-no-quarantine-packaging/SKILL.md) | — | 让模组的辅助脚本能过站点扫描：把 `.bat`/`.ps1` 在运行时生成到用户配置目录，而不是放进归档；并把它做成构建门禁。 |

@@ -5,7 +5,7 @@ description: "Inspect a built HD2 addon ZIP before shipping: manifest, GUID, arc
 
 # hd2-addon-package-inspector
 
-> **Confidence:** verified here — its hash matches the loader's three published vectors and it exits non-zero if they disagree. See [verification status](../../docs/verification-status.md).
+> **Confidence:** verified here — its hash matches the loader's three published vectors and it exits non-zero if they disagree. Optional repository details: [verification status](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/verification-status.md); this skill does not require network access.
 
 English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-addon-package-inspector_cn.md)
 
@@ -44,6 +44,11 @@ package size and SHA-256, which is what the next person uses to confirm they hav
 | hash self-test | before any of the above, the name→hash implementation is checked against the **three published vectors** (`core/wwise/lua/wwise_flow_callbacks` → `0x7251FDD9BB62480A`, `mods/codex/gun_calibration` → `0x9537023F38D32BCD`, `mods/example_author/example_addon` → `0x835DB1516CA1E1CA`). If the hash is wrong, every identity check below is meaningless, so the tool refuses to continue and exits 1 |
 | declaration | the resource carries a `-- HD2-Addon: <name>` line, and it matches `--resource` when given |
 | source (`--source`) | the packaged bytes contain the source you built, and its version string matches the ZIP's file name |
+
+For split-source builds, compare the **extracted Lua payload** with the frozen canonical source too;
+apply only the build's documented line-ending normalization. Keep the ZIP SHA-256 and payload SHA-256
+separate: one identifies the archive, the other identifies its embedded source. Check the extracted
+user README and manifest identity in the same artifact, not only the build log.
 
 ## One detail worth knowing
 

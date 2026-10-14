@@ -13,13 +13,10 @@ description: "开发、验证并打包 Bingus/MDL 加载器的 HD2 Lua mod：仓
 
 > 独立 git 仓库 → 纯文本 LuaJIT 源码 → 离线沙盒自检 → 信封包 ZIP → 管理器手动部署 → 实机日志取证
 
-它有一条硬发布纪律：任何一条门禁不过，**构建不部署任何东西**；而任何改动只有在真实游戏里跑过
-才算完成。
+它有一条硬发布纪律：任何一条门禁不过，**构建不部署任何东西**。运行时行为改动要有适当的运行时证据后，
+才能称为已验证；文档和纯离线改动可在自身范围内完成并验证。用户确认与直接运行时采样是不同的证据。
 
-另外两份东西负责"什么会坏"而不是"怎么构建"：
-[`docs/hd2-mod-failure-catalog.md`](../../docs/hd2-mod-failure-catalog.md)（症状 → 根因）以及
-`hd2-in-game-panel`、`hd2-native-panel-input-lock`、`hd2-game-language-autodetect` 里的代码级技术。
-**要搭流水线就读本 skill；要写某个功能再去读那几份。**
+可选的[仓库故障目录](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/hd2-mod-failure-catalog_cn.md)按症状映射根因。若 `hd2-in-game-panel`、`hd2-native-panel-input-lock`、`hd2-game-language-autodetect` 与本 skill 一同安装，可参考其中的代码级技术。本 skill 自带构建流水线，不依赖这些补充资料或网络。
 
 ---
 
@@ -117,6 +114,12 @@ python -B work/standalone/ffi_audit.py work/standalone/mymod.lua
 **坏了好几个月的测试比没有测试更糟。** 本工作区就背了两个（`test_smoothboot.py` 有 6 项已知失败，
 `test_sb4_writerhold.py` 要求另一个版本），规矩是**明说**，而不是悄悄当成通过。修不好的过期测试，
 在 README 里标注为"已知失败 + 原因"。
+
+打包生成或同步后的源码前，先确认唯一 canonical 输入，并检查同步工具实际解析参数的方式。不要
+假设 `--check` 一定只读：脚本可能忽略不认识的参数后仍写文件。修改 canonical fragment，运行
+预期同步，再运行第二次并比较哈希，确认幂等。验证和打包前冻结 canonical 源码；分别报告原始
+源码哈希，以及构建器会规范换行时的 LF-normalized 哈希。构建后按构建器明示的换行规范化方式，
+把解出的 payload 与冻结源码比较。
 
 ## 5. 打包：信封包
 
@@ -232,10 +235,8 @@ Start-Process 'steam://rungameid/553850'      # 约 15-25 秒到船上
 
 - `hd2-addon-build` —— 含全部四条门禁、图标处理和 README 抽取的构建脚本。改 CONFIG 块即可
   直接运行。
-- `hd2-in-game-panel`、`hd2-native-panel-input-lock`、`hd2-game-language-autodetect` —— 功能侧：
-  绘制、输入/光标、本地化。
-- [`docs/hd2-mod-failure-catalog_cn.md`](../../docs/hd2-mod-failure-catalog_cn.md) —— 出问题时：
-  症状 → 根因 → 修法，包括那些不抛异常的坑。
+- 若与本 skill 一同安装，`hd2-in-game-panel`、`hd2-native-panel-input-lock`、`hd2-game-language-autodetect` 是功能侧参考：绘制、输入/光标、本地化。
+- 可选仓库补充资料：[故障目录](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/hd2-mod-failure-catalog_cn.md)——出问题时按症状找根因和修法，包括那些不抛异常的坑；本 skill 无需联网查阅。
 
 ## 哪些**没有**验证
 

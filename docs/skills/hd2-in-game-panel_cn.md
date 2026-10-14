@@ -13,7 +13,7 @@ description: "只用 Gui.rect 在 HD2 里画可点击面板：常驻 GUI 生命�
 
 **为什么是这种形态：** 在引擎构建完它的字体/材质库之前调用 `World.create_screen_gui`，会在**原生**层面出错 —— `pcall` 不抓原生崩溃。证据：日志停在 `building the panel`，进程每隔几秒抛出 `ntdll 0xc0000026`，帧回调一直是死的。rect 不带有这种依赖。
 
-> 配套阅读：[`docs/hd2-mod-failure-catalog.md`](../../docs/hd2-mod-failure-catalog.md)
+> 可选仓库补充资料：[故障目录](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/hd2-mod-failure-catalog_cn.md)。本技能可独立使用，无需联网查阅。
 > —— §1（`pcall` 抓不到的原生崩溃）、§2（引擎构建时机）和 §3（保留式面板变不可见的三个
 > 原因），正是本技能围绕其塑形的失败模式。
 
@@ -346,8 +346,24 @@ local zcell = math.max(1, math.floor(1.15 * scale + 0.5))     -- 每个字体像
 
 从生产绘制和命中测试路径验证，而不只测换行 helper：捕获实际绘制文字与矩形，断言其边界
 位于 viewport 内，并检查可见控件的命中框一致。对实际支持的路径覆盖窄分辨率、偏宽 CJK
-字形、中英文本、长说明/名称、滚动到底和输入尾部。布局断言与性能计时分开；离线成本比较见
-[`hd2-offline-engine-harness`](../skills/hd2-offline-engine-harness_cn.md)。AutoChat 的[面板源码](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/src/auto_chat.lua)
+字形、中英文本、长说明/名称、滚动到底和输入尾部。布局断言与性能计时分开。如果离线引擎
+harness 技能与本技能一同安装，可用它比较离线成本；本技能本身不依赖该技能。
+
+在已有使用 `Gui.text` 的保留式 GUI 编辑器中，文字要保留从显示 token、换行片段到 UTF-8 字节边界的 source map；显示替换不能改变
+保存值、光标或选区偏移。新编辑 session 打开时只初始化一次光标和滚动位置。滚轮或光标
+未变时的重绘必须保留用户滚动；只有 session、内容或光标变化才重新计算光标跟随。若这些变化会影响保留式面板，就标记其
+签名变脏；应用最终 viewport offset 后再绘制选区矩形。滚动吸附要避免浮点误差造成来回跳动。
+排版测量和绘制都使用扣除滚动条、padding 后的实际内容宽度，并为所有可达内容保留正高度的
+滚动区。
+
+记录参数的假 `Gui.text` 不会模拟原生 markup 解释。如果编辑器必须逐字显示 markup，应在绘制
+调用边界隔离分隔符，同时保留 raw 字节映射；用 markup-aware 测试 shim 检查单次调用是否收到
+完整 tag。这只检查调用边界，不证明原生渲染行为。预览 markup 与 raw 编辑器分开处理。跨帧
+文字缓存必须有界并有明确失效键，只保存普通数据；若引擎 `Color` 对象是临时对象或其生命周期未说明，就不要跨帧缓存该对象。内容不变的
+静止帧不应重复解析或测量。下方固定提交链接只支持其列出的旧布局测试；较新的编辑器经验见
+[AutoChat lessons A8](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/autochat-lessons-coverage_cn.md)，其证据是本地 D07B 快照和离线测试，
+没有公开的对应 AutoChat 代码提交，也没有直接采样原生 markup 渲染器。
+AutoChat 的[面板源码](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/src/auto_chat.lua)
 及测试覆盖低分辨率双语倒计时/表单（[`test_ui_preview.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_ui_preview.py)）、
 敌人说明及裁剪后的命中框（[`test_alert_layout.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_alert_layout.py)），
 以及 105 项任务列表末行交互（[`test_panel_interaction.py`](https://github.com/Puipipi/HD2-AutoChat/blob/4445596a76ed387edc3c09d0d25aa9d06ffd5b11/work/standalone/tests/test_panel_interaction.py)）；
