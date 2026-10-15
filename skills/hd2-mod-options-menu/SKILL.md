@@ -124,6 +124,20 @@ for that bug, because the option renders correctly and the callback fails silent
 The mod parses its config both sectioned and flat. A fix applied to one parser was overwritten by the
 other. When you touch config parsing, find every parser before declaring it fixed.
 
+## Locale and persisted values
+
+When a host exposes `ready()`, wait for it to return true before registering options; retain any
+older-host compatibility path only when the established API contract permits it. Choose the UI
+locale before registration. Keep option IDs, persistence keys, and choice value/index meanings the
+same in each language; localize only visible labels and descriptions. A one-time registration does
+not imply that MOM will relocalize an already registered page after the game language changes.
+
+On registration, read the host's saved value with `get()`, normalize or migrate it if the mod has an
+explicit migration, then apply it to runtime state before pushing the effective value with `set()`.
+Do not push a hard-coded default over a saved value, and do not periodically rewrite MOM's
+persistence. The exact migration rules and accepted option types remain host/version-specific; do
+not infer new framework capabilities from a wrapper accepting an option.
+
 ## What MOM does not support
 
 - **Free text entry.** An exact number the list cannot express belongs in `config.txt`.

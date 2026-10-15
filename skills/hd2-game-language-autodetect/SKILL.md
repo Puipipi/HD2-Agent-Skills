@@ -1,6 +1,6 @@
 ---
 name: hd2-game-language-autodetect
-description: "Tell whether a running HD2 client is Chinese or English — read Text Language from game.dll memory, with a font-coverage fallback. Use when a mod must pick zh or en labels automatically."
+description: "Choose a mod's UI language from HD2's saved or active Text Language. Use when labels should follow the game's language."
 ---
 
 # HD2 game language auto-detect
@@ -9,21 +9,47 @@ description: "Tell whether a running HD2 client is Chinese or English — read T
 
 English / [简体中文](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/skills/hd2-game-language-autodetect_cn.md)
 
-Two **independent** methods, in the order they should be attempted. Both were taken
-from working HD2 Lua/JIT mods and confirmed live.
+These signals answer different questions: a saved setting is portable but may not reflect a live
+change; a verified runtime read can represent the active selection but is build-specific; font
+coverage says what can render, not what language the player selected. Choose the source that matches
+the product behavior and make its precedence explicit.
 
 | # | Method | Reads | Survives a game update? | Fails when |
 |---|---|---|---|---|
+| Saved | Persisted `language` setting | the user's settings file | Independent of memory offsets, but the file contract can change and it can lag behind a live change | missing, malformed, unsupported, or ambiguous profile/settings |
 | A | Selected **Text Language** via verified game.dll offsets | absolute offsets in `game.dll` | **No** — must be re-derived | offsets shifted; build hash mismatch |
 | B | Engine **font glyph coverage** (`Gui.text_extents`) | only the engine's own API | **Yes** | engine font not ready / not measurable |
 
 Method A needs a build proof before it is allowed to read a single byte. Method B needs
-nothing but a live GUI handle. Use A for accuracy, B as the portable fallback, and the
-config override (`lang=zh` / `lang=en`) as the manual escape hatch.
+nothing but a live GUI handle. A saved setting can avoid memory reads when persisted preference is
+the desired signal; Method A is the build-specific active-state route, and Method B is a
+renderability check or fallback when the product explicitly wants glyph coverage. A config
+override (`lang=zh` / `lang=en`) can remain the manual escape hatch.
 
 > Optional repository companion: [failure catalog](https://github.com/Puipipi/HD2-Agent-Skills/blob/main/docs/hd2-mod-failure-catalog.md). This skill remains usable on its own; no network lookup is required.
 > — §5 (memory-read safety: build proof, torn reads, id validation) and §6 (config parsing)
 > are the rules this skill applies to a single value.
+
+---
+
+## 0. Read a saved setting when persisted preference is the intended signal
+
+One verified HD2 implementation first reads the user's saved settings file, before attempting a
+build-gated runtime read. Its reader uses the current user's application-data path, accepts exactly
+one matching profile file and exactly one `language=` key, and maps only known language codes to
+`zh` or `en`. Missing, malformed, unknown, or ambiguous settings are not guessed; the reader falls
+through to the runtime method. This is a persisted preference, so confirm that it matches the
+current session before using it for UI that must react immediately to an in-game language change.
+
+The caller's unknown-language policy is separate from the reader. One menu-registration example
+chooses English if both sources fail; other products may preserve their last known language or ask
+the user. Do not describe a particular fallback as a property of the reader itself.
+
+For a bilingual ModOptionsMenu, wait until its supported host-ready condition before registering
+labels, select the locale once for that registration, and keep option IDs, saved keys, and choice
+values stable across languages. Translate visible labels and descriptions; do not translate the
+persisted values. A menu registered once does not automatically relocalize if the live game setting
+changes later.
 
 ---
 
@@ -54,7 +80,7 @@ code     = text:match('^(%a[%a%-]*)%z')         ; "cn", "us", "zh-CN", ...
    assert(rd(VISBRIDGE.base + 0x14c0350, 16)
        == unhex('48895c24084889742410574883ec208b'), 'native presenter changed')
    ```
-   If any of that fails, return `nil` and let the caller keep its previous language.
+   If any of that fails, return `nil`; the caller applies its explicit unknown-language policy.
 2. **Re-read the index and compare before trusting the string** (torn-read guard):
    ```lua
    local bytes = rd(settings + 705712, 4)
@@ -65,8 +91,9 @@ code     = text:match('^(%a[%a%-]*)%z')         ; "cn", "us", "zh-CN", ...
 3. **Validate the result shape**, not just non-nil: `index < 15`, code is `%a[%a%-]*`,
    `#code <= 12`, `text` truncated at a NUL. A garbage pointer otherwise yields a
    plausible-looking string.
-4. **Return `nil` on any doubt.** `nil` means "unknown, keep what you had" — never
-   "default to English".
+4. **Return `nil` on any doubt.** `nil` means unknown, not English. Keep that state distinct and
+   let the caller choose an explicit policy; preserving the last value is one option, not a
+   universal rule.
 
 ### Throttle it
 
@@ -94,8 +121,8 @@ end
 Note the two behaviours that matter:
 - **First call runs immediately** (`M.lang_due` is nil), so the panel is not English for
   the first two seconds.
-- **`selected == nil` keeps `M.lang`** — an unreadable setting after a game update
-  freezes the language instead of flickering.
+- In this `update_language` example, **`selected == nil` keeps `M.lang`**. That is this caller's
+  policy; another menu may use an explicit fallback when it registers.
 - Only log **on change**, not per poll.
 
 ### Test seam (how to prove it offline)
@@ -143,8 +170,9 @@ Then:
   ASCII stand-ins (`，→ ,`, `。→ .`, `：→ :`) instead of letting the engine paint `?`.
 - **If the ratio fails, stay English.** Do not render a screen of `?`.
 
-Method B is the one that keeps working across game updates, so wire it as the automatic
-path and Method A as the accurate one.
+Method B can survive game updates, but it detects glyph support rather than the player's selected
+language. Use it as a capability check or as an explicitly chosen fallback; do not silently treat
+it as the authoritative locale when saved or runtime language state is available.
 
 ---
 
@@ -188,6 +216,10 @@ Rules that keep this maintainable:
   whole chain, including the "unreadable setting preserves last known language" case.
 - `outputs/validated-2026-10-04/hud-compatibility/sources/installed-Super-Earth-Armory-Forge-v6.2.1-0-0.lua`
   — `PP.font_test` (method B) and `PP.tr` (draw-time translation with cache).
+- A separate Eagle implementation reads one unambiguous saved `language` setting first and falls
+  through to a build-fingerprinted runtime reader; its ModOptionsMenu chooses a locale only after
+  the host is ready. Treat this as a source-pattern example, not as a universal settings path or
+  evidence that saved settings track live changes.
 
 ## Gotchas that cost real time
 
@@ -195,6 +227,6 @@ Rules that keep this maintainable:
 |---|---|
 | `attempt to index global 'PANEL' (a nil value)` right after the language flips | Auto-detect changed the UI signature and the panel table was declared *below* the scanner. Forward-declare anything the scan frame touches (`local PANEL`). |
 | Language flickers between zh and en | Reading on every frame without a throttle, or trusting a torn read. Throttle + re-compare. |
-| Panel goes all-`?` after a game update | Method A offsets moved and returned garbage that still matched `%a+`. Add the sanity gates and fall back to Method B. |
+| Panel goes all-`?` after a game update | Method A's offsets moved or failed validation. Return unknown and apply the caller's explicit policy; use Method B only to check glyph renderability, not to infer the selected language. |
 | Translations leak into saved files | `tr()` applied on write instead of on draw. Translate only in the renderer. |
 | Engine font measures nothing | Font library is built later than boot; the slot is NULL early. Retry, do not latch "no measuring" for the session. |

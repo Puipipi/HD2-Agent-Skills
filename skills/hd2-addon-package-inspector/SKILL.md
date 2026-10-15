@@ -45,6 +45,14 @@ package size and SHA-256, which is what the next person uses to confirm they hav
 | declaration | the resource carries a `-- HD2-Addon: <name>` line, and it matches `--resource` when given |
 | source (`--source`) | the packaged bytes contain the source you built, and its version string matches the ZIP's file name |
 
+The current script's structural check is for a topology with exactly one `Addon/*.patch_0` and
+its two sidecars. If a manifest and build contract legitimately declare multiple addon archives,
+that layout mismatch is not evidence that the package is invalid. Do not silently skip inspection
+or report that this script passed: use a reader that understands the declared topology and reads
+every ZIP member, validates every archive/resource range and identity, checks all required native
+sidecars, compares every expected payload with the frozen source, and verifies CRCs by reading the
+complete members. Keep the unsupported-layout result explicit until that full check is complete.
+
 For split-source builds, compare the **extracted Lua payload** with the frozen canonical source too;
 apply only the build's documented line-ending normalization. Keep the ZIP SHA-256 and payload SHA-256
 separate: one identifies the archive, the other identifies its embedded source. Check the extracted

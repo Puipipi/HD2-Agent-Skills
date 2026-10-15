@@ -111,6 +111,47 @@ verify each run really redraws; keep layout-correctness assertions separate from
 engine, font mocks, and offline QPC results are not in-game latency evidence and cannot guarantee
 that the game stays below 0.05 ms per frame.
 
+### Measuring a cache or renderer change honestly
+
+Use the same production closure, scene inputs, frame sequence, and counters for the baseline and
+candidate. Build each case independently; do not inject a change into only one case with nested
+string replacement, since that can make the compared programs differ in more than the intended
+edit. Record LuaJIT version, `jit.status()`, GC mode, and source revision. Use a fresh process/runtime
+per case and QPC inside Lua; keep fake native/UI stubs bounded so retained samples or JIT trace logs
+do not become the dominant GC workload. Warm up through the same bounded batching path used for
+timing. If JIT traces are still growing during timed samples, call the result cold-to-warm, not
+steady-state. QPC wall time is not thread CPU time.
+
+Label the statistic that was actually sampled. A percentile over callback-batch means is a
+percentile of batches, not a per-frame p99. Keep cache rebuilds, hits, population, and residual
+work visible across the same input groups; equal totals can hide a missed path. Offline results are
+observations under that fixture, not controlled in-game results or proof of a per-frame target.
+
+For reusable geometry caches, follow the actual ownership graph. In one LuaJIT renderer, copied
+cache slots held references to arrays inside three batch wrappers, not references to the wrapper
+tables themselves. The cache used the identity of each newly built outer batch array as its
+cache-miss signal; it did not compare the reused expanded rows by identity. Reuse final expanded
+rows and endpoint tables only under that verified contract, where native line submission copies
+endpoint values into its own buffer. Construct a fresh outer cover or dash collection on every
+rebuild. If a consumer compares row identity to detect change, pooling those rows needs a separate
+revision or invalidation proof. Do not pool raw flow input, GUI face input, or static expanded
+geometry without evidence that their lifetime and identity contracts permit it. Release pool
+ownership links without mutating rows or
+points still held by a current submit/cache. Preserve any valid expanded state needed by a
+same-bucket no-op, and detach inline cleanup paths that bypass the usual pair helper. Exercise first,
+same, and changed buckets, failed rebuild and retry, world/style/toggle changes, trimming, and empty
+guides. These details are examples of ownership and invalidation questions to test, not a reusable
+API contract.
+
+For live confirmation, identify the running process and verify its startup version banner, deployed
+artifact hash, and session epoch before attributing logs to a candidate. Record the raw log-tail hash
+and the actual copy offset and byte count for any deployed instrumentation. Keep the expected log
+schema/version strict; a bounded early stop such as `profile_unavailable` does not prove a full
+sample target completed. A stop near a guide boundary may support only coarse timing, not an exact
+cause. Treat grouped hit/rebuild/population counts as observational unless the run controlled those
+conditions. A one-item human review may need no screenshot when the written acceptance signal is
+clear; do not add capture work that does not answer the question.
+
 ## What it found, as evidence this is worth it
 
 Writing this harness against the skeleton found two real bugs that code review had missed:

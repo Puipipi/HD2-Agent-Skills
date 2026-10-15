@@ -127,6 +127,27 @@ resource.
 
 ## 7. Release checklist (adapt these steps to the requested scope)
 
+### Identify the release source and reconcile the version
+
+Record the hash of the reviewed source contents that produced the package. A reviewed, uncommitted
+working tree can be a valid source; isolate the reviewed files or use a verified frozen copy when
+the tree also contains unreviewed or unrelated changes. Remove temporary captures, automatic
+CSV/request pollers, and pure-observation modules from production when they are no longer required;
+decide by behavior, not
+by a filename containing `probe` or `diagnostic`, since a similarly named module may provide a real
+user feature. Recompute source/module inventory counts after cleanup instead of assuming an older
+count still applies.
+
+Before choosing a stable version, inspect the repository's tags and release artifacts. Confirm the
+candidate follows the project's normal SemVer scheme and that source constants, manifest, startup
+banner, ZIP filename, and user-facing README agree. A pre-release tag does not by itself prove that
+the matching stable version is already published. For repositories that keep a canonical per-mod
+`dist/`, put the release ZIP there; treat copies in research, staging, or Downloads as secondary and
+compare their hashes with the canonical artifact.
+
+After packaging, read the ZIP back and verify the complete payload, native resources/sidecars,
+manifest identity, and archive integrity. Record the archive hash separately from source hashes.
+
 1. Identify the target mod's version field, builder and output contract. In this repository, edit
    `local VERSION`, use `python tools\build_mod.py --list` to see key names, and build with
    `python tools\build_mod.py <key>`; the scanner uses `hd2-scanner\build.py` for multi-resource

@@ -118,6 +118,21 @@ python tools/build_addon.py --name mods/<author>/<name> --entry x.lua --guid <st
 
 ## 7. 发布清单（按请求范围调整）
 
+### 核定发布源码并核对版本
+
+记录实际用于构包的已审核源码内容 hash。已审核但尚未提交的工作区也可以作为构建源；若其中还混有未审核或
+无关改动，应隔离已审核文件或使用经核实的冻结副本。生产版本不再需要时，清理临时捕获、自动 CSV/request
+poller 和纯观察模块；依据实际行为判断，不能仅因文件名含 `probe` 或
+`diagnostic` 就删除，因为类似命名的模块也可能提供真实用户功能。清理后重新统计源码/模块数量，不沿用旧计数。
+
+选择 stable 版本前先检查仓库 tags 和发布产物。确认候选版本符合项目正常使用的 SemVer 规则，并核对源码常量、manifest、
+启动 banner、ZIP 文件名和用户 README 一致。存在预发布 tag 本身不能证明对应 stable 版本已发布。若仓库将
+每个 mod 的 `dist/` 作为正式目录，就把发布 ZIP 放在那里；research、staging 或 Downloads 中的副本应视作
+便利副本，并与正式产物核对 hash。
+
+打包后重新读取 ZIP，核对完整 payload、原生资源/sidecar、manifest 身份和归档完整性。归档 hash 与源码 hash
+分开记录。
+
 1. 先确定目标 mod 的版本字段、builder 和输出约定。在本文所在仓库，编辑 `local VERSION`，用
    `python tools\build_mod.py --list` 查看 key，再运行 `python tools\build_mod.py <key>`；scanner
    使用 `hd2-scanner\build.py` 构建多资源归档。这些仓库专用 builder 会把冲突归档到
