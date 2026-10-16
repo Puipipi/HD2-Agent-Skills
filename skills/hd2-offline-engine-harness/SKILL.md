@@ -127,6 +127,10 @@ percentile of batches, not a per-frame p99. Keep cache rebuilds, hits, populatio
 work visible across the same input groups; equal totals can hide a missed path. Offline results are
 observations under that fixture, not controlled in-game results or proof of a per-frame target.
 
+Separate counters by work layer: source/input scans, cache-key construction, geometry expansion/copies, math-object construction, GUI stub events, and native submissions. A face count is not a native-call count. An identity-based cache can reuse output while still scanning every source row to build its key; instrument that scan separately before claiming it removed traversal. Compare elapsed time as well as call/copy counts, and reject a candidate whose measured saving is only a smaller counter.
+
+For each live sample window, record its reset/start/end boundaries, sample count, denominator, and confirmed target-instance/type state. Generic projectile/effect markers do not establish how many target actors were active. Keep window deltas separate from cumulative profiler counters; a short phase mean is neither a whole-call mean nor a per-frame p99.
+
 For reusable geometry caches, follow the actual ownership graph. In one LuaJIT renderer, copied
 cache slots held references to arrays inside three batch wrappers, not references to the wrapper
 tables themselves. The cache used the identity of each newly built outer batch array as its
@@ -171,6 +175,15 @@ Neither is visible by reading. Both are instant in a harness.
   shape until someone updates it. Treat the fake as part of the code under review.
 - It cannot catch native crashes caused by calling a real API at the wrong time; it can only
   catch that your code *tried* to, given the state you simulated.
+- When same-build evidence shows engine math constructors return frame/temp-arena userdata,
+  create and consume those values synchronously in the owning frame; do not retain them in a
+  controller or across frames unless that build's lifetime contract proves it safe. A fake that
+  copies values for assertions can test that Lua state does not retain them, but cannot certify
+  the engine object's lifetime.
+- A fake `Gui.text_3d` boundary can verify resource gating, argument order, and cleanup, not
+  native acceptance, appearance, occlusion, or performance. `Application.can_get == true` means
+  a resource is available under that API; it does not prove the text path renders. Keep an
+  unrun text prototype explicitly experimental until a target-build live visual check.
 - A `Gui.text` stub that records its input does not simulate native markup parsing or rasterization.
   When literal markup is a requirement, add a test-only markup-aware shim that flags complete tags
   passed within one draw call, then assert that the production renderer splits calls and that the

@@ -45,4 +45,8 @@ Eagle 的填充 renderer 会为双面显示提交反向绕序的三角形。这�
 
 线条批次、WorldGUI 和清理签名是受 build 限制的示例，应针对目标 API 再核对。另有一个已检查的三角形填充资源/build，其材质深度状态已验证；这不能证明通用材质字段布局或 GUI API。没有已证的通用深度修复参数或 `Gui.set_depth_test` 函数。
 
+Eagle 1.10.0 发布版已通过用户的局部填充遮挡与清理检查。1.10.1-beta.1 性能候选沿用相同的深度测试填充材质；其距离/重入测试不属于遮挡验收。加入始终可见的线条时，应保留深度测试填充材质；线条的透视开关不代表应让填充面也始终显示在顶层。
+
+同 build 的资源审计在运行时 census 中发现了 `Application.can_get`，也找到一个 screen-GUI 字体示例按资源类型和逻辑名称查询。资源可用的肯定结果不能证明 WorldGUI 文字能绘制或正确遮挡。`.font`、`.material` 等归档类型后缀不一定属于逻辑资源名；应依据目标 build 的 API/源码证据传参。该审计中的静态 `Gui.text_3d` 原型仍仅为离线实验，尚未作为实机渲染路径验收。
+
 **来源：** 这些实现说明已对照审阅过的 `HD2-EagleDirectionProbe` 1.10.0 发布源码核验。其主文件 `eagle_direction_probe.lua` 的 SHA-256 为 `7562c947f525d915e3f1a0198556e736b56a0f76508a522a986cbb2e3ffdf8c2`；相关轮廓与填充渲染代码位于 `occlusion_outline.lua` 和 `solid_renderer.lua`。另有人在游戏中实测了局部遮挡行为和清理效果。此处未记录游戏 fingerprint，因此这些资源/build 行为仅适用于该案例，其他目标仍需重新核实。

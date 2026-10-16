@@ -95,6 +95,15 @@ The build says the envelope is *well formed*; it cannot say the manager will acc
 Check the artifact itself with **`hd2-addon-package-inspector`** before shipping, and
 confirm the import + in-game load once by hand.
 
+### Compare hashes in the same representation
+
+Keep raw-source, framed-payload, and ZIP-container hashes separate. The examined addon envelope
+adds an 8-byte length/version header (the observed form is described as `<len, 2>`), so a hash of
+the embedded framed bytes is expected to differ from the plaintext Lua source hash. To prove that
+packaged Lua matches source, parse or strip the envelope with the builder/readback path and compare
+the unframed body bytes. Report the ZIP hash separately; never treat a container or framed-payload
+hash as the source-file hash.
+
 ## Limitations
 
 - It validates the envelope, not your mod's behaviour: a mod that passes every gate can

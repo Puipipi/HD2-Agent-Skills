@@ -138,6 +138,8 @@ Do not push a hard-coded default over a saved value, and do not periodically rew
 persistence. The exact migration rules and accepted option types remain host/version-specific; do
 not infer new framework capabilities from a wrapper accepting an option.
 
+If an option controls cached visibility or render output, apply its normalized value and invalidate the derived cache in the registered change callback. Test through the host callback and production update/draw path; assigning a runtime field directly skips persistence, normalization, and the invalidation path, so it can miss stale output.
+
 ## What MOM does not support
 
 - **Free text entry.** An exact number the list cannot express belongs in `config.txt`.
